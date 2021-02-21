@@ -22,6 +22,10 @@ void point::cout_point() {
 	cout << "(" << x << ", " << y << ") ";
 }
 
+bool point::operator==(point p) {
+	return x == p.x && y == p.y;
+}
+
 point sym_point_x(point p) {
 	point a;
 	a.x = p.x;
