@@ -16,3 +16,5 @@ public:
 straight perp_straight(straight);			//sozdanie pryamoi, perpendiculyarnoi dannoi			L2 = perp_straight(L1)
 bool parallel_straight(straight, straight);	//opredelenie parallelnosti dvuh pryamih				bool f = parallel_straight(L1, L2)
 bool point_on_straight(point, straight);	//opredelenie prinadlezhnosti tochki pryamoi			bool f = point_on_straight(p, L)
+double get_twostraights_radangle(straight, straight); //nahozhdenie ugla mezhdu pryamimi v radianah	double a = get_twostraights_radangle
+double get_twostraights_degangle(straight, straight); //nahozhdenie ugla mezhdu pryamimi v gradusah double a = get_twostraights_degangle

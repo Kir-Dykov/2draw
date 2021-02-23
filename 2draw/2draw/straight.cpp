@@ -52,3 +52,13 @@ void straight::cout_straight() {
 		cout << "+";
 	cout << c << endl;
 }
+
+double get_twostraights_radangle(straight L1, straight L2) {
+	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));
+	return acos(a);
+}
+
+double get_twostraights_degangle(straight L1, straight L2) {
+	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));
+	return acos(a) * 180 / PI;
+}
