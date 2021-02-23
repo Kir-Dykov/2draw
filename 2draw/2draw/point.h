@@ -7,6 +7,7 @@ public:
 	void set_point(int, int);   //zadanie tochki:													p.set_point()
 	int find_quarter();    //nahozhdenie chetverti v kotoroy nahoditsa tochka:						p.find_quarter() 
 	void cout_point();     //vivod koordinat tochki d konsol:										p.cout_point()
+	bool operator==(point);
 double x, y;	//koordinati x y
 };
 
