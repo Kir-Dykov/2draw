@@ -13,7 +13,7 @@ public:
 	Point operator [] (int idx) return vertexes[idx];
 	
 	
-	// checks for self-intersections
+	// unimplemented
 	bool is_selfx ();
 	
 	bool is_convex ();
@@ -21,5 +21,8 @@ public:
 	Point center_of_mass ();
 	
 	//rotate around center of mass by /angle/ given in radians
-	void rotate (double angle); 
+	void rotate (double angle);
+	void rotate (Point center, double angle);
+	
+	double area ();
 }
