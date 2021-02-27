@@ -1,3 +1,4 @@
+#pragma once
 #include "line.h"
 
 class tetragon {
@@ -10,4 +11,4 @@ public:
 	double tetragon_perimeter();		//vichislenie perimetra			 double p = t.tetragon_perimeter()
 	double tetragon_area();				//vichislenie ploshadi			 double s = t.tetragon_area()
 	tetragon create_middletetragon();	//sodanie chetiryohugolnika, opiraushigosya na seredini dannogo chetiryohugolnika 
-}																		 //tetragon tp = t.create_middletetragon()
+};

@@ -1,11 +1,14 @@
 #pragma once
-#include <iostream>
+#include "point.h"
 using namespace std;
 
 class circle
 {
 public:
-	circle(double, double, double);
+	point center;
+	double radius;
+	void set_circle(point, double); // set a circle by its center and radius
+
 	double get_radius();
 	double get_centerx();
 	double get_centery();
@@ -13,12 +16,4 @@ public:
 	double get_length();
 	double get_square();
 	double get_diameter();
-private:
-	double radius;
-	struct center
-	{
-		double x, y;
-	};
-	center center;
 };
-

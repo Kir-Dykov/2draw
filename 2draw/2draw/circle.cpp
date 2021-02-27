@@ -1,9 +1,9 @@
 #include "circle.h"
-circle::circle(double new_x = 0, double new_y = 0, double new_r = 0)
+void circle::set_circle(point _center, double _radius = 0)
 {
-	center.x = new_x;
-	center.y = new_y;
-	radius = new_r;
+	center.x = _center.x;
+	center.y = _center.y;
+	radius = _radius;
 }
 double circle::get_radius()
 {

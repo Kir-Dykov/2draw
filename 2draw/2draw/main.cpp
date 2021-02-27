@@ -6,8 +6,9 @@
 
 using namespace std;
 
-int main() {
-
+int main() 
+{
+	triangle::line_error_catch();
 
 
 	return 0;

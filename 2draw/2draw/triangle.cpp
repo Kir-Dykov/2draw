@@ -1,27 +1,148 @@
 #include "triangle.h"
 #include <cmath>
 
-void triangle::set(point _p1, point _p2, point _p3)
+const double PI = 3.14159265358979;
+
+void triangle::set_triangle(point _p1, point _p2, point _p3)
 {
 	p1 = _p1;
 	p2 = _p2;
 	p3 = _p3;
 }
 
-double triangle::triangle_angle(point p)
+double triangle::get_triangle_angle(int num_point)
 {
 	Line A, B;
+	point p;
 	double angle;
-	if (p == p1) { A.set(p1, p2); B.set(p1, p3); }
-	if (p == p2) { A.set(p2, p1); B.set(p2, p3); }
-	if (p == p3) { A.set(p3, p1); B.set(p3, p2); }
+
+	num_to_point(num_point, p);
+	if (p == p1) { A.set_line(p1, p2); B.set_line(p1, p3); }
+	if (p == p2) { A.set_line(p2, p1); B.set_line(p2, p3); }
+	if (p == p3) { A.set_line(p3, p1); B.set_line(p3, p2); }
 	angle = get_twoLines_radangle(A, B);
+
 	return angle;
+}
+
+double triangle::get_triangle_side(int num_point1, int num_point2)
+{
+	point p1, p2;
+	num_to_point(num_point1, p1);
+	num_to_point(num_point2, p2);
+	return point_distance(p1, p2);
 }
 
 double triangle::triangle_perimeter()
 {
 	return point_distance(p1, p2) + point_distance(p1, p3) + point_distance(p2, p3);
+}
+
+double triangle::triangle_area()
+{
+	double p = triangle_perimeter() / 2;
+	double a = point_distance(p1, p2);
+	double b = point_distance(p2, p3);
+	double c = point_distance(p1, p3);
+	return sqrt(p * (p - a) * (p - b) * (p - c));
+}
+
+int triangle::triangle_type()
+{
+	double angle[3];
+	bool is_right = false, is_obtise = false;
+	for (int i = 0; i < 3; i++)
+	{
+		angle[i] = get_triangle_angle(i + 1);
+		if (angle[i] == PI / 2) is_right;
+		if (angle[i] > PI / 2) is_obtise;
+	}
+	if (is_right) return 1;
+	else if (is_obtise) return 2;
+	else return 3;
+
+	return 0;
+}
+
+circle triangle::get_circumcircle() // formula https://www.wikiwand.com/ru/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BE%D0%BA%D1%80%D1%83%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D1%8C
+{
+	circle cc;
+	double D = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
+	cc.center.x = ((p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y) + (p2.x * p2.x + p2.y * p2.y) * (p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / D;
+	cc.center.y = ((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * (p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / D;
+	cc.radius = point_distance(cc.center, p1);
+
+	return cc;
+}
+
+circle triangle::get_inscribed_circle() // we get the center of inscribed circle by solving the system of linear equations (two bisectrixes intersection) and r = S/p
+{
+	circle ic;
+	Line B1, B2;
+	B1 = get_median(1);
+	B2 = get_median(2);
+	ic.center.y = ((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b);
+	ic.center.x = (-B1.b * ic.center.y - B1.c) / B1.a;
+	ic.radius = 2 * triangle_area() / triangle_perimeter();
+
+	return ic;
+}
+
+Line triangle::get_median(int num_point)
+{
+	point p, a1, a2, m;
+	Line M;
+
+	num_to_point(num_point, p);
+	if (p == p1) { a1 = p2; a2 = p3; }
+	if (p == p2) { a1 = p1; a2 = p3; }
+	if (p == p3) { a1 = p1; a2 = p2; }
+
+	m.x = (a1.x + a2.x) * 0.5;
+	m.y = (a1.y + a2.y) * 0.5;
+	M.set_line(m, p);
+
+	return M;
+}
+
+Line triangle::get_bisectrix(int num_point)
+{
+	Line B, L;
+	point p, a1, a2, bis;
+	double a, b, c;
+
+	num_to_point(num_point, p);
+	if (p == p1) { a1 = p2; a2 = p3; }
+	if (p == p2) { a1 = p1; a2 = p3; }
+	if (p == p3) { a1 = p1; a2 = p2; }
+
+	a = point_distance(p, p1);
+	b = point_distance(p, p2);
+	c = point_distance(p1, p2);
+	L.set_line(p1, p2);
+	double k = sqrt(a*c / (a + b) * (L.a * L.a + L.b * L.b));
+	bis.x = p1.x - k * L.b;
+	bis.y = p1.y + k * L.a;
+	B.set_line(bis, p);
+
+	return B;
+}
+
+Line triangle::get_altitude(int num_point)
+{
+	Line Alt, L;
+	point p, a1, a2;
+
+	num_to_point(num_point, p);
+	if (p == p1) { a1 = p2; a2 = p3; }
+	if (p == p2) { a1 = p1; a2 = p3; }
+	if (p == p3) { a1 = p1; a2 = p2; }
+
+	L.set_line(p1, p2);
+	Alt = perp_Line(L);
+	Alt.c = -L.a * p.x - L.b * p.y;
+
+	return Alt;
 }
 
 bool triangle::operator==(triangle T) {
@@ -35,75 +156,42 @@ bool triangle::operator==(triangle T) {
 	return false;
 }
 
-double triangle::triangle_area()
+string triangle::line_error_catch(Line(*get_function)(int), int num_point)
 {
-	double p = triangle_perimeter() / 2;
-	double a = point_distance(p1, p2);
-	double b = point_distance(p2, p3);
-	double c = point_distance(p1, p3);
-	return sqrt(p * (p - a) * (p - b) * (p - c));
-}
-
-Line triangle::get_median(point p)
-{
-	Line M;
-	if (!(p == p1) && !(p == p2) && !(p == p3)); // idk what to rerurn if user decides to choose a point not as a triangle vertex
+	if (num_point != 1 && num_point != 2 && num_point != 3) return "Error: invalid parameter";
 	else
 	{
-		point a1, a2, m;
-		if (p == p1) { a1 = p2; a2 = p3; }
-		if (p == p2) { a1 = p1; a2 = p3; }
-		if (p == p3) { a1 = p1; a2 = p2; }
-		m.x = (a1.x + a2.x) * 0.5;
-		m.y = (a1.y + a2.y) * 0.5;
-		M.set(m, p);
+		(*get_function)(num_point);
+		return "";
 	}
-	return M;
 }
 
-Line triangle::get_bisectrix(point p)
+string triangle::double_error_catch(double(*get_function)(int), int num_point)
 {
-	Line B;
-	if (!(p == p1) && !(p == p2) && !(p == p3)); // same as in line 39
+	if (num_point != 1 && num_point != 2 && num_point != 3) return "Error: invalid parameter";
 	else
 	{
-		Line L;
-		point a1, a2, bis;
-		double a, b, c;
-		if (p == p1) { a1 = p2; a2 = p3; }
-		if (p == p2) { a1 = p1; a2 = p3; }
-		if (p == p3) { a1 = p1; a2 = p2; }
-		a = point_distance(p, p1);
-		b = point_distance(p, p2);
-		c = point_distance(p1, p2);
-		L.set(p1, p2);
-		double k = sqrt(a*c / (a + b) * (L.a * L.a + L.b * L.b));
-		bis.x = p1.x - k * L.b;
-		bis.y = p1.y + k * L.a;
-		B.set(bis, p);
+		(*get_function)(num_point);
+		return "";
 	}
-	return B;
 }
 
-Line triangle::get_altitude(point p)
+void triangle::num_to_point(int num, point& p)
 {
-	Line Alt;
-	if (!(p == p1) && !(p == p2) && !(p == p3)); // same as in line 39
-	else
-	{
-		point a1, a2;
-		Line L;
-		if (p == p1) { a1 = p2; a2 = p3; }
-		if (p == p2) { a1 = p1; a2 = p3; }
-		if (p == p3) { a1 = p1; a2 = p2; }
-		L.set(p1, p2);
-		Alt = perp_Line(L);
-		Alt.c = -L.a * p.x - L.b * p.y;
-	}
-	return Alt;
+	if (num == 1) p = p1;
+	if (num == 2) p = p2;
+	if (num == 3) p = p3;
 }
 
-int triangle::triangle_type()
+bool are_congruent(triangle t1, triangle t2)
 {
-	
+	if (t1 == t2) return true;
+	else return false;
+}
+
+bool are_similar(triangle t1, triangle t2)
+{
+	for (int i = 1; i <= 3; i++)
+		if (t1.get_triangle_angle(i) != t2.get_triangle_angle(i)) return false;
+	return true;
 }

@@ -4,9 +4,9 @@
 #include <vector>
 #include <algorithm>
 bool cmp(const point& p1, const point& p2) {
-	if (p1.x != p2.x) 
+	if (p1.x != p2.x)
 		return p1.x > p2.x;
-	else 
+	else
 		return p1.y > p2.y;
 }
 void tetragon::set(point a, point b, point c, point d) {
@@ -16,8 +16,8 @@ void tetragon::set(point a, point b, point c, point d) {
 	sort(p.begin(), p.end(), cmp);
 	p1 = p[0];
 	p2 = p[1];
-	l1.set(p1, p2);
-	if (-l1.a / l1.b > 0 || l1.b == 0) 
+	l1.set_line(p1, p2);
+	if (-l1.a / l1.b > 0 || l1.b == 0)
 		if (p[2].y > p[3].y) {
 			p3 = p[2];
 			p4 = p[3];
@@ -39,11 +39,11 @@ void tetragon::set(point a, point b, point c, point d) {
 		p3 = p[3];
 		p4 = p[2];
 	}
-	l2.set(p2, p3);
-	l3.set(p3, p4);
-	l4.set(p1, p4);
-	d1.set(p1, p3);
-	d2.set(p2, p4);
+	l2.set_line(p2, p3);
+	l3.set_line(p3, p4);
+	l4.set_line(p1, p4);
+	d1.set_line(p1, p3);
+	d2.set_line(p2, p4);
 	if (l1 == l2 || l2 == l3 || l3 == l4 || l1 == l4)
 		cout << "Such tetragon doesn't exist" << endl;
 	side1 = point_distance(p1, p2);
@@ -65,8 +65,8 @@ double tetragon::tetragon_perimeter() {
 
 double tetragon::tetragon_area() {
 	triangle t1, t2;
-	t1.set(p1, p2, p3);
-	t2.set(p1, p4, p3);
+	t1.set_triangle(p1, p2, p3);
+	t2.set_triangle(p1, p4, p3);
 	return t1.triangle_area() + t2.triangle_area();
 }
 

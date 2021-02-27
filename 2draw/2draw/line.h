@@ -7,8 +7,8 @@ public:
 	point p1, p2;							//2 tochki, zadayshie pryamuy							
 	double a, b, c;							//koefficienti uravneniya pryamoi
 
-	void set(point, point);		//zadanie pryamoi cherez 2 tocki (uravnenie zadayotsa avtomatichski) L.set(p1, p2)
-	void set(int, int, int);	//zadanie pryamoi uravneniem							L.set(a, b, c)
+	void set_line(point, point);		//zadanie pryamoi cherez 2 tocki (uravnenie zadayotsa avtomatichski) L.set(p1, p2)
+	void set_line(int, int, int);	//zadanie pryamoi uravneniem							L.set(a, b, c)
 
 	double get_angle_rad();			//vichislenie ugla mezhdu pryamoi i osiu Ox v radianah	a = L.get_angle_rad()
 	double get_angle_deg();			//vichislenie ugla mezhdu pryamoi i osiu Ox v gradusah	a = L.get_angle_deg()
