@@ -2,11 +2,12 @@
 #include "point.h"
 #include "line.h"
 #include "circle.h"
+#include "tetragon.h"
 #include <string>
 
 class triangle
 {
-public:
+private:
 	point p1, p2, p3;
 
 	void set_triangle(point, point, point); // sets the triangle using 3 points
@@ -35,6 +36,9 @@ public:
 	string line_error_catch(Line(*get_function)(int), int); // incorrect input protection for get_median, bisectrix and altitude
 	string double_error_catch(double(*get_function)(int), int); // incorrect input protection for get_angle
 	void num_to_point(int, point&); // converts 1 to p1, 2 to p2, 3 to p3
+
+	// Friends
+	friend double tetragon::tetragon_area();
 };
 
 // Two triangles
