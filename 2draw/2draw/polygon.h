@@ -9,20 +9,20 @@ using namespace std;
 class Polygon {
 public:
 	vector<Point> vertexes;
-	
+
 	Point operator [] (int idx) return vertexes[idx];
-	
-	
+
+
 	// unimplemented
-	bool is_selfx ();
-	
-	bool is_convex ();
-	
-	Point center_of_mass ();
-	
+	bool is_selfx();
+
+	bool is_convex();
+
+	Point center_of_mass();
+
 	//rotate around center of mass by /angle/ given in radians
-	void rotate (double angle);
-	void rotate (Point center, double angle);
-	
-	double area ();
+	void rotate_polygon(double angle);
+	void rotate_polygon(Point center, double angle);
+
+	double area();
 }
