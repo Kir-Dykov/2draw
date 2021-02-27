@@ -19,3 +19,4 @@ double point_distance(point p1, point p2); //vichislenie rasstoyaniya mezhdy toc
 
 point sym_point_x(point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Ox:			q = sym_point_x(p)
 point sym_point_y(point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Îy:			q = sym_point_y(p)
+point middlepoint(point, point);

@@ -50,3 +50,10 @@ double point_distance(point p1, point p2)
 {
 	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
+
+point middlepoint(point p1, point p2) {
+	point p;
+	p.x = (p1.x + p2.x) / 2;
+	p.y = (p1.y + p2.y) / 2;
+	return p;
+}

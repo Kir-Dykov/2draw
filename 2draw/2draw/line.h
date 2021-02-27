@@ -24,3 +24,5 @@ bool point_on_Line(point, Line);	//opredelenie prinadlezhnosti tochki pryamoi			
 
 double get_twoLines_radangle(Line, Line); //nahozhdenie ugla mezhdu pryamimi v radianah	double a = get_twoLines_radangle
 double get_twoLines_degangle(Line, Line); //nahozhdenie ugla mezhdu pryamimi v gradusah double a = get_twoLines_degangle
+int find_halfplane(Line, point);    //v kakoi poluploskosti ot pryamoi lezhit tochka  int f = find_halfplane(Line L, point p);
+																				//1 - vishe pryamoi, -1 - nizhe pryamoi, 0 - na pryamoi

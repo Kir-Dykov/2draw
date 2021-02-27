@@ -75,3 +75,13 @@ double get_twoLines_degangle(Line L1, Line L2)
 	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));
 	return acos(a) * 180 / PI;
 }
+
+int find_halfplane(Line L, point p) 
+{
+	if (p.x * L.a + p.y * L.b + L.c > 0)
+		return 1;
+	else if (p.x * L.a + p.y * L.b + L.c < 0)
+		return -1;
+	else
+		return 0;
+}
