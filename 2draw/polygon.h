@@ -1,0 +1,32 @@
+#pragma once
+#include <vector>
+#include "point.h"
+
+
+//polygon is defined by series of points
+//adjacent points form an edge of polygon
+//currently edges are allowed to intersect each other
+class Polygon {
+public:
+	std::vector<Point> vertexes;
+	Polygon() {};
+
+	void append(Point);
+
+	Point operator [] (int idx) { return vertexes[idx]; }
+
+	// unimplemented
+	//bool is_selfx();
+
+	bool is_convex();
+
+	Point center_of_mass();
+
+	//rotate around center of mass by /angle/ given in radians
+	void rotate(double angle);
+	void rotate(Point center, double angle);
+
+	double area();
+};
+
+std::ostream& operator<<(std::ostream& os, Polygon& p);
