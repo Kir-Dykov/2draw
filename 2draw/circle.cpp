@@ -11,17 +11,33 @@ void Circle::set_circleby2p(Point _center, Point secondp)
 	center.y = _center.y;
 	radius = point_distance(_center, secondp);
 }
+void Circle::set_radius(double _radius)
+{
+	radius = _radius;
+}
 double Circle::get_radius()
 {
 	return radius;
 }
 double Circle::get_dist_pnttocir(Point secondp, Circle _circle)
 {
-	return point_distance(_circle.center, secondp) - radius;
+	return point_distance(_circle.get_center(), secondp) - radius;
+}
+Point Circle::get_center()
+{
+	return center;
+}
+void Circle::set_centerx(double _centerx)
+{
+	center.x = _centerx;
 }
 double Circle::get_centerx()
 {
 	return center.x;
+}
+void Circle::set_centery(double _centery)
+{
+	center.y = _centery;
 }
 double Circle::get_centery()
 {
@@ -67,12 +83,12 @@ void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles)
 		double h = sqrt(radius * radius - a * a);
 		Point tmppnt;
 		tmppnt.x = center.x + a / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
-		tmppnt.y = center.y + a / circlesdist * (_circles.get_centery - _circlef.get_centery());
+		tmppnt.y = center.y + a / circlesdist * (_circles.get_centery() - _circlef.get_centery());
 		Point frstinterspnt, scndinterspnt;
-		frstinterspnt.x = tmppnt.x + h / circlesdist * (_circles.get_centery - _circlef.get_centery());
-		frstinterspnt.y = tmppnt.y - h / circlesdist * (_circles.get_centerx - _circlef.get_centerx());
-		scndinterspnt.x = tmppnt.x - h / circlesdist * (_circles.get_centery - _circlef.get_centery());
-		scndinterspnt.y = tmppnt.y + h / circlesdist * (_circles.get_centerx - _circlef.get_centerx());
+		frstinterspnt.x = tmppnt.x + h / circlesdist * (_circles.get_centery() - _circlef.get_centery());
+		frstinterspnt.y = tmppnt.y - h / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
+		scndinterspnt.x = tmppnt.x - h / circlesdist * (_circles.get_centery() - _circlef.get_centery());
+		scndinterspnt.y = tmppnt.y + h / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
 		if (frstinterspnt == scndinterspnt)
 			std::cout << "\nIntesection point: " << frstinterspnt;
 		else
