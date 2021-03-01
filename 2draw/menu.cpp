@@ -1,5 +1,6 @@
 #include "tests/hello_world.h"
 #include "tests/polygon_tests.h"
+#include "tests/circle_tests.h"
 
 #include<string>
 #include<conio.h>
@@ -15,7 +16,7 @@
 std::vector<MenuPos> menu_positions = {
 		MenuPos("Hello World Programm", hello_world_main),
 		MenuPos("Polygon testing", polygon_main),
-		
+		MenuPos("Circle testing", circle_main),
 };
 
 std::ostream& operator<<(std::ostream& os, const MenuPos& mp) { os << mp.name; return os; }
