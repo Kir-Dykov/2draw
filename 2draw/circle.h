@@ -14,12 +14,12 @@ public:
 	double get_centerx();
 	void set_centery(double);
 	double get_centery();
-	double get_dist_pnttocir(Point, Circle);	// get the distance from a point to a circle
-	void find_cros_2circlespnts(Circle, Circle);// get the intersection points of two circles
-	void cout_circle(Circle);
-	double get_length();
-	double get_square();
-	double get_diameter();
+	static double get_dist_pnttocir(Point, Circle);	// get the distance from a point to a circle
+	static void find_cros_2circlespnts(Circle, Circle);// get the intersection points of two circles
+	static void cout_circle(Circle);
+	static double get_length(Circle);
+	static double get_square(Circle);
+	static double get_diameter(Circle);
 private:
 	Point center;
 	double radius;

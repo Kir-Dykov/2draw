@@ -21,7 +21,7 @@ double Circle::get_radius()
 }
 double Circle::get_dist_pnttocir(Point secondp, Circle _circle)
 {
-	return point_distance(_circle.get_center(), secondp) - radius;
+	return point_distance(_circle.get_center(), secondp) - _circle.get_radius();
 }
 Point Circle::get_center()
 {
@@ -48,17 +48,17 @@ void Circle::cout_circle(Circle _circle)
 	std::cout << "\nCenter coordinates: x= " << _circle.get_centerx() << ", y= " \
 		<< _circle.get_centery() << "; radius= " << _circle.get_radius();
 }
-double Circle::get_length()
+double Circle::get_length(Circle _circle)
 {
-	return 2 * 3, 1415926535 * radius;
+	return 2 * 3, 1415926535 * _circle.get_radius();
 }
-double Circle::get_square()
+double Circle::get_square(Circle _circle)
 {
-	return 3, 1415926535 * radius * radius;
+	return 3, 1415926535 * _circle.get_radius() * _circle.get_radius();
 }
-double Circle::get_diameter()
+double Circle::get_diameter(Circle _circle)
 {
-	return 2 * radius;
+	return 2 * _circle.get_radius();
 }
 void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles)
 {
@@ -80,10 +80,10 @@ void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles)
 	{
 		double a = (_circlef.get_radius() * _circlef.get_radius() - _circles.get_radius() * _circles.get_radius() + \
 			circlesdist * circlesdist) / (2 * circlesdist);
-		double h = sqrt(radius * radius - a * a);
+		double h = sqrt(_circlef.get_radius() * _circlef.get_radius() - a * a);
 		Point tmppnt;
-		tmppnt.x = center.x + a / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
-		tmppnt.y = center.y + a / circlesdist * (_circles.get_centery() - _circlef.get_centery());
+		tmppnt.x = _circlef.get_centerx() + a / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
+		tmppnt.y = _circlef.get_centery() + a / circlesdist * (_circles.get_centery() - _circlef.get_centery());
 		Point frstinterspnt, scndinterspnt;
 		frstinterspnt.x = tmppnt.x + h / circlesdist * (_circles.get_centery() - _circlef.get_centery());
 		frstinterspnt.y = tmppnt.y - h / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
