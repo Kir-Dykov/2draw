@@ -10,7 +10,6 @@ bool cmp(const Point& p1, const Point& p2) {
 		return p1.y > p2.y;
 }
 void tetragon::set(Point a, Point b, Point c, Point d) {
-
 	vector <Point> p; p.resize(4);
 	p[0] = a; p[1] = b; p[2] = c; p[3] = d;
 	sort(p.begin(), p.end(), cmp);
@@ -54,9 +53,9 @@ void tetragon::set(Point a, Point b, Point c, Point d) {
 
 bool tetragon::convex_tetragon() {
 	if (find_halfplane(d2, p1) > 0 || find_halfplane(d2, p3) < 0 || find_halfplane(d1, p2) < 0 || find_halfplane(d1, p4) > 0)
-		return 0;
-	else
 		return 1;
+	else
+		return 0;
 }
 
 double tetragon::tetragon_perimeter() {

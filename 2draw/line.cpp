@@ -73,7 +73,10 @@ double get_twoLines_radangle(Line L1, Line L2)
 double get_twoLines_degangle(Line L1, Line L2)
 {
 	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));
-	return acos(a) * 180 / PI;
+	a = acos(a) * 180 / PI;
+	while (a > 90)
+		a -= 90;
+	return a;
 }
 
 int find_halfplane(Line L, Point p)
