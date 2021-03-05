@@ -4,7 +4,7 @@
 #include "circle.h"
 #include "tetragon.h"
 #include <string>
-
+class clown;
 class triangle
 {
 public:
