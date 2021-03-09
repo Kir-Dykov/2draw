@@ -31,8 +31,6 @@ public:
 	Line get_altitude(int); // finds the equation for the altitude taken from the chosen triangle vertex
 
 	// Subsidary functions
-	string line_error_catch(Line(*get_function)(int), int); // incorrect input protection for get_median, bisectrix and altitude
-	string double_error_catch(double(*get_function)(int), int); // incorrect input protection for get_angle
 	void num_to_point(int, Point&); // converts 1 to p1, 2 to p2, 3 to p3
 
 private:

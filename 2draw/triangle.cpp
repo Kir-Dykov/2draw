@@ -69,7 +69,7 @@ Circle triangle::get_circumcircle() // formula https://www.wikiwand.com/ru/%D0%9
 	Circle cc;
 	double D = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
 	cc.set_centerx(((p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y) + (p2.x * p2.x + p2.y * p2.y) * (p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / D);
-	cc.set_centery(((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * (p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / D);
+	cc.set_centery(((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * (p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / -D);
 	cc.set_radius(point_distance(cc.get_center(), p1));
 
 	return cc;
@@ -79,8 +79,8 @@ Circle triangle::get_inscribed_circle() // we get the center of inscribed circle
 {
 	Circle ic;
 	Line B1, B2;
-	B1 = get_median(1);
-	B2 = get_median(2);
+	B1 = get_bisectrix(2);
+	B2 = get_bisectrix(3);
 	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
 	ic.set_centerx((-B1.b * ic.get_centery() - B1.c) / B1.a);
 	ic.set_radius(2 * triangle_area() / triangle_perimeter());
@@ -128,8 +128,16 @@ Line triangle::get_bisectrix(int num_point)
 	if (L.b == 0) v.set(0, 1);
 	v = v * m;
 
-	bis.x = a1.x + v.getx();
-	bis.y = a1.y + v.gety();
+	if (a1.x + v.getx() < a1.x && a1.x + v.getx() > a2.x || a1.x + v.getx() > a1.x && a1.x + v.getx() < a2.x)
+	{
+		bis.x = a1.x + v.getx();
+		bis.y = a1.y + v.gety();
+	}
+	else
+	{
+		bis.x = a1.x - v.getx();
+		bis.y = a1.y - v.gety();
+	}
 
 	B.set_line(bis, p);
 
@@ -146,9 +154,9 @@ Line triangle::get_altitude(int num_point)
 	if (p == p2) { a1 = p1; a2 = p3; }
 	if (p == p3) { a1 = p1; a2 = p2; }
 
-	L.set_line(p1, p2);
+	L.set_line(a1, a2);
 	Alt = perp_Line(L);
-	Alt.c = -L.a * p.x - L.b * p.y;
+	Alt.c = -Alt.a * p.x - Alt.b * p.y;
 
 	return Alt;
 }
@@ -162,26 +170,6 @@ bool triangle::operator==(triangle T) {
 					if (point_distance(p[i], p[j]) == point_distance(T.p1, T.p2) && point_distance(p[j], p[k]) == point_distance(T.p1, T.p2) && point_distance(p[i], p[k]) == point_distance(T.p1, T.p2))
 						return true;
 	return false;
-}
-
-string triangle::line_error_catch(Line(*get_function)(int), int num_point)
-{
-	if (num_point != 1 && num_point != 2 && num_point != 3) return "Error: invalid parameter";
-	else
-	{
-		(*get_function)(num_point);
-		return "";
-	}
-}
-
-string triangle::double_error_catch(double(*get_function)(int), int num_point)
-{
-	if (num_point != 1 && num_point != 2 && num_point != 3) return "Error: invalid parameter";
-	else
-	{
-		(*get_function)(num_point);
-		return "";
-	}
 }
 
 void triangle::num_to_point(int num, Point& p)
