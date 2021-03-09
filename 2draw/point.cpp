@@ -1,7 +1,7 @@
 #include "point.h"
 #include <cmath>
 
-void Point::set_point(int _x = 0, int _y = 0)
+void Point::set_point(double _x = 0, double _y = 0)
 {
 	x = _x;
 	y = _y;

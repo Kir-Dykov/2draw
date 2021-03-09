@@ -3,6 +3,7 @@
 #include "line.h"
 #include "circle.h"
 #include "tetragon.h"
+#include "vector.h"
 #include <string>
 
 class triangle

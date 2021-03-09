@@ -4,11 +4,12 @@
 #include "tests/point_tests.h"
 #include "tests/line_tests.h"
 #include "tests/tetragon_tests.h"
+#include "tests/triangle_tests.h"
 
-#include<string>
-#include<conio.h>
-#include<windows.h>
-#include<iostream>
+#include <string>
+#include <conio.h>
+#include <windows.h>
+#include <iostream>
 
 #include <vector>
 #include "menu.hpp"
@@ -23,6 +24,7 @@ std::vector<MenuPos> menu_positions = {
 		MenuPos("Point testing", point_main),
 		MenuPos("Line testing", line_main),
 		MenuPos("Tetragon testing", tetragon_main),
+		MenuPos("Triangle testing", triangle_main),
 };
 
 std::ostream& operator<<(std::ostream& os, const MenuPos& mp) { os << mp.name; return os; }

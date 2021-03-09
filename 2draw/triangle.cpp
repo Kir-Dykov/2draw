@@ -109,20 +109,28 @@ Line triangle::get_bisectrix(int num_point)
 {
 	Line B, L;
 	Point p, a1, a2, bis;
-	double a, b, c;
+	double a, b, c, m;
 
 	num_to_point(num_point, p);
 	if (p == p1) { a1 = p2; a2 = p3; }
 	if (p == p2) { a1 = p1; a2 = p3; }
 	if (p == p3) { a1 = p1; a2 = p2; }
 
-	a = point_distance(p, p1);
-	b = point_distance(p, p2);
-	c = point_distance(p1, p2);
-	L.set_line(p1, p2);
-	double k = sqrt(a*c / (a + b) * (L.a * L.a + L.b * L.b));
-	bis.x = p1.x - k * L.b;
-	bis.y = p1.y + k * L.a;
+	a = point_distance(p, a1);
+	b = point_distance(p, a2);
+	c = point_distance(a1, a2);
+	L.set_line(a1, a2);
+
+	m = a * c / (a + b);
+	Vector v;
+	if (L.a != 0 && L.b != 0) v.set(L.b / sqrt(L.a * L.a + L.b * L.b), -L.a / sqrt(L.a * L.a + L.b * L.b));
+	if (L.a == 0) v.set(1, 0);
+	if (L.b == 0) v.set(0, 1);
+	v = v * m;
+
+	bis.x = a1.x + v.getx();
+	bis.y = a1.y + v.gety();
+
 	B.set_line(bis, p);
 
 	return B;

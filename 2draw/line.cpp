@@ -6,9 +6,9 @@ void Line::set_line(Point _p1, Point _p2)
 {
 	p1 = _p1;
 	p2 = _p2;
-	a = 1.0 / (p2.x - p1.x);
-	b = 1.0 / (p1.y - p2.y);
-	c = p1.y / (p2.y - p1.y) - p1.x / (p2.x - p1.x);
+	a = p1.y - p2.y;
+	b = p2.x - p1.x;
+	c = p1.x * p2.y - p2.x * p1.y;
 }
 
 void Line::set_line(int _a = 1, int _b = 1, int _c = 0)
@@ -55,13 +55,12 @@ bool point_on_Line(Point p, Line L)
 
 void Line::cout_line()
 {
-	cout << a << "*x ";
-	if (b > 0)
-		cout << "+";
-	cout << b << "*y ";
-	if (c > 0)
-		cout << "+";
-	cout << c << endl;
+	cout << a << "x ";
+	if (b > 0) cout << "+ " << b << "y ";
+	else cout << "- " << -b << "y ";
+
+	if (c > 0) cout << "+ " << c << " = 0";
+	else cout << "- " << -c << " = 0";
 }
 
 double get_twoLines_radangle(Line L1, Line L2)

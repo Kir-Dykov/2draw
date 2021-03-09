@@ -8,7 +8,7 @@ class Vector
 public:
 	double x, y;	//koordinati x y
 
-	Vector(double _x, double _y) { x = _x; y = _y; }
+	Vector(double _x = 0, double _y = 0) { x = _x; y = _y; }
 
 	void set(double _x, double _y) { x = _x; y = _y; }
 	double getx() { return x; }

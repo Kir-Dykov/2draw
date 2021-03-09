@@ -8,7 +8,7 @@ class Point
 public:
 	double x, y;	//koordinati x y
 
-	void set_point(int, int);   //zadanie tochki:													p.set_point()
+	void set_point(double, double);   //zadanie tochki:													p.set_point()
 	int find_quarter();    //nahozhdenie chetverti v kotoroy nahoditsa tochka:						p.find_quarter() 
 
 	void cout_point();     //vivod koordinat tochki d konsol:										p.cout_point()
