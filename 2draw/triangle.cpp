@@ -49,19 +49,16 @@ double triangle::triangle_area()
 
 int triangle::triangle_type()
 {
-	double angle[3];
+	double eps = 0.00000000000001;
 	bool is_right = false, is_obtise = false;
 	for (int i = 0; i < 3; i++)
 	{
-		angle[i] = get_triangle_angle(i + 1);
-		if (angle[i] == PI / 2) is_right;
-		if (angle[i] > PI / 2) is_obtise;
+		if (get_triangle_angle(i + 1) > PI / 2.0 - eps && get_triangle_angle(i + 1) < PI / 2.0 + eps) is_right = true;
+		if (get_triangle_angle(i + 1) > PI / 2.0) is_obtise = true;
 	}
-	if (is_right) return 1;
-	else if (is_obtise) return 2;
-	else return 3;
-
-	return 0;
+	if (is_right == true) return 1;
+	if (is_obtise == true) return 2;
+	return 3;
 }
 
 Circle triangle::get_circumcircle() // formula https://www.wikiwand.com/ru/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BE%D0%BA%D1%80%D1%83%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D1%8C

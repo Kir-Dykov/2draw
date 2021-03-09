@@ -10,25 +10,30 @@ int triangle_main()
 	Circle cir;
 
 	Point p1, p2, p3;
-	p1.set_point(-2, 0);
-	p2.set_point(-3, -1);
-	p3.set_point(-2, -10);
+	p1.set_point(0, 0);
+	p2.set_point(3, 0);
+	p3.set_point(0, 4);
 	t.set_triangle(p1, p2, p3);
 
 	cout << "Triangle area: " << t.triangle_area() << endl;
 
+	cout << "Triangle angles: ";
+	for (int i = 1; i <= 3; i++)
+		cout << t.get_triangle_angle(i) << "  ";
+	cout << endl;
+
 	cout << "Triangle bisectrix: ";
-	bis = t.get_bisectrix(2);
+	bis = t.get_bisectrix(1);
 	bis.cout_line();
 	cout << endl;
 
 	cout << "Triangle altitude: ";
-	bis = t.get_altitude(1);
+	bis = t.get_altitude(2);
 	bis.cout_line();
 	cout << endl;
 
 	cout << "Triangle median: ";
-	bis = t.get_median(1);
+	bis = t.get_median(3);
 	bis.cout_line();
 	cout << endl;
 
@@ -41,6 +46,8 @@ int triangle_main()
 	cir = t.get_inscribed_circle();
 	cir.cout_circle(cir);
 	cout << endl;
+
+	cout << "Triangle type: " << t.triangle_type() << endl;
 
 	return 0;
 }
