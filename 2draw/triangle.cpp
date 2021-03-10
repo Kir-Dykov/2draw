@@ -91,9 +91,7 @@ Line triangle::get_median(int num_point)
 	Line M;
 
 	num_to_point(num_point, p);
-	if (p == p1) { a1 = p2; a2 = p3; }
-	if (p == p2) { a1 = p1; a2 = p3; }
-	if (p == p3) { a1 = p1; a2 = p2; }
+	point_reassignment(p, p1, p2, p3, a1, a2);
 
 	m.x = (a1.x + a2.x) * 0.5;
 	m.y = (a1.y + a2.y) * 0.5;
@@ -109,9 +107,7 @@ Line triangle::get_bisectrix(int num_point)
 	double a, b, c, m;
 
 	num_to_point(num_point, p);
-	if (p == p1) { a1 = p2; a2 = p3; }
-	if (p == p2) { a1 = p1; a2 = p3; }
-	if (p == p3) { a1 = p1; a2 = p2; }
+	point_reassignment(p, p1, p2, p3, a1, a2);
 
 	a = point_distance(p, a1);
 	b = point_distance(p, a2);
@@ -147,9 +143,7 @@ Line triangle::get_altitude(int num_point)
 	Point p, a1, a2;
 
 	num_to_point(num_point, p);
-	if (p == p1) { a1 = p2; a2 = p3; }
-	if (p == p2) { a1 = p1; a2 = p3; }
-	if (p == p3) { a1 = p1; a2 = p2; }
+	point_reassignment(p, p1, p2, p3, a1, a2);
 
 	L.set_line(a1, a2);
 	Alt = perp_Line(L);
@@ -174,6 +168,13 @@ void triangle::num_to_point(int num, Point& p)
 	if (num == 1) p = p1;
 	if (num == 2) p = p2;
 	if (num == 3) p = p3;
+}
+
+void triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& a1, Point& a2)
+{
+	if (p == p1) { a1 = p2; a2 = p3; }
+	if (p == p2) { a1 = p1; a2 = p3; }
+	if (p == p3) { a1 = p1; a2 = p2; }
 }
 
 bool are_congruent(triangle t1, triangle t2)
