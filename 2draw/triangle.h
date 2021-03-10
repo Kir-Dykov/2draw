@@ -34,13 +34,12 @@ public:
 	void num_to_point(int, Point&); // converts 1 to p1, 2 to p2, 3 to p3
 	void point_reassignment(Point, Point, Point, Point, Point&, Point&); // if we have received a main point p, this func changes a1 and a2 to other points of a triangle
 
+	// Two triangles
+	bool are_congruent(triangle); // checks if two triangles are congruent (=)
+	bool are_similar(triangle); // checks if two triangles are similar (~)
 private:
 	Point p1, p2, p3;
 	
 	// Friends
 	friend double tetragon::tetragon_area();
 };
-
-// Two triangles
-bool are_congruent(triangle, triangle); // checks if two triangles are congruent (=)
-bool are_similar(triangle, triangle); // checks if two triangles are similar (~)

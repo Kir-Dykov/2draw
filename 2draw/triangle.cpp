@@ -153,12 +153,12 @@ Line triangle::get_altitude(int num_point)
 }
 
 bool triangle::operator==(triangle T) {
-	Point p[3]; p[0] = p1; p[1] = p2; p[2] = p3;
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-			for (int k = 0; k < 3; k++)
+	triangle t; t.set_triangle(p1, p2, p3);
+	for (int i = 1; i <= 3; i++)
+		for (int j = 1; j <= 3; j++)
+			for (int k = 1; k <= 3; k++)
 				if (i != j && j != k && i != k)
-					if (point_distance(p[i], p[j]) == point_distance(T.p1, T.p2) && point_distance(p[j], p[k]) == point_distance(T.p1, T.p2) && point_distance(p[i], p[k]) == point_distance(T.p1, T.p2))
+					if (t.get_triangle_side(1, 2) == T.get_triangle_side(i, j) && t.get_triangle_side(2, 3) == T.get_triangle_side(j, k) && t.get_triangle_side(1, 3) == T.get_triangle_side(i, k))
 						return true;
 	return false;
 }
@@ -177,15 +177,21 @@ void triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& 
 	if (p == p3) { a1 = p1; a2 = p2; }
 }
 
-bool are_congruent(triangle t1, triangle t2)
+bool triangle::are_congruent(triangle t)
 {
-	if (t1 == t2) return true;
-	else return false;
+	triangle s;
+	s.set_triangle(p1, p2, p3);
+	return (s == t);
 }
 
-bool are_similar(triangle t1, triangle t2)
+bool triangle::are_similar(triangle t)
 {
+	triangle s; s.set_triangle(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
-		if (t1.get_triangle_angle(i) != t2.get_triangle_angle(i)) return false;
-	return true;
+		for (int j = 1; j <= 3; j++)
+			for (int k = 1; k <= 3; k++)
+				if (i != j && j != k && i != k)
+					if (s.get_triangle_angle(1) == t.get_triangle_angle(i) && s.get_triangle_angle(2) == t.get_triangle_angle(j) && s.get_triangle_angle(3) == t.get_triangle_angle(k))
+						return true;
+	return false;
 }

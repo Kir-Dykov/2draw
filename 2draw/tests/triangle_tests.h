@@ -5,8 +5,8 @@ using namespace std;
 
 int triangle_main() 
 {
-	triangle t;
-	Line bis;
+	triangle t, s;
+	Line bis, alt, med;
 	Circle cir;
 
 	Point p1, p2, p3;
@@ -28,13 +28,13 @@ int triangle_main()
 	cout << endl;
 
 	cout << "Triangle altitude: ";
-	bis = t.get_altitude(2);
-	bis.cout_line();
+	alt = t.get_altitude(2);
+	alt.cout_line();
 	cout << endl;
 
 	cout << "Triangle median: ";
-	bis = t.get_median(3);
-	bis.cout_line();
+	med = t.get_median(3);
+	med.cout_line();
 	cout << endl;
 
 	cout << "Tetragon circumcircle: ";
@@ -49,5 +49,13 @@ int triangle_main()
 
 	cout << "Triangle type: " << t.triangle_type() << endl;
 
+	Point r1, r2, r3;
+	r1.set_point(0, 6.5);
+	r2.set_point(0, 5);
+	r3.set_point(-2, 5);
+	s.set_triangle(r1, r2, r3);
+
+	cout << "Is t congruent to s: " << t.are_congruent(s) << endl;
+	cout << "Is t similar to s: " << t.are_similar(s) << endl;
 	return 0;
 }
