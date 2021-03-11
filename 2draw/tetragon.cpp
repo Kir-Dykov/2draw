@@ -5,9 +5,9 @@
 #include <algorithm>
 bool cmp(const Point& p1, const Point& p2) {
 	if (p1.x != p2.x)
-		return p1.x > p2.x;
+		return p1.x < p2.x;
 	else
-		return p1.y > p2.y;
+		return p1.y < p2.y;
 }
 void tetragon::set(Point a, Point b, Point c, Point d) {
 	vector <Point> p; p.resize(4);

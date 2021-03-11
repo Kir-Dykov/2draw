@@ -55,12 +55,26 @@ bool point_on_Line(Point p, Line L)
 
 void Line::cout_line()
 {
-	cout << a << "x ";
-	if (b > 0) cout << "+ " << b << "y ";
-	else cout << "- " << -b << "y ";
-
-	if (c > 0) cout << "+ " << c << " = 0";
-	else cout << "- " << -c << " = 0";
+	if (a == 1)
+		cout << "x ";
+	else if (a == -1)
+		cout << "-x ";
+	else if (a != 0)
+		cout << a << "x ";
+	if (b == 1)
+		cout << "+y ";
+	else if (b == -1)
+		cout << "-y ";
+	else if (b != 0)
+		if (b > 0)
+			cout << "+ " << b << "y ";
+		else
+			cout << b << "y ";
+	if (c > 0)
+		cout << "+" << c << " ";
+	else if (c < 0)
+		cout << c << " ";
+	cout << "= 0";
 }
 
 double get_twoLines_radangle(Line L1, Line L2)
@@ -71,15 +85,29 @@ double get_twoLines_radangle(Line L1, Line L2)
 
 double get_twoLines_degangle(Line L1, Line L2)
 {
-	return get_twoLines_radangle(L1, L2) * 180.0 / PI;
+	if (get_twoLines_radangle(L1, L2) * 180.0 / PI > 90)
+		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
+	else
+		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
 }
 
 int find_halfplane(Line L, Point p)
 {
-	if (p.x * L.a + p.y * L.b + L.c > 0)
-		return 1;
-	else if (p.x * L.a + p.y * L.b + L.c < 0)
-		return -1;
+	if (L.a > 0 || L.a == 0 && L.b > 0) {
+		if (p.x * L.a + p.y * L.b + L.c > 0)
+			return 1;
+		else if (p.x * L.a + p.y * L.b + L.c < 0)
+			return -1;
+		else
+			return 0;
+	}
 	else
-		return 0;
+	{
+		if (p.x * L.a + p.y * L.b + L.c < 0)
+			return 1;
+		else if (p.x * L.a + p.y * L.b + L.c > 0)
+			return -1;
+		else
+			return 0;
+	}
 }
