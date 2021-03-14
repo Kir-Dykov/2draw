@@ -15,5 +15,6 @@ int point_main() {
 	cout << "A, B's middle point is - ";
 	m.cout_point();
 	cout << endl;
+
 	return 0;
 }

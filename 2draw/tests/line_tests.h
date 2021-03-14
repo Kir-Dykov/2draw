@@ -28,5 +28,7 @@ int line_main() {
 	p3.set_point(-1.4, 2.1212323);
 	cout << "Is point lower or higher than a-line: " << find_halfplane(a, p3) << endl;
 	cout << "Is point lower or higher than b-line: " << find_halfplane(b, p3) << endl;
+
+	cout << endl << "Does p1 belong to a: " << a.point_line_belonging(p1) << endl;
 	return 0;
 }

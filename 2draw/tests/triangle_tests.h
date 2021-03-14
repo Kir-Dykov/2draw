@@ -5,14 +5,14 @@ using namespace std;
 
 int triangle_main() 
 {
-	triangle t, s;
-	Line bis, alt, med;
+	Triangle t, s;
+	Line bis, alt, med, mid, perp;
 	Circle cir;
 
 	Point p1, p2, p3;
-	p1.set_point(0, 0);
-	p2.set_point(3, 0);
-	p3.set_point(0, 4);
+	p1.set_point(0, 2);
+	p2.set_point(2, 0);
+	p3.set_point(6, 6);
 	t.set_triangle(p1, p2, p3);
 
 	cout << "Triangle area: " << t.triangle_area() << endl;
@@ -37,6 +37,16 @@ int triangle_main()
 	med.cout_line();
 	cout << endl;
 
+	cout << "Triangle midline: ";
+	mid = t.get_midline(3);
+	mid.cout_line();
+	cout << endl;
+
+	cout << "Triangle perp. bisector: ";
+	perp = t.get_perp_bis(3);
+	perp.cout_line();
+	cout << endl;
+
 	cout << "Tetragon circumcircle: ";
 	cir = t.get_circumcircle();
 	cir.cout_circle(cir);
@@ -57,5 +67,7 @@ int triangle_main()
 
 	cout << "Is t congruent to s: " << t.are_congruent(s) << endl;
 	cout << "Is t similar to s: " << t.are_similar(s) << endl;
+
+	cout << endl << "Does r1 belond to t: " << t.point_triangle_belonging(r1) << endl;
 	return 0;
 }

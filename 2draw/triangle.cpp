@@ -152,6 +152,33 @@ Line Triangle::get_altitude(int num_point)
 	return Alt;
 }
 
+Line Triangle::get_midline(int num_point)
+{
+	Line Mid;
+	Point p, a1, a2;
+
+	num_to_point(num_point, p);
+	point_reassignment(p, p1, p2, p3, a1, a2);
+
+	Mid.set_line(Point((p.x + a1.x) / 2.0, (p.y + a1.y) / 2.0), Point((p.x + a2.x) / 2.0, (p.y + a2.y) / 2.0));
+	return Mid;
+}
+
+Line Triangle::get_perp_bis(int num_point)
+{
+	Line Perp, L;
+	Point p, a1, a2;
+
+	num_to_point(num_point, p);
+	point_reassignment(p, p1, p2, p3, a1, a2);
+
+	L.set_line(a1, a2);
+	Perp = perp_Line(L);
+	Perp.c = -Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0;
+
+	return Perp;
+}
+
 bool Triangle::point_triangle_belonging(Point p)
 {
 	Triangle T; T.set_triangle(p1, p2, p3);

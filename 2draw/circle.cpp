@@ -45,8 +45,8 @@ double Circle::get_centery()
 }
 void Circle::cout_circle(Circle _circle)
 {
-	std::cout << "\nCenter coordinates: x= " << _circle.get_centerx() << ", y= " \
-		<< _circle.get_centery() << "; radius= " << _circle.get_radius();
+	std::cout << "\nCenter coordinates: x = " << _circle.get_centerx() << ", y = " \
+		<< _circle.get_centery() << "; radius = " << _circle.get_radius();
 }
 double Circle::get_length(Circle _circle)
 {

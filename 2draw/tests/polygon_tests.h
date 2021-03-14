@@ -5,7 +5,7 @@ using namespace std;
 
 int polygon_main() {
 
-	Polygon p;
+	/* Polygon p;
 
 	p.append(Point(0, 0));
 	p.append(Point(1, 0));
@@ -21,7 +21,7 @@ int polygon_main() {
 
 	cout << "Points after rotation:\n" << p << endl;
 
-	cout << "Are of rotated square:\n" << p.area() << endl;
+	cout << "Are of rotated square:\n" << p.area() << endl; */
 
 	return 0;
 }

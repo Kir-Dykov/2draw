@@ -58,22 +58,22 @@ void Line::cout_line()
 	if (a == 1)
 		cout << "x ";
 	else if (a == -1)
-		cout << "-x ";
+		cout << "- x ";
 	else if (a != 0)
 		cout << a << "x ";
 	if (b == 1)
-		cout << "+y ";
+		cout << "+ y ";
 	else if (b == -1)
-		cout << "-y ";
+		cout << "- y ";
 	else if (b != 0)
 		if (b > 0)
 			cout << "+ " << b << "y ";
 		else
-			cout << b << "y ";
+			cout << "- " << -b << "y ";
 	if (c > 0)
-		cout << "+" << c << " ";
+		cout << "+ " << c << " ";
 	else if (c < 0)
-		cout << c << " ";
+		cout << "- " << -c << " ";
 	cout << "= 0";
 }
 

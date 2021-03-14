@@ -25,10 +25,12 @@ public:
 	Circle get_circumcircle();
 	Circle get_inscribed_circle();
 
-	// Median, bisectix and altitude
+	// Median, bisectix, altitude, midpoint, perp. bisector
 	Line get_median(int); // finds the equation for the median taken from the chosen Triangle vertex
 	Line get_bisectrix(int); // finds the equation for the bisectrix taken from the chosen Triangle vertex
 	Line get_altitude(int); // finds the equation for the altitude taken from the chosen Triangle vertex
+	Line get_midline(int); // finds the equation for the midline taken for the side laying opposite the chosen Triangle vertex
+	Line get_perp_bis(int); // finds the equation for the perpendicular bisector taken for the side laying opposite the chosen Triangle vertex
 
 	// Subsidary functions
 	void num_to_point(int, Point&); // converts 1 to p1, 2 to p2, 3 to p3
