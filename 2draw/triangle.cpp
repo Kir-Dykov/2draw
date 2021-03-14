@@ -3,14 +3,14 @@
 
 const double PI = 3.14159265358979;
 
-void triangle::set_triangle(Point _p1, Point _p2, Point _p3)
+void Triangle::set_triangle(Point _p1, Point _p2, Point _p3)
 {
 	p1 = _p1;
 	p2 = _p2;
 	p3 = _p3;
 }
 
-double triangle::get_triangle_angle(int num_point)
+double Triangle::get_triangle_angle(int num_point)
 {
 	Line A, B;
 	Point p;
@@ -25,7 +25,7 @@ double triangle::get_triangle_angle(int num_point)
 	return angle;
 }
 
-double triangle::get_triangle_side(int num_point1, int num_point2)
+double Triangle::get_triangle_side(int num_point1, int num_point2)
 {
 	Point p1, p2;
 	num_to_point(num_point1, p1);
@@ -33,12 +33,12 @@ double triangle::get_triangle_side(int num_point1, int num_point2)
 	return point_distance(p1, p2);
 }
 
-double triangle::triangle_perimeter()
+double Triangle::triangle_perimeter()
 {
 	return point_distance(p1, p2) + point_distance(p1, p3) + point_distance(p2, p3);
 }
 
-double triangle::triangle_area()
+double Triangle::triangle_area()
 {
 	double p = triangle_perimeter() / 2;
 	double a = point_distance(p1, p2);
@@ -47,7 +47,7 @@ double triangle::triangle_area()
 	return sqrt(p * (p - a) * (p - b) * (p - c));
 }
 
-int triangle::triangle_type()
+int Triangle::triangle_type()
 {
 	double eps = 0.00000000000001;
 	bool is_right = false, is_obtise = false;
@@ -61,7 +61,7 @@ int triangle::triangle_type()
 	return 3;
 }
 
-Circle triangle::get_circumcircle() // formula https://www.wikiwand.com/ru/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BE%D0%BA%D1%80%D1%83%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D1%8C
+Circle Triangle::get_circumcircle() // formula https://www.wikiwand.com/ru/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BE%D0%BA%D1%80%D1%83%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D1%8C
 {
 	Circle cc;
 	double D = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
@@ -72,7 +72,7 @@ Circle triangle::get_circumcircle() // formula https://www.wikiwand.com/ru/%D0%9
 	return cc;
 }
 
-Circle triangle::get_inscribed_circle() // we get the center of inscribed circle by solving the system of linear equations (two bisectrixes intersection) and r = S/p
+Circle Triangle::get_inscribed_circle() // we get the center of inscribed circle by solving the system of linear equations (two bisectrixes intersection) and r = S/p
 {
 	Circle ic;
 	Line B1, B2;
@@ -85,7 +85,7 @@ Circle triangle::get_inscribed_circle() // we get the center of inscribed circle
 	return ic;
 }
 
-Line triangle::get_median(int num_point)
+Line Triangle::get_median(int num_point)
 {
 	Point p, a1, a2, m;
 	Line M;
@@ -100,7 +100,7 @@ Line triangle::get_median(int num_point)
 	return M;
 }
 
-Line triangle::get_bisectrix(int num_point)
+Line Triangle::get_bisectrix(int num_point)
 {
 	Line B, L;
 	Point p, a1, a2, bis;
@@ -137,7 +137,7 @@ Line triangle::get_bisectrix(int num_point)
 	return B;
 }
 
-Line triangle::get_altitude(int num_point)
+Line Triangle::get_altitude(int num_point)
 {
 	Line Alt, L;
 	Point p, a1, a2;
@@ -152,8 +152,16 @@ Line triangle::get_altitude(int num_point)
 	return Alt;
 }
 
-bool triangle::operator==(triangle T) {
-	triangle t; t.set_triangle(p1, p2, p3);
+bool Triangle::point_triangle_belonging(Point p)
+{
+	Triangle T; T.set_triangle(p1, p2, p3);
+	Triangle T1, T2, T3;
+	T1.set_triangle(p1, p2, p);	T2.set_triangle(p2, p3, p); T3.set_triangle(p1, p3, p);
+	return (T1.triangle_area() + T2.triangle_area() + T3.triangle_area() == T.triangle_area());
+}
+
+bool Triangle::operator==(Triangle T) {
+	Triangle t; t.set_triangle(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)
@@ -163,30 +171,30 @@ bool triangle::operator==(triangle T) {
 	return false;
 }
 
-void triangle::num_to_point(int num, Point& p)
+void Triangle::num_to_point(int num, Point& p)
 {
 	if (num == 1) p = p1;
 	if (num == 2) p = p2;
 	if (num == 3) p = p3;
 }
 
-void triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& a1, Point& a2)
+void Triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& a1, Point& a2)
 {
 	if (p == p1) { a1 = p2; a2 = p3; }
 	if (p == p2) { a1 = p1; a2 = p3; }
 	if (p == p3) { a1 = p1; a2 = p2; }
 }
 
-bool triangle::are_congruent(triangle t)
+bool Triangle::are_congruent(Triangle t)
 {
-	triangle s;
+	Triangle s;
 	s.set_triangle(p1, p2, p3);
 	return (s == t);
 }
 
-bool triangle::are_similar(triangle t)
+bool Triangle::are_similar(Triangle t)
 {
-	triangle s; s.set_triangle(p1, p2, p3);
+	Triangle s; s.set_triangle(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)

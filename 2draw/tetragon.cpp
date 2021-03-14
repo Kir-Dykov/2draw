@@ -9,7 +9,7 @@ bool cmp(const Point& p1, const Point& p2) {
 	else
 		return p1.y < p2.y;
 }
-void tetragon::set(Point a, Point b, Point c, Point d) {
+void Tetragon::set(Point a, Point b, Point c, Point d) {
 	vector <Point> p; p.resize(4);
 	p[0] = a; p[1] = b; p[2] = c; p[3] = d;
 	sort(p.begin(), p.end(), cmp);
@@ -44,37 +44,45 @@ void tetragon::set(Point a, Point b, Point c, Point d) {
 	d1.set_line(p1, p3);
 	d2.set_line(p2, p4);
 	if (l1 == l2 || l2 == l3 || l3 == l4 || l1 == l4)
-		cout << "Such tetragon doesn't exist" << endl;
+		cout << "Such Tetragon doesn't exist" << endl;
 	side1 = point_distance(p1, p2);
 	side2 = point_distance(p2, p3);
 	side3 = point_distance(p3, p4);
 	side4 = point_distance(p1, p4);
 }
 
-bool tetragon::convex_tetragon() {
+bool Tetragon::convex_tetragon() {
 	if (find_halfplane(d2, p1) > 0 || find_halfplane(d2, p3) < 0 || find_halfplane(d1, p2) < 0 || find_halfplane(d1, p4) > 0)
 		return 1;
 	else
 		return 0;
 }
 
-double tetragon::tetragon_perimeter() {
+double Tetragon::tetragon_perimeter() {
 	return side1 + side2 + side3 + side4;
 }
 
-double tetragon::tetragon_area() {
-	triangle t1, t2;
+double Tetragon::tetragon_area() {
+	Triangle t1, t2;
 	t1.set_triangle(p1, p2, p3);
 	t2.set_triangle(p1, p4, p3);
 	return t1.triangle_area() + t2.triangle_area();
 }
 
-tetragon tetragon::create_middletetragon() {
-	tetragon t;
+Tetragon Tetragon::create_middletetragon() {
+	Tetragon t;
 	t.p1 = middlepoint(p1, p2);
 	t.p2 = middlepoint(p2, p3);
 	t.p3 = middlepoint(p3, p4);
 	t.p4 = middlepoint(p1, p4);
 	t.set(t.p1, t.p2, t.p3, t.p4);
 	return t;
+}
+
+bool Tetragon::point_tetragon_belonging(Point p)
+{
+	Tetragon T; T.set(p1, p2, p3, p4);
+	Triangle T1, T2, T3, T4;
+	T1.set_triangle(p1, p2, p);	T2.set_triangle(p2, p3, p); T3.set_triangle(p3, p4, p); T4.set_triangle(p1, p4, p);
+	return (T1.triangle_area() + T2.triangle_area() + T3.triangle_area() + T4.triangle_area() == T.tetragon_area());
 }

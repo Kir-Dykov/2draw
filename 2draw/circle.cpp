@@ -96,3 +96,8 @@ void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles)
 			<< " Second intersection point: " << scndinterspnt;
 	}
 }
+
+bool Circle::point_circle_belonging(Point p)
+{
+	return (point_distance(center, p) == radius);
+}

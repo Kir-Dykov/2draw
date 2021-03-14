@@ -15,6 +15,8 @@ public:
 
 	void cout_line();					//vivod uravneniya pryamoi								L.cout_Line()
 
+	bool point_line_belonging(Point); // returns 1 if point belongs to line and 0 otherwise
+
 	bool operator==(Line);				//operator sovpadenia dvuh pryamih						L1 == L2
 };
 

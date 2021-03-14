@@ -119,3 +119,17 @@ std::ostream& operator<<(std::ostream& os, Polygon& p) {
 	}
 	return os;
 }
+
+bool Polygon::point_polygon_belonging(Point p)
+{
+	Polygon A;
+	for (unsigned int i = 0; i < vertexes.size(); i++) A.vertexes[i] = vertexes[i];
+
+	vector<Triangle> T(vertexes.size());
+	for (unsigned int i = 0; i < vertexes.size() - 1; i++) T[i].set_triangle(vertexes[i + 1], vertexes[i + 2], p);
+	T[vertexes.size() - 1].set_triangle(vertexes[1], vertexes[vertexes.size() - 1], p);
+	double area = 0;
+	for (unsigned int i = 0; i < vertexes.size(); i++) area += T[i].triangle_area();
+
+	return (area == A.area());
+}

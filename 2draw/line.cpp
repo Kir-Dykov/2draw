@@ -77,6 +77,11 @@ void Line::cout_line()
 	cout << "= 0";
 }
 
+bool Line::point_line_belonging(Point p)
+{
+	return (p.x * a + p.y * b + c == 0);
+}
+
 double get_twoLines_radangle(Line L1, Line L2)
 {
 	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));

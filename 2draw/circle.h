@@ -20,6 +20,8 @@ public:
 	static double get_length(Circle);
 	static double get_square(Circle);
 	static double get_diameter(Circle);
+
+	bool point_circle_belonging(Point); // returns 1 if point belongs to circle and 0 otherwise
 private:
 	Point center;
 	double radius;
