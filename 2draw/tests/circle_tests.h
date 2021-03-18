@@ -12,6 +12,6 @@ int circle_main()
 	std::cout << "\nDistance point to circle: " << Circle::get_dist_pnttocir(Point(10, 9), first);
 	Circle::find_cros_2circlespnts(first, second);
 
-	cout << endl << "Does (-1, 3) belong to second: " << second.point_circle_belonging(Point(-1, 3)) << endl;
+	std::cout << endl << "Does (-1, 3) belong to second: " << second.point_circle_belonging(Point(-1, 3)) << endl;
 	return 0;
 }

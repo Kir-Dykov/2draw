@@ -9,39 +9,56 @@
 class Triangle
 {
 public:
-	void set_triangle(Point, Point, Point); // sets the Triangle using 3 points
+	// sets the Triangle using 3 points
+	void set_triangle(Point, Point, Point); 
 
 	// Angles and sides
-	double get_triangle_angle(int); // finds one of the Triangle's angles
-	double get_triangle_side(int, int); // finds one of the sides using the points that define it
+	// finds one of the Triangle's angles
+	double get_triangle_angle(int);
+	// finds one of the sides using the points that define it
+	double get_triangle_side(int, int);
 
 	bool operator==(Triangle);
+
 	// Some triangular properties
-	double triangle_perimeter(); // finds the perimeter of the Triangle
-	double triangle_area(); // finds the area of the Triangle
-	int triangle_type(); // finds the type of the Triangle (right - 1, obtise - 2, acute - 3)
+	// finds the perimeter of the Triangle
+	double triangle_perimeter() const;
+	// finds the area of the Triangle
+	double triangle_area();
+	// finds the type of the Triangle (right - 1, obtise - 2, acute - 3)
+	int triangle_type();
 
 	// Triangle and a circle
 	Circle get_circumcircle();
 	Circle get_inscribed_circle();
 
 	// Median, bisectix, altitude, midpoint, perp. bisector
-	Line get_median(int); // finds the equation for the median taken from the chosen Triangle vertex
-	Line get_bisectrix(int); // finds the equation for the bisectrix taken from the chosen Triangle vertex
-	Line get_altitude(int); // finds the equation for the altitude taken from the chosen Triangle vertex
-	Line get_midline(int); // finds the equation for the midline taken for the side laying opposite the chosen Triangle vertex
-	Line get_perp_bis(int); // finds the equation for the perpendicular bisector taken for the side laying opposite the chosen Triangle vertex
+	// finds the equation for the median taken from the chosen Triangle vertex
+	Line get_median(int);
+	// finds the equation for the bisectrix taken from the chosen Triangle vertex
+	Line get_bisectrix(int);
+	// finds the equation for the altitude taken from the chosen Triangle vertex
+	Line get_altitude(int);
+	// finds the equation for the midline taken for the side laying opposite the chosen Triangle vertex
+	Line get_midline(int);
+	// finds the equation for the perpendicular bisector taken for the side laying opposite the chosen Triangle vertex
+	Line get_perp_bis(int);
 
 	// Subsidary functions
-	void num_to_point(int, Point&); // converts 1 to p1, 2 to p2, 3 to p3
-	void point_reassignment(Point, Point, Point, Point, Point&, Point&); // if we have received a main point p, this func changes a1 and a2 to other points of a Triangle
+	// converts 1 to p1, 2 to p2, 3 to p3
+	void num_to_point(int, Point&);
+	// if we have received a main point p, this func changes a1 and a2 to other points of a Triangle
+	void point_reassignment(Point, Point, Point, Point, Point&, Point&);
 
 	// Two triangles
-	bool are_congruent(Triangle); // checks if two triangles are congruent (=)
-	bool are_similar(Triangle); // checks if two triangles are similar (~)
+	// checks if two triangles are congruent (=)
+	bool are_congruent(Triangle);
+	// checks if two triangles are similar (~)
+	bool are_similar(Triangle);
 
 	// Triangle and a point
-	bool point_triangle_belonging(Point); // returns 1 if point belongs to triangle and 0 otherwise
+	// returns 1 if point belongs to triangle and 0 otherwise
+	bool point_triangle_belonging(Point);
 
 private:
 	Point p1, p2, p3;

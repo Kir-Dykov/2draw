@@ -16,7 +16,7 @@ void Circle::set_radius(double _radius) {
 	radius = _radius;
 }
 
-double Circle::get_radius() {
+double Circle::get_radius() const {
 	return radius;
 }
 
@@ -24,7 +24,7 @@ double Circle::get_dist_pnttocir(Point secondp, Circle _circle) {
 	return point_distance(_circle.get_center(), secondp) - _circle.get_radius();
 }
 
-Point Circle::get_center() {
+Point Circle::get_center() const {
 	return center;
 }
 
@@ -32,7 +32,7 @@ void Circle::set_centerx(double _centerx) {
 	center.x = _centerx;
 }
 
-double Circle::get_centerx() {
+double Circle::get_centerx() const {
 	return center.x;
 }
 
@@ -40,7 +40,7 @@ void Circle::set_centery(double _centery) {
 	center.y = _centery;
 }
 
-double Circle::get_centery() {
+double Circle::get_centery() const{
 	return center.y;
 }
 
@@ -50,11 +50,11 @@ void Circle::cout_circle(Circle _circle) {
 }
 
 double Circle::get_length(Circle _circle) {
-	return 2 * 3, 1415926535 * _circle.get_radius();
+	return 2 * 3,1415926535 * _circle.get_radius();
 }
 
 double Circle::get_square(Circle _circle) {
-	return 3, 1415926535 * _circle.get_radius() * _circle.get_radius();
+	return 3,1415926535 * _circle.get_radius() * _circle.get_radius();
 }
 
 double Circle::get_diameter(Circle _circle) {
@@ -64,16 +64,13 @@ double Circle::get_diameter(Circle _circle) {
 void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles) {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
 	double circlesdist = point_distance(_circlef.center, _circles.center);
-	if (circlesdist == 0 && _circlef.get_radius() == _circles.get_radius()) // coincide
-	{
+	if (circlesdist == 0 && _circlef.get_radius() == _circles.get_radius()) {		// coincide
 		std::cout << "\nThe circles coincide";
 	}
-	else if (circlesdist > _circlef.get_radius() + _circles.get_radius())   // don't intersect
-	{
+	else if (circlesdist > _circlef.get_radius() + _circles.get_radius()) {			// don't intersect
 		std::cout << "\nThe circles don't intersect";
 	}
-	else if (circlesdist < abs(_circlef.get_radius() - _circles.get_radius()))	// one to the other
-	{
+	else if (circlesdist < abs(_circlef.get_radius() - _circles.get_radius())) {	// one to the other
 		std::cout << "\nOne circle is in another";
 	}
 	else // touch or intersect at two points
@@ -97,6 +94,6 @@ void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles) {
 	}
 }
 
-bool Circle::point_circle_belonging(Point p) {
+bool Circle::point_circle_belonging(Point p) const {
 	return (point_distance(center, p) == radius);
 }
