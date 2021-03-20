@@ -13,9 +13,11 @@ int triangle_main()
 	p1.set_point(0, 2);
 	p2.set_point(2, 0);
 	p3.set_point(6, 6);
-	t.set_triangle(p1, p2, p3);
+	t.set(p1, p2, p3);
 
-	cout << "Triangle area: " << t.triangle_area() << endl;
+	cout << t << endl;
+
+	cout << "Triangle area: " << t.area() << endl;
 
 	cout << "Triangle angles: ";
 	for (int i = 1; i <= 3; i++)
@@ -63,11 +65,11 @@ int triangle_main()
 	r1.set_point(0, 6.5);
 	r2.set_point(0, 5);
 	r3.set_point(-2, 5);
-	s.set_triangle(r1, r2, r3);
+	s.set(r1, r2, r3);
 
 	cout << "Is t congruent to s: " << t.are_congruent(s) << endl;
 	cout << "Is t similar to s: " << t.are_similar(s) << endl;
 
-	cout << endl << "Does r1 belond to t: " << t.point_triangle_belonging(r1) << endl;
+	cout << endl << "Does r1 belong to t: " << t.is_in(r1) << endl;
 	return 0;
 }

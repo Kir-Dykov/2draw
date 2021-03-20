@@ -2,9 +2,6 @@
 #include "polygon.h"
 #include "vector.h"
 
-
-void Polygon::append(Point new_point) { vertexes.push_back(new_point); }
-
 bool Polygon::is_convex() {
 	//if (is_selfx())
 	//	return 0;
@@ -33,7 +30,7 @@ bool Polygon::is_convex() {
 
 Point Polygon::center_of_mass() {
 	// the formula is taken from https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
-	// TESTING REQUIRED!!!!
+
 	double A = 0;
 	for (unsigned int i = 0; i < vertexes.size() - 1; i += 1) {
 		A += vertexes[i].x * vertexes[i + 1].y - vertexes[i + 1].x * vertexes[i].y;
@@ -59,6 +56,7 @@ Point Polygon::center_of_mass() {
 }
 
 void Polygon::rotate(double angle) {
+	//just applying rotation matrix to all points
 	Point center = center_of_mass();
 
 	double cos_ = cos(angle);
@@ -81,6 +79,7 @@ void Polygon::rotate(double angle) {
 }
 
 void Polygon::rotate(const Point center, double angle) {
+	//just applying rotation matrix to all points
 
 	double cos_ = cos(angle);
 	double sin_ = sin(angle);
@@ -102,7 +101,7 @@ void Polygon::rotate(const Point center, double angle) {
 }
 
 double Polygon::area() {
-	// Formula: https://en.wikipedia.org/wiki/Shoelace_formula
+	// Formula is taken from https://en.wikipedia.org/wiki/Shoelace_formula
 	double A = 0;
 	for (unsigned int i = 0; i < vertexes.size() - 1; i += 1)
 		A += vertexes[i].x * vertexes[i + 1].y - vertexes[i + 1].x * vertexes[i].y;
@@ -120,16 +119,30 @@ std::ostream& operator<<(std::ostream& os, Polygon& p) {
 	return os;
 }
 
-bool Polygon::point_polygon_belonging(Point p)
+bool Polygon::is_in(Point p)
 {
-	Polygon A;
-	for (unsigned int i = 0; i < vertexes.size(); i++) A.vertexes[i] = vertexes[i];
+	/*vector<Triangle> T(vertexes.size());
+	for (unsigned int i = 0; i < vertexes.size() - 1; i++) 
+		T[i].set(vertexes[i + 1], vertexes[i + 2], p);
 
-	vector<Triangle> T(vertexes.size());
-	for (unsigned int i = 0; i < vertexes.size() - 1; i++) T[i].set_triangle(vertexes[i + 1], vertexes[i + 2], p);
-	T[vertexes.size() - 1].set_triangle(vertexes[1], vertexes[vertexes.size() - 1], p);
+	T[vertexes.size() - 1].set(vertexes[1], vertexes[vertexes.size() - 1], p);
+
 	double area = 0;
-	for (unsigned int i = 0; i < vertexes.size(); i++) area += T[i].triangle_area();
 
-	return (area == A.area());
+	for (unsigned int i = 0; i < vertexes.size(); i++) 
+		area += T[i].area();
+
+	return (area == this->area()); */ 
+
+	double A = 0;
+	for (unsigned int i = 0; i < vertexes.size() - 1; i++) {
+		A += Triangle(vertexes[i], vertexes[i + 1U], p).area();
+		cout << Triangle(vertexes[i], vertexes[i + 1U], p).area() << endl;
+	}
+		
+
+	A += Triangle(vertexes[0], vertexes[vertexes.size() - 1], p).area();
+	cout << Triangle(vertexes[0], vertexes[vertexes.size() - 1], p).area() << endl;
+	cout << " " << A << " ";
+	return (A == area());
 }

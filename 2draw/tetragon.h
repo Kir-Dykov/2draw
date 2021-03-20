@@ -12,5 +12,5 @@ public:
 	double tetragon_perimeter();		//vichislenie perimetra			 double p = t.tetragon_perimeter()
 	double tetragon_area();				//vichislenie ploshadi			 double s = t.tetragon_area()
 	Tetragon create_middletetragon();	//sodanie chetiryohugolnika, opiraushigosya na seredini dannogo chetiryohugolnika 
-	bool point_tetragon_belonging(Point); // returns 1 if point belongs to tetragon and 0 otherwise
+	bool is_in(Point); // returns 1 if point belongs to tetragon and 0 otherwise
 };

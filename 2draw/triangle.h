@@ -10,8 +10,9 @@ class Triangle
 {
 public:
 	// sets the Triangle using 3 points
-	void set_triangle(Point, Point, Point); 
-
+	void set(Point, Point, Point); 
+	Triangle() {};
+	Triangle(Point, Point, Point);
 	// Angles and sides
 	// finds one of the Triangle's angles
 	double get_triangle_angle(int);
@@ -22,9 +23,9 @@ public:
 
 	// Some triangular properties
 	// finds the perimeter of the Triangle
-	double triangle_perimeter() const;
+	double perimeter() const;
 	// finds the area of the Triangle
-	double triangle_area();
+	double area();
 	// finds the type of the Triangle (right - 1, obtise - 2, acute - 3)
 	int triangle_type();
 
@@ -58,11 +59,12 @@ public:
 
 	// Triangle and a point
 	// returns 1 if point belongs to triangle and 0 otherwise
-	bool point_triangle_belonging(Point);
+	bool is_in(Point);
 
 private:
 	Point p1, p2, p3;
 	
 	// Friends
 	friend double Tetragon::tetragon_area();
+	friend std::ostream& operator<<(std::ostream& os, Triangle& t);
 };

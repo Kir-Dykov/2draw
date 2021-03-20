@@ -64,9 +64,9 @@ double Tetragon::tetragon_perimeter() {
 
 double Tetragon::tetragon_area() {
 	Triangle t1, t2;
-	t1.set_triangle(p1, p2, p3);
-	t2.set_triangle(p1, p4, p3);
-	return t1.triangle_area() + t2.triangle_area();
+	t1.set(p1, p2, p3);
+	t2.set(p1, p4, p3);
+	return t1.area() + t2.area();
 }
 
 Tetragon Tetragon::create_middletetragon() {
@@ -79,10 +79,10 @@ Tetragon Tetragon::create_middletetragon() {
 	return t;
 }
 
-bool Tetragon::point_tetragon_belonging(Point p)
+bool Tetragon::is_in(Point p)
 {
 	Tetragon T; T.set(p1, p2, p3, p4);
 	Triangle T1, T2, T3, T4;
-	T1.set_triangle(p1, p2, p);	T2.set_triangle(p2, p3, p); T3.set_triangle(p3, p4, p); T4.set_triangle(p1, p4, p);
-	return (T1.triangle_area() + T2.triangle_area() + T3.triangle_area() + T4.triangle_area() == T.tetragon_area());
+	T1.set(p1, p2, p);	T2.set(p2, p3, p); T3.set(p3, p4, p); T4.set(p1, p4, p);
+	return (T1.area() + T2.area() + T3.area() + T4.area() == T.tetragon_area());
 }

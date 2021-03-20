@@ -2,9 +2,9 @@
 #include <vector>
 #include "point.h"
 #include "triangle.h"
+#include "vector.h"
 
-
-//polygon is defined by series of points
+//here polygon is defined by series of points
 //adjacent points form an edge of polygon
 //currently edges are allowed to intersect each other
 class Polygon {
@@ -12,11 +12,24 @@ public:
 	std::vector<Point> vertexes;
 	Polygon() {};
 
-	void append(Point);
+	Polygon(initializer_list<Point> l) : vertexes(l) {};
 
-	Point operator [] (int idx) { return vertexes[idx]; }
+	void append(Point new_point) { 
+		vertexes.push_back(new_point); 
+	}
+	void append(initializer_list<Point> l) {
+		vertexes.insert(vertexes.end(), l.begin(), l.end());
+	}
 
-	// unimplemented
+	inline Point operator [] (unsigned int idx) { return vertexes[idx]; }
+
+
+	Polygon operator+=(Vector s) {
+		for (int i = 0; i < vertexes.size(); i++) vertexes[i] += s;
+		return *this;
+	}
+
+	// unimplemented (is_selfx is short for is_self_intersecting)
 	//bool is_selfx();
 
 	bool is_convex();
@@ -29,7 +42,7 @@ public:
 
 	double area();
 
-	bool point_polygon_belonging(Point); // returns 1 if point belongs to polygon and 0 otherwise
+	bool is_in(Point); // returns 1 if point belongs to polygon and 0 otherwise
 };
 
 std::ostream& operator<<(std::ostream& os, Polygon& p);

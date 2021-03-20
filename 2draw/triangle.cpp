@@ -3,7 +3,13 @@
 
 const double PI = 3.14159265358979;
 
-void Triangle::set_triangle(Point _p1, Point _p2, Point _p3) {
+void Triangle::set(Point _p1, Point _p2, Point _p3) {
+	p1 = _p1;
+	p2 = _p2;
+	p3 = _p3;
+}
+
+Triangle::Triangle(Point _p1, Point _p2, Point _p3) {
 	p1 = _p1;
 	p2 = _p2;
 	p3 = _p3;
@@ -39,12 +45,12 @@ double Triangle::get_triangle_side(int num_point1, int num_point2) {
 	return point_distance(p1, p2);
 }
 
-double Triangle::triangle_perimeter() const {
+double Triangle::perimeter() const {
 	return point_distance(p1, p2) + point_distance(p1, p3) + point_distance(p2, p3);
 }
 
-double Triangle::triangle_area() {
-	double p = triangle_perimeter() / 2;
+double Triangle::area() {
+	double p = perimeter() / 2;
 	double a = point_distance(p1, p2);
 	double b = point_distance(p2, p3);
 	double c = point_distance(p1, p3);
@@ -87,7 +93,7 @@ Circle Triangle::get_inscribed_circle() {
 	B2 = get_bisectrix(3);
 	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
 	ic.set_centerx((-B1.b * ic.get_centery() - B1.c) / B1.a);
-	ic.set_radius(2 * triangle_area() / triangle_perimeter());
+	ic.set_radius(2 * area() / perimeter());
 
 	return ic;
 }
@@ -167,16 +173,15 @@ Line Triangle::get_perp_bis(int num_point) {
 	return Perp;
 }
 
-bool Triangle::point_triangle_belonging(Point p) {
-	Triangle T; T.set_triangle(p1, p2, p3);
-	Triangle T1, T2, T3;
-	T1.set_triangle(p1, p2, p);	T2.set_triangle(p2, p3, p); T3.set_triangle(p1, p3, p);
+bool Triangle::is_in(Point p) {
+	Triangle T(p1, p2, p3);
+	Triangle T1(p1, p2, p),	T2(p2, p3, p), T3(p1, p3, p);
 
-	return (T1.triangle_area() + T2.triangle_area() + T3.triangle_area() == T.triangle_area());
+	return (T1.area() + T2.area() + T3.area() == T.area());
 }
 
 bool Triangle::operator==(Triangle T) {
-	Triangle t; t.set_triangle(p1, p2, p3);
+	Triangle t(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)
@@ -210,14 +215,13 @@ void Triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& 
 }
 
 bool Triangle::are_congruent(Triangle t) {
-	Triangle s;
-	s.set_triangle(p1, p2, p3);
+	Triangle s(p1, p2, p3);
 
 	return (s == t);
 }
 
 bool Triangle::are_similar(Triangle t) {
-	Triangle s; s.set_triangle(p1, p2, p3);
+	Triangle s(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)
@@ -227,4 +231,9 @@ bool Triangle::are_similar(Triangle t) {
 						return true;
 
 	return false;
+}
+
+std::ostream& operator<<(std::ostream& os, Triangle& t) {
+	os << t.p1 << ", " << t.p2 << ", " << t.p3;
+	return os;
 }
