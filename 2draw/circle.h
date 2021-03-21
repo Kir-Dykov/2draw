@@ -29,7 +29,7 @@ public:
 	bool is_in(Point) const;
 
 	// get the intersection points of two circles
-	friend vector<Point> intersections(Circle, Circle);
+	friend std::vector<Point> intersections(Circle, Circle);
 
 	// Output circle
 	friend std::ostream& operator<<(std::ostream& os, Circle& c);

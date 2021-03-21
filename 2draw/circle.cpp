@@ -53,7 +53,7 @@ double Circle::area() {
 }
 
 
-vector<Point> intersections(Circle circle1, Circle circle2) {
+std::vector<Point> intersections(Circle circle1, Circle circle2) {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
 	double circlesdist = point_distance(circle1.center, circle2.center);
 	if (circlesdist == 0 && circle1.radius == circle2.radius) {		// coincide
@@ -86,5 +86,5 @@ vector<Point> intersections(Circle circle1, Circle circle2) {
 }
 
 bool Circle::is_in(Point p) const {
-	return (point_distance(center, p) == radius);
+	return (point_distance(center, p) <= radius);
 }
