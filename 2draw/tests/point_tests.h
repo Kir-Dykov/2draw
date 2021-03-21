@@ -5,8 +5,8 @@ using namespace std;
 
 int point_main() {
 	Point a, b, m;
-	a.set_point(1, 1);
-	b.set_point(2, 3);
+	a.set(1, 1);
+	b.set(2, 3);
 	cout << "A's quarter is - " << a.find_quarter() << endl;
 	cout << "Point B is - ";
 	b.cout_point();

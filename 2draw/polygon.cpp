@@ -121,28 +121,12 @@ std::ostream& operator<<(std::ostream& os, Polygon& p) {
 
 bool Polygon::is_in(Point p)
 {
-	/*vector<Triangle> T(vertexes.size());
-	for (unsigned int i = 0; i < vertexes.size() - 1; i++) 
-		T[i].set(vertexes[i + 1], vertexes[i + 2], p);
-
-	T[vertexes.size() - 1].set(vertexes[1], vertexes[vertexes.size() - 1], p);
-
-	double area = 0;
-
-	for (unsigned int i = 0; i < vertexes.size(); i++) 
-		area += T[i].area();
-
-	return (area == this->area()); */ 
-
-	double A = 0;
-	for (unsigned int i = 0; i < vertexes.size() - 1; i++) {
-		A += Triangle(vertexes[i], vertexes[i + 1U], p).area();
-		cout << Triangle(vertexes[i], vertexes[i + 1U], p).area() << endl;
+	double det_0 = determinant(vertexes[0] - vertexes.back(), p - vertexes.back());
+	for (unsigned int i = 0; i < vertexes.size()-1; i += 1) {
+		double det = determinant(vertexes[i + 1] - vertexes[i], p - vertexes[i]);
+		if (det * det_0 < 0)
+			return 0;
 	}
-		
 
-	A += Triangle(vertexes[0], vertexes[vertexes.size() - 1], p).area();
-	cout << Triangle(vertexes[0], vertexes[vertexes.size() - 1], p).area() << endl;
-	cout << " " << A << " ";
-	return (A == area());
+	return 1;
 }

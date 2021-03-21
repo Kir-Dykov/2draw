@@ -8,13 +8,14 @@ class Point
 public:
 	double x, y;	//koordinati x y
 
-	void set_point(double, double);   //zadanie tochki:													p.set_point()
+	void set(double, double);   //zadanie tochki:													p.set()
 	int find_quarter();    //nahozhdenie chetverti v kotoroy nahoditsa tochka:						p.find_quarter() 
 
 	void cout_point();     //vivod koordinat tochki d konsol:										p.cout_point()
 	
 	Point() { x = 0; y = 0; }
 	Point(double _x, double _y) { x = _x; y = _y; }
+	Point& operator =(const Point& other);
 
 	bool operator==(Point p) {return x == p.x && y == p.y;}
 

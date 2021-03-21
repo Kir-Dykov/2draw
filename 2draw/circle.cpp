@@ -1,12 +1,12 @@
 #include "circle.h"
 
-void Circle::set_circle(Point _center, double _radius = 0) {
+void Circle::set(Point _center, double _radius = 0) {
 	center.x = _center.x;
 	center.y = _center.y;
 	radius = _radius;
 }
 
-void Circle::set_circleby2p(Point _center, Point secondp) {
+void Circle::set(Point _center, Point secondp) {
 	center.x = _center.x;
 	center.y = _center.y;
 	radius = point_distance(_center, secondp);
@@ -28,72 +28,63 @@ Point Circle::get_center() const {
 	return center;
 }
 
-void Circle::set_centerx(double _centerx) {
-	center.x = _centerx;
+void Circle::set_center(Point _center) {
+	center = _center;
 }
 
-double Circle::get_centerx() const {
-	return center.x;
+void Circle::set_centerx(double _x) {
+	center.x = _x;
+}
+void Circle::set_centery(double _y) {
+	center.y = _y;
 }
 
-void Circle::set_centery(double _centery) {
-	center.y = _centery;
+std::ostream& operator<<(std::ostream& os, Circle& c) {
+	os << "the circle with radius of " << c.radius << " and center at " << c.center;
+	return os;
 }
 
-double Circle::get_centery() const{
-	return center.y;
+double Circle::circumference() {
+	return 2 * 3,1415926535 * radius;
 }
 
-void Circle::cout_circle(Circle _circle) {
-	std::cout << "\nCenter coordinates: x = " << _circle.get_centerx() << ", y = " \
-		<< _circle.get_centery() << "; radius = " << _circle.get_radius();
+double Circle::area() {
+	return 3,1415926535 * radius * radius;
 }
 
-double Circle::get_length(Circle _circle) {
-	return 2 * 3,1415926535 * _circle.get_radius();
-}
 
-double Circle::get_square(Circle _circle) {
-	return 3,1415926535 * _circle.get_radius() * _circle.get_radius();
-}
-
-double Circle::get_diameter(Circle _circle) {
-	return 2 * _circle.get_radius();
-}
-
-void Circle::find_cros_2circlespnts(Circle _circlef, Circle _circles) {
+vector<Point> intersections(Circle circle1, Circle circle2) {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
-	double circlesdist = point_distance(_circlef.center, _circles.center);
-	if (circlesdist == 0 && _circlef.get_radius() == _circles.get_radius()) {		// coincide
-		std::cout << "\nThe circles coincide";
+	double circlesdist = point_distance(circle1.center, circle2.center);
+	if (circlesdist == 0 && circle1.radius == circle2.radius) {		// coincide
+		return { circle1.center, circle2.center };
 	}
-	else if (circlesdist > _circlef.get_radius() + _circles.get_radius()) {			// don't intersect
-		std::cout << "\nThe circles don't intersect";
+	else if (circlesdist > circle1.radius + circle2.radius) {			// don't intersect
+		return vector<Point>(0);
 	}
-	else if (circlesdist < abs(_circlef.get_radius() - _circles.get_radius())) {	// one to the other
-		std::cout << "\nOne circle is in another";
+	else if (circlesdist < abs(circle1.radius - circle2.radius)) {	// one to the other
+		return vector<Point>(0);
 	}
 	else // touch or intersect at two points
 	{
-		double a = (_circlef.get_radius() * _circlef.get_radius() - _circles.get_radius() * _circles.get_radius() + \
+		double a = (circle1.get_radius() * circle1.get_radius() - circle2.get_radius() * circle2.get_radius() + \
 			circlesdist * circlesdist) / (2 * circlesdist);
-		double h = sqrt(_circlef.get_radius() * _circlef.get_radius() - a * a);
+		double h = sqrt(circle1.get_radius() * circle1.get_radius() - a * a);
 		Point tmppnt;
-		tmppnt.x = _circlef.get_centerx() + a / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
-		tmppnt.y = _circlef.get_centery() + a / circlesdist * (_circles.get_centery() - _circlef.get_centery());
+		tmppnt.x = circle1.center.x + a / circlesdist * (circle2.center.x - circle1.center.x);
+		tmppnt.y = circle1.center.y + a / circlesdist * (circle2.center.y - circle1.center.y);
 		Point frstinterspnt, scndinterspnt;
-		frstinterspnt.x = tmppnt.x + h / circlesdist * (_circles.get_centery() - _circlef.get_centery());
-		frstinterspnt.y = tmppnt.y - h / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
-		scndinterspnt.x = tmppnt.x - h / circlesdist * (_circles.get_centery() - _circlef.get_centery());
-		scndinterspnt.y = tmppnt.y + h / circlesdist * (_circles.get_centerx() - _circlef.get_centerx());
+		frstinterspnt.x = tmppnt.x + h / circlesdist * (circle2.center.y - circle1.center.y);
+		frstinterspnt.y = tmppnt.y - h / circlesdist * (circle2.center.x - circle1.center.x);
+		scndinterspnt.x = tmppnt.x - h / circlesdist * (circle2.center.y - circle1.center.y);
+		scndinterspnt.y = tmppnt.y + h / circlesdist * (circle2.center.x - circle1.center.x);
 		if (frstinterspnt == scndinterspnt)
-			std::cout << "\nIntesection point: " << frstinterspnt;
+			return { frstinterspnt };
 		else
-			std::cout << "\nFirst intersection point: " << frstinterspnt \
-			<< " Second intersection point: " << scndinterspnt;
+			return { frstinterspnt, scndinterspnt };
 	}
 }
 
-bool Circle::point_circle_belonging(Point p) const {
+bool Circle::is_in(Point p) const {
 	return (point_distance(center, p) == radius);
 }

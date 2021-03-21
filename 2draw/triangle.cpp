@@ -92,7 +92,7 @@ Circle Triangle::get_inscribed_circle() {
 	B1 = get_bisectrix(2);
 	B2 = get_bisectrix(3);
 	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
-	ic.set_centerx((-B1.b * ic.get_centery() - B1.c) / B1.a);
+	ic.set_centerx((-B1.b * ic.get_center().x - B1.c) / B1.a);
 	ic.set_radius(2 * area() / perimeter());
 
 	return ic;

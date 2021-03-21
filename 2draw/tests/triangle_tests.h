@@ -10,9 +10,9 @@ int triangle_main()
 	Circle cir;
 
 	Point p1, p2, p3;
-	p1.set_point(0, 2);
-	p2.set_point(2, 0);
-	p3.set_point(6, 6);
+	p1.set(0, 2);
+	p2.set(2, 0);
+	p3.set(6, 6);
 	t.set(p1, p2, p3);
 
 	cout << t << endl;
@@ -51,20 +51,18 @@ int triangle_main()
 
 	cout << "Tetragon circumcircle: ";
 	cir = t.get_circumcircle();
-	cir.cout_circle(cir);
-	cout << endl;
+	cout << cir << endl;
 
 	cout << "Tetragon inscribed circle: ";
 	cir = t.get_inscribed_circle();
-	cir.cout_circle(cir);
-	cout << endl;
+	cout << cir << endl;
 
 	cout << "Triangle type: " << t.triangle_type() << endl;
 
 	Point r1, r2, r3;
-	r1.set_point(0, 6.5);
-	r2.set_point(0, 5);
-	r3.set_point(-2, 5);
+	r1.set(0, 6.5);
+	r2.set(0, 5);
+	r3.set(-2, 5);
 	s.set(r1, r2, r3);
 
 	cout << "Is t congruent to s: " << t.are_congruent(s) << endl;
