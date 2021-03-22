@@ -8,7 +8,7 @@ public:
 	double a, b, c;							//koefficienti uravneniya pryamoi
 
 	void set_line(Point, Point);		//zadanie pryamoi cherez 2 tocki (uravnenie zadayotsa avtomatichski) L.set(p1, p2)
-	void set_line(int, int, int);	//zadanie pryamoi uravneniem							L.set(a, b, c)
+	void set_line(double, double, double);	//zadanie pryamoi uravneniem							L.set(a, b, c)
 
 	double get_angle_rad();			//vichislenie ugla mezhdu pryamoi i osiu Ox v radianah	a = L.get_angle_rad()
 	double get_angle_deg();			//vichislenie ugla mezhdu pryamoi i osiu Ox v gradusah	a = L.get_angle_deg()
@@ -18,6 +18,8 @@ public:
 	bool point_line_belonging(Point); // returns 1 if point belongs to line and 0 otherwise
 
 	bool operator==(Line);				//operator sovpadenia dvuh pryamih						L1 == L2
+	//find increase points by two lines
+	static Point findpointincrs(Line, Line);
 };
 
 Line perp_Line(Line);			//sozdanie pryamoi, perpendiculyarnoi dannoi			L2 = perp_Line(L1)

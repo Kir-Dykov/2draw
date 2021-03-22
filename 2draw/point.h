@@ -20,8 +20,8 @@ public:
 	bool operator==(Point p) {return x == p.x && y == p.y;}
 
 	Vector operator-(Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
-	Point operator+=(Vector s) { x += s.x; y += s.y; return *this; }
-	Point operator+(Vector s) {return Point(x + s.x, y + s.y); }
+	Point operator+=(Vector s) { x += s.getx(); y += s.gety(); return *this; }
+	Point operator+(Vector s) {return Point(x + s.getx(), y + s.gety()); }
 };
 
 std::ostream& operator<<(std::ostream& os, const Point& p);

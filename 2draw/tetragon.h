@@ -1,6 +1,7 @@
 #pragma once
 #include "point.h"
 #include "line.h"
+#include "circle.h"
 
 class Tetragon {
 public:
@@ -13,4 +14,12 @@ public:
 	double tetragon_area();				//vichislenie ploshadi			 double s = t.tetragon_area()
 	Tetragon create_middletetragon();	//sodanie chetiryohugolnika, opiraushigosya na seredini dannogo chetiryohugolnika 
 	bool is_in(Point); // returns 1 if point belongs to tetragon and 0 otherwise
+	Circle get_inscribed_circle();
+	// find oppose points for vertex p1;
+	Point find_oppose_vertforp1();
+	Point find_oppose_vertforp2();
+	Point find_oppose_vertforp3();
+	Point find_oppose_vertforp4();
+	// find oppose points for this vertex
+	Point find_oppose_vert(Point);
 };

@@ -6,7 +6,6 @@ using namespace std;
 class Vector
 {
 public:
-	double x, y;	//koordinati x y
 
 	Vector(double _x = 0, double _y = 0) { x = _x; y = _y; }
 
@@ -24,7 +23,8 @@ public:
 
 	double abs() { return sqrt(x * x + y * y); }
 	double arg() { return atan2(x, y); }
-
+private:
+	double x, y;	//koordinati x y
 };
 
 double determinant(Vector, Vector);

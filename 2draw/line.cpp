@@ -1,4 +1,5 @@
 #include "line.h"
+#include "vector.h"
 #include <math.h>
 
 const double PI = 3.14159265358979;
@@ -11,7 +12,7 @@ void Line::set_line(Point _p1, Point _p2)
 	c = p1.x * p2.y - p2.x * p1.y;
 }
 
-void Line::set_line(int _a = 1, int _b = 1, int _c = 0)
+void Line::set_line(double _a = 1, double _b = 1, double _c = 0)
 {
 	a = _a;
 	b = _b;
@@ -115,4 +116,14 @@ int find_halfplane(Line L, Point p)
 		else
 			return 0;
 	}
+}
+//Kramers method for find increase points
+Point Line::findpointincrs(Line first, Line second) {
+	double generaldet = determinant(Vector(first.a, first.b), Vector(second.a, second.b));
+	double detforx = determinant(Vector(-first.c, first.b), Vector(-second.c, second.b));
+	double detfory = determinant(Vector(first.a, -first.c), Vector(second.a, -second.c));
+	Point res;
+	res.x = detforx / generaldet;
+	res.y = detfory / generaldet;
+	return res;
 }

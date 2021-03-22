@@ -5,6 +5,8 @@
 class Circle
 {
 public:
+	Circle(double, double, double);
+	Circle();
 	// Set circle functions
 	// set a circle by point and radius
 	void set(Point, double);
