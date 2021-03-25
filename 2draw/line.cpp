@@ -3,7 +3,7 @@
 #include <math.h>
 
 const double PI = 3.14159265358979;
-void Line::set_line(Point _p1, Point _p2)
+void Line::set(Point _p1, Point _p2)
 {
 	p1 = _p1;
 	p2 = _p2;
@@ -12,31 +12,23 @@ void Line::set_line(Point _p1, Point _p2)
 	c = p1.x * p2.y - p2.x * p1.y;
 }
 
-void Line::set_line(double _a = 1, double _b = 1, double _c = 0)
+void Line::set(double _a = 1, double _b = 1, double _c = 0)
 {
 	a = _a;
 	b = _b;
 	c = _c;
 }
 
-double Line::get_angle_rad()
-{
-	return atan(-a / b);
-}
+double Line::get_angle_rad() const {return atan(-a / b);}
 
-double Line::get_angle_deg()
-{
-	return atan(-a / b) * 180 / PI;
-}
+double Line::get_angle_deg() const {return atan(-a / b) * 180 / PI;}
 
-bool Line::operator==(Line L)
-{
+bool Line::operator==(Line L) const {
 	return a / L.a == b / L.b && b / L.b == c / L.c;
 }
 
 //TODO: пусть функци€ принимает точку, через которую должна проходить перпендикул€рна€ пр€ма€
-Line perp_Line(Line L)
-{
+Line perpendicular(Line L) {
 	Line res;
 	res.a = L.b;
 	res.b = -L.a;
@@ -44,8 +36,7 @@ Line perp_Line(Line L)
 	return res;
 }
 
-bool are_parallel(Line L1, Line L2)
-{
+bool are_parallel(Line L1, Line L2) {
 	return L1.a / L2.a == L1.b / L2.b;
 }
 
@@ -78,7 +69,7 @@ void Line::cout_line()
 	cout << "= 0";
 }
 
-bool Line::point_line_belonging(Point p)
+bool Line::point_line_belonging(Point p) const
 {
 	return (p.x * a + p.y * b + c == 0);
 }

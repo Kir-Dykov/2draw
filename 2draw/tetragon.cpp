@@ -16,7 +16,7 @@ void Tetragon::set(Point a, Point b, Point c, Point d) {
 	sort(p.begin(), p.end(), cmp);
 	p1 = p[0];
 	p2 = p[1];
-	l1.set_line(p1, p2);
+	l1.set(p1, p2);
 	if (-l1.a / l1.b > 0 || l1.b == 0)
 		if (p[2].y > p[3].y) {
 			p3 = p[2];
@@ -39,11 +39,11 @@ void Tetragon::set(Point a, Point b, Point c, Point d) {
 		p3 = p[3];
 		p4 = p[2];
 	}
-	l2.set_line(p2, p3);
-	l3.set_line(p3, p4);
-	l4.set_line(p1, p4);
-	d1.set_line(p1, p3);
-	d2.set_line(p2, p4);
+	l2.set(p2, p3);
+	l3.set(p3, p4);
+	l4.set(p1, p4);
+	d1.set(p1, p3);
+	d2.set(p2, p4);
 	if (l1 == l2 || l2 == l3 || l3 == l4 || l1 == l4)
 		cout << "Such Tetragon doesn't exist" << endl;
 	side1 = distance(p1, p2);

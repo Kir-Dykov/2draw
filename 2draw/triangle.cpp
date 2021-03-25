@@ -21,16 +21,16 @@ double Triangle::get_angle(int num_point) const {
 	double angle;
 	num_to_point(num_point, p);
 	if (p == p1) {
-		A.set_line(p1, p2);
-		B.set_line(p1, p3); 
+		A.set(p1, p2);
+		B.set(p1, p3); 
 	}
 	if (p == p2) {
-		A.set_line(p2, p1); 
-		B.set_line(p2, p3); 
+		A.set(p2, p1); 
+		B.set(p2, p3); 
 	}
 	if (p == p3) {
-		A.set_line(p3, p1); 
-		B.set_line(p3, p2); 
+		A.set(p3, p1); 
+		B.set(p3, p2); 
 	}
 	angle = get_twoLines_radangle(A, B);
 
@@ -105,7 +105,7 @@ Line Triangle::get_median(int num_point) const {
 	point_reassignment(p, p1, p2, p3, a1, a2);
 	m.x = (a1.x + a2.x) * 0.5;
 	m.y = (a1.y + a2.y) * 0.5;
-	M.set_line(m, p);
+	M.set(m, p);
 
 	return M;
 }
@@ -119,7 +119,7 @@ Line Triangle::get_bisectrix(int num_point) const {
 	a = distance(p, a1);
 	b = distance(p, a2);
 	c = distance(a1, a2);
-	L.set_line(a1, a2);
+	L.set(a1, a2);
 	m = a * c / (a + b);
 	Vector v;
 	if (L.a != 0 && L.b != 0) v.set(L.b / sqrt(L.a * L.a + L.b * L.b), -L.a / sqrt(L.a * L.a + L.b * L.b));
@@ -134,7 +134,7 @@ Line Triangle::get_bisectrix(int num_point) const {
 		bis.x = a1.x - v.getx();
 		bis.y = a1.y - v.gety();
 	}
-	B.set_line(bis, p);
+	B.set(bis, p);
 
 	return B;
 }
@@ -144,8 +144,8 @@ Line Triangle::get_altitude(int num_point) const {
 	Point p, a1, a2;
 	num_to_point(num_point, p);
 	point_reassignment(p, p1, p2, p3, a1, a2);
-	L.set_line(a1, a2);
-	Alt = perp_Line(L);
+	L.set(a1, a2);
+	Alt = perpendicular(L);
 	Alt.c = -Alt.a * p.x - Alt.b * p.y;
 
 	return Alt;
@@ -156,7 +156,7 @@ Line Triangle::get_midline(int num_point) const {
 	Point p, a1, a2;
 	num_to_point(num_point, p);
 	point_reassignment(p, p1, p2, p3, a1, a2);
-	Mid.set_line(Point((p.x + a1.x) / 2.0, (p.y + a1.y) / 2.0), Point((p.x + a2.x) / 2.0, (p.y + a2.y) / 2.0));
+	Mid.set(Point((p.x + a1.x) / 2.0, (p.y + a1.y) / 2.0), Point((p.x + a2.x) / 2.0, (p.y + a2.y) / 2.0));
 
 	return Mid;
 }
@@ -166,8 +166,8 @@ Line Triangle::get_perp_bis(int num_point) const {
 	Point p, a1, a2;
 	num_to_point(num_point, p);
 	point_reassignment(p, p1, p2, p3, a1, a2);
-	L.set_line(a1, a2);
-	Perp = perp_Line(L);
+	L.set(a1, a2);
+	Perp = perpendicular(L);
 	Perp.c = -Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0;
 
 	return Perp;
