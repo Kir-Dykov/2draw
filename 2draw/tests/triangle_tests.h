@@ -21,7 +21,7 @@ int triangle_main()
 
 	cout << "Triangle angles: ";
 	for (int i = 1; i <= 3; i++)
-		cout << t.get_triangle_angle(i) << "  ";
+		cout << t.get_angle(i) << "  ";
 	cout << endl;
 
 	cout << "Triangle bisectrix: ";

@@ -26,7 +26,7 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
 
-double point_distance(Point p1, Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = point_distance(p1, p2)
+double distance(Point p1, Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = distance(p1, p2)
 
 Point sym_point_x(Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Ox:			q = sym_point_x(p)
 Point sym_point_y(Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Îy:			q = sym_point_y(p)

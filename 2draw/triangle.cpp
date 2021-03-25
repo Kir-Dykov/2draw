@@ -15,7 +15,7 @@ Triangle::Triangle(Point _p1, Point _p2, Point _p3) {
 	p3 = _p3;
 }
 
-double Triangle::get_triangle_angle(int num_point) {
+double Triangle::get_angle(int num_point) const {
 	Line A, B;
 	Point p;
 	double angle;
@@ -37,34 +37,34 @@ double Triangle::get_triangle_angle(int num_point) {
 	return angle;
 }
 
-double Triangle::get_triangle_side(int num_point1, int num_point2) {
+double Triangle::get_side(int num_point1, int num_point2) const {
 	Point p1, p2;
 	num_to_point(num_point1, p1);
 	num_to_point(num_point2, p2);
 
-	return point_distance(p1, p2);
+	return distance(p1, p2);
 }
 
 double Triangle::perimeter() const {
-	return point_distance(p1, p2) + point_distance(p1, p3) + point_distance(p2, p3);
+	return distance(p1, p2) + distance(p1, p3) + distance(p2, p3);
 }
 
-double Triangle::area() {
+double Triangle::area() const {
 	double p = perimeter() / 2;
-	double a = point_distance(p1, p2);
-	double b = point_distance(p2, p3);
-	double c = point_distance(p1, p3);
+	double a = distance(p1, p2);
+	double b = distance(p2, p3);
+	double c = distance(p1, p3);
 
 	return sqrt(p * (p - a) * (p - b) * (p - c));
 }
 
-int Triangle::triangle_type() {
+int Triangle::triangle_type() const {
 	double eps = 0.00000000000001;
 	bool is_right = false, is_obtise = false;
 	for (int i = 0; i < 3; i++) {
-		if (get_triangle_angle(i + 1) > PI / 2.0 - eps && get_triangle_angle(i + 1) < PI / 2.0 + eps) 
+		if (get_angle(i + 1) > PI / 2.0 - eps && get_angle(i + 1) < PI / 2.0 + eps) 
 			is_right = true;
-		if (get_triangle_angle(i + 1) > PI / 2.0) is_obtise = true;
+		if (get_angle(i + 1) > PI / 2.0) is_obtise = true;
 	}
 
 	if (is_right == true) return 1;
@@ -73,20 +73,20 @@ int Triangle::triangle_type() {
 }
 
 // formula https://www.wikiwand.com/ru/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BE%D0%BA%D1%80%D1%83%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D1%8C
-Circle Triangle::get_circumcircle() { 
+Circle Triangle::get_circumcircle() const {
 	Circle cc;
 	double D = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
 	cc.set_centerx(((p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y) + (p2.x * p2.x + p2.y * p2.y) * \
 		(p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / D);
 	cc.set_centery(((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * \
 		(p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / -D);
-	cc.set_radius(point_distance(cc.get_center(), p1));
+	cc.set_radius(distance(cc.get_center(), p1));
 
 	return cc;
 }
 
 // we get the center of inscribed circle by solving the system of linear equations (two bisectrixes intersection) and r = S/p
-Circle Triangle::get_inscribed_circle() {
+Circle Triangle::get_inscribed_circle() const {
 	Circle ic;
 	Line B1, B2;
 	B1 = get_bisectrix(2);
@@ -98,7 +98,7 @@ Circle Triangle::get_inscribed_circle() {
 	return ic;
 }
 
-Line Triangle::get_median(int num_point) {
+Line Triangle::get_median(int num_point) const {
 	Point p, a1, a2, m;
 	Line M;
 	num_to_point(num_point, p);
@@ -110,15 +110,15 @@ Line Triangle::get_median(int num_point) {
 	return M;
 }
 
-Line Triangle::get_bisectrix(int num_point) {
+Line Triangle::get_bisectrix(int num_point) const {
 	Line B, L;
 	Point p, a1, a2, bis;
 	double a, b, c, m;
 	num_to_point(num_point, p);
 	point_reassignment(p, p1, p2, p3, a1, a2);
-	a = point_distance(p, a1);
-	b = point_distance(p, a2);
-	c = point_distance(a1, a2);
+	a = distance(p, a1);
+	b = distance(p, a2);
+	c = distance(a1, a2);
 	L.set_line(a1, a2);
 	m = a * c / (a + b);
 	Vector v;
@@ -139,7 +139,7 @@ Line Triangle::get_bisectrix(int num_point) {
 	return B;
 }
 
-Line Triangle::get_altitude(int num_point) {
+Line Triangle::get_altitude(int num_point) const {
 	Line Alt, L;
 	Point p, a1, a2;
 	num_to_point(num_point, p);
@@ -151,7 +151,7 @@ Line Triangle::get_altitude(int num_point) {
 	return Alt;
 }
 
-Line Triangle::get_midline(int num_point) {
+Line Triangle::get_midline(int num_point) const {
 	Line Mid;
 	Point p, a1, a2;
 	num_to_point(num_point, p);
@@ -161,7 +161,7 @@ Line Triangle::get_midline(int num_point) {
 	return Mid;
 }
 
-Line Triangle::get_perp_bis(int num_point) {
+Line Triangle::get_perp_bis(int num_point) const {
 	Line Perp, L;
 	Point p, a1, a2;
 	num_to_point(num_point, p);
@@ -173,30 +173,30 @@ Line Triangle::get_perp_bis(int num_point) {
 	return Perp;
 }
 
-bool Triangle::is_in(Point p) {
+bool Triangle::is_in(Point p) const {
 	Triangle T(p1, p2, p3);
 	Triangle T1(p1, p2, p),	T2(p2, p3, p), T3(p1, p3, p);
 
 	return (T1.area() + T2.area() + T3.area() == T.area());
 }
 
-bool Triangle::operator==(Triangle T) {
+bool Triangle::operator==(Triangle T) const {
 	Triangle t(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)
 				if (i != j && j != k && i != k)
-					if (t.get_triangle_side(1, 2) == T.get_triangle_side(i, j) && t.get_triangle_side(2, 3) == \
-						T.get_triangle_side(j, k) && t.get_triangle_side(1, 3) == T.get_triangle_side(i, k))
+					if (t.get_side(1, 2) == T.get_side(i, j) && t.get_side(2, 3) == \
+						T.get_side(j, k) && t.get_side(1, 3) == T.get_side(i, k))
 						return true;
 
 	return false;
 }
 
-void Triangle::num_to_point(int num, Point& p) {
+void Triangle::num_to_point(int num, Point& p) const {
 	if (num == 1) p = p1;
-	if (num == 2) p = p2;
-	if (num == 3) p = p3;
+	else if (num == 2) p = p2;
+	else if (num == 3) p = p3;
 }
 
 void Triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& a1, Point& a2) {
@@ -214,20 +214,20 @@ void Triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& 
 	}
 }
 
-bool Triangle::are_congruent(Triangle t) {
+bool Triangle::are_congruent(Triangle t) const {
 	Triangle s(p1, p2, p3);
 
 	return (s == t);
 }
 
-bool Triangle::are_similar(Triangle t) {
+bool Triangle::are_similar(Triangle t) const {
 	Triangle s(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)
 				if (i != j && j != k && i != k)
-					if (s.get_triangle_angle(1) == t.get_triangle_angle(i) && s.get_triangle_angle(2) == \
-						t.get_triangle_angle(j) && s.get_triangle_angle(3) == t.get_triangle_angle(k))
+					if (s.get_angle(1) == t.get_angle(i) && s.get_angle(2) == \
+						t.get_angle(j) && s.get_angle(3) == t.get_angle(k))
 						return true;
 
 	return false;
