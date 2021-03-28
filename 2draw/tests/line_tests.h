@@ -8,8 +8,8 @@ int line_main() {
 	Point p1, p2;
 	p1.set(10, 1);
 	p2.set(2, 3);
-	a.set_line(1, 4, 0);
-	b.set_line(p1, p2);
+	a.set(1, 4, 0);
+	b.set(p1, p2);
 	cout << "Lines: " << endl;
 	a.cout_line();
 	cout << endl;

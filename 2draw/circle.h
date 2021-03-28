@@ -4,12 +4,15 @@
 
 class Circle
 {
+private:
+	Point center;
+	double radius;
 public:
-	// Set circle functions
-	// set a circle by point and radius
-	void set(Point, double);
-	// set a circle from two points
-	void set(Point, Point);
+	Circle(double, double, double);
+	Circle();
+	// setters
+	void set(Point _center, double _radius);
+	void set(Point _center, Point other);
     void set_radius(double);
 	void set_center(Point);
 	void set_centerx(double);
@@ -18,23 +21,17 @@ public:
 	// Get circle parameters functions
 	double get_radius() const;
 	Point get_center() const;
-	double circumference();
-	double area();
+	double circumference() const;
+	double area() const;
 
 	// Some circle special functions
-	// get the distance from a point to a circle
-	static double get_dist_pnttocir(Point, Circle);
 	
-	// returns 1 if point belongs to circle and 0 otherwise
+	// return 1 if point lies inside circle, 0 otherwise
 	bool is_in(Point) const;
 
 	// get the intersection points of two circles
-	friend vector<Point> intersections(Circle, Circle);
+	friend std::vector<Point> intersections(Circle, Circle);
 
 	// Output circle
 	friend std::ostream& operator<<(std::ostream& os, Circle& c);
-
-private:
-	Point center;
-	double radius;
 };

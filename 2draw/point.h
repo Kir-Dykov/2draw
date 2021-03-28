@@ -20,13 +20,13 @@ public:
 	bool operator==(Point p) {return x == p.x && y == p.y;}
 
 	Vector operator-(Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
-	Point operator+=(Vector s) { x += s.x; y += s.y; return *this; }
-	Point operator+(Vector s) {return Point(x + s.x, y + s.y); }
+	Point operator+=(Vector s) { x += s.getx(); y += s.gety(); return *this; }
+	Point operator+(Vector s) {return Point(x + s.getx(), y + s.gety()); }
 };
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
 
-double point_distance(Point p1, Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = point_distance(p1, p2)
+double distance(Point p1, Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = distance(p1, p2)
 
 Point sym_point_x(Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Ox:			q = sym_point_x(p)
 Point sym_point_y(Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Îy:			q = sym_point_y(p)
