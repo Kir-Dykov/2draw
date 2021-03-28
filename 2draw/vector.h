@@ -28,3 +28,5 @@ public:
 };
 
 double determinant(Vector, Vector);
+double dot(Vector, Vector);
+double cos(Vector, Vector);

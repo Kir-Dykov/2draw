@@ -56,11 +56,32 @@ int polygon_main() {
 		cout << "Is (0, 0) inside octagon? " << p.is_in(Point(0, 0)) << endl;
 	}
 	cout << "\n\n\n";
+	
+	{
+		cout << "Zadacha is kontesta na vypuklie obolochki (finding a convex hull)\n";
+		vector<Point> v = {
+			Point(4,6),
+			Point(2,5),
+			Point(6,4),
+			Point(7,7),
+			Point(4,4),
+			Point(1,5),
+			Point(3,8),
+			Point(3,2),
+			Point(5,7),
+			Point(7,3)
+		};
+
+		Polygon p = convex_hull(v);
+		cout << p << endl;
+		cout << p.area() << endl;
+	}
+	cout << "\n\n\n";
 	{
 		const int N = 1000000;
 		Polygon p;
 		for (int i = 0; i < N; i++)
-			p.append(Point(cos(2*M_PI * (double)i / (double)N), sin(2*M_PI * (double)i / (double)N)));
+			p.append(Point(cos(2 * M_PI * (double)i / (double)N), sin(2 * M_PI * (double)i / (double)N)));
 
 		cout << "1'000'000-gon approximating a circle" << endl;
 		cout << "it's center (should be (0,0)): " << p.center_of_mass() << endl;
@@ -73,7 +94,6 @@ int polygon_main() {
 		cout << "Is (-0.999, 0) inside polygon? (should be 1) : " << p.is_in(Point(-0.999, 0)) << endl;
 	}
 	
-
 
 	return 0;
 }

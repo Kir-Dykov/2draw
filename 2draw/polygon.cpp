@@ -1,7 +1,8 @@
 #include <math.h>
+#include <algorithm>
+#include <vector>
 #include "polygon.h"
 #include "vector.h"
-
 bool Polygon::is_convex() {
 	//if (is_selfx())
 	//	return 0;
@@ -129,4 +130,61 @@ bool Polygon::is_in(Point p)
 	}
 
 	return 1;
+}
+
+
+//Graham scan algorithm
+Polygon convex_hull(vector<Point> f) {
+
+	if (f.size() == 3)
+	{
+		Polygon hull = { f[0], f[1], f[2] };
+		return hull;
+	}
+
+	double min_y = f[0].y;
+	int min_idx = 0;
+	for (int i = 1; i < f.size(); i++)
+	{
+		if (f[i].y < min_y ||
+			f[i].y == min_y && f[i].x < f[min_idx].x)
+		{
+			min_y = f[i].y;
+			min_idx = i;
+		}
+	}
+	
+	swap(f[0], f[min_idx]);
+	double _x = f[0].x;
+	double _y = f[0].y;
+
+	sort(f.begin()+1, f.end(), 
+		[p0 = f[0]](Point a, Point b) {
+		return cos(a - p0, Vector(1,0)) > cos(b - p0, Vector(1, 0));
+	});
+
+	Polygon hull;
+
+	hull.append({ f[0], f[1], f[2] });
+
+	int head = 2;
+
+	for (int i = 3; i < f.size(); i++)
+	{
+		
+		if (determinant(hull[head] - hull[head - 1], f[i] - hull[head]) > 0) {
+			hull.append(f[i]);
+			head++;
+			
+		}
+		else {
+			while (determinant(hull[head-1] - hull[head - 2], f[i] - hull[head-1]) <= 0) {
+				head--;
+			}
+			hull.vertexes[head] = f[i];
+			hull.vertexes.resize(head + 1);
+		}
+	}
+
+	return hull;
 }

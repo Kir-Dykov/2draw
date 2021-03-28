@@ -46,3 +46,5 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, Polygon& p);
+
+Polygon convex_hull(vector<Point> f);
