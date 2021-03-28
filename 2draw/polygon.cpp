@@ -3,7 +3,8 @@
 #include <vector>
 #include "polygon.h"
 #include "vector.h"
-bool Polygon::is_convex() {
+
+bool Polygon::is_convex() const{
 	//if (is_selfx())
 	//	return 0;
 
@@ -29,7 +30,7 @@ bool Polygon::is_convex() {
 	return 1;
 }
 
-Point Polygon::center_of_mass() {
+Point Polygon::center_of_mass() const{
 	// the formula is taken from https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 
 	double A = 0;
@@ -101,7 +102,7 @@ void Polygon::rotate(const Point center, double angle) {
 		}
 }
 
-double Polygon::area() {
+double Polygon::area() const{
 	// Formula is taken from https://en.wikipedia.org/wiki/Shoelace_formula
 	double A = 0;
 	for (unsigned int i = 0; i < vertexes.size() - 1; i += 1)
@@ -112,16 +113,15 @@ double Polygon::area() {
 	return abs(A * 0.5);
 }
 
-std::ostream& operator<<(std::ostream& os, Polygon& p) {
-	for (unsigned int i = 0; i < p.vertexes.size(); i++)
+std::ostream& operator<<(std::ostream& os, const Polygon& p) {
+	for (unsigned int i = 0; i < p.v.size(); i++)
 	{
 		os << p[i] << " ";
 	}
 	return os;
 }
 
-bool Polygon::is_in(Point p)
-{
+bool Polygon::is_in(Point p) const {
 	double det_0 = determinant(vertexes[0] - vertexes.back(), p - vertexes.back());
 	for (unsigned int i = 0; i < vertexes.size()-1; i += 1) {
 		double det = determinant(vertexes[i + 1] - vertexes[i], p - vertexes[i]);
@@ -134,7 +134,7 @@ bool Polygon::is_in(Point p)
 
 
 //Graham scan algorithm
-Polygon convex_hull(vector<Point> f) {
+Polygon convex_hull(const vector<Point> f) {
 
 	if (f.size() == 3)
 	{

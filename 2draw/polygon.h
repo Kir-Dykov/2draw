@@ -8,8 +8,13 @@
 //adjacent points form an edge of polygon
 //currently edges are allowed to intersect each other
 class Polygon {
-public:
+
+private:
 	std::vector<Point> vertexes;
+public:
+	
+	const std::vector<Point>& v = vertexes;
+
 	Polygon() {};
 
 	Polygon(initializer_list<Point> l) : vertexes(l) {};
@@ -21,7 +26,7 @@ public:
 		vertexes.insert(vertexes.end(), l.begin(), l.end());
 	}
 
-	inline Point operator [] (unsigned int idx) { return vertexes[idx]; }
+	inline Point operator [] (unsigned int idx) const { return vertexes[idx]; }
 
 
 	Polygon operator+=(Vector s) {
@@ -32,19 +37,20 @@ public:
 	// unimplemented (is_selfx is short for is_self_intersecting)
 	//bool is_selfx();
 
-	bool is_convex();
+	bool is_convex() const;
 
-	Point center_of_mass();
+	Point center_of_mass() const;
 
 	//rotate around center of mass by /angle/ given in radians
 	void rotate(double angle);
 	void rotate(Point center, double angle);
 
-	double area();
+	double area() const;
 
-	bool is_in(Point); // returns 1 if point belongs to polygon and 0 otherwise
+	bool is_in(Point) const; // returns 1 if point belongs to polygon and 0 otherwise
+
+	friend Polygon convex_hull(const vector<Point> f);
+
 };
 
-std::ostream& operator<<(std::ostream& os, Polygon& p);
-
-Polygon convex_hull(vector<Point> f);
+std::ostream& operator<<(std::ostream& os, const Polygon& p);

@@ -2,7 +2,6 @@
 #include "point.h"
 #include "line.h"
 #include "circle.h"
-#include "tetragon.h"
 #include "vector.h"
 #include <string>
 
@@ -52,7 +51,7 @@ public:
 	// converts 1 to p1, 2 to p2, 3 to p3
 	void num_to_point(int, Point&) const;
 	// if we have received a main point p, this func changes a1 and a2 to other points of a Triangle
-	void point_reassignment(Point, Point, Point, Point, Point&, Point&);
+	void point_reassignment(Point, Point&, Point&) const;
 
 	// Two triangles
 	// checks if two triangles are congruent (=)
@@ -65,6 +64,5 @@ public:
 	bool is_in(Point) const;
 
 	// Friends
-	friend double Tetragon::tetragon_area();
 	friend std::ostream& operator<<(std::ostream& os, Triangle& t);
 };

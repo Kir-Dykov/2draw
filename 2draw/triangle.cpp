@@ -102,7 +102,7 @@ Line Triangle::get_median(int num_point) const {
 	Point p, a1, a2, m;
 	Line M;
 	num_to_point(num_point, p);
-	point_reassignment(p, p1, p2, p3, a1, a2);
+	point_reassignment(p, a1, a2);
 	m.x = (a1.x + a2.x) * 0.5;
 	m.y = (a1.y + a2.y) * 0.5;
 	M.set(m, p);
@@ -115,7 +115,7 @@ Line Triangle::get_bisectrix(int num_point) const {
 	Point p, a1, a2, bis;
 	double a, b, c, m;
 	num_to_point(num_point, p);
-	point_reassignment(p, p1, p2, p3, a1, a2);
+	point_reassignment(p, a1, a2);
 	a = distance(p, a1);
 	b = distance(p, a2);
 	c = distance(a1, a2);
@@ -143,10 +143,10 @@ Line Triangle::get_altitude(int num_point) const {
 	Line Alt, L;
 	Point p, a1, a2;
 	num_to_point(num_point, p);
-	point_reassignment(p, p1, p2, p3, a1, a2);
+	point_reassignment(p, a1, a2);
 	L.set(a1, a2);
 	Alt = perpendicular(L);
-	Alt.c = -Alt.a * p.x - Alt.b * p.y;
+	Alt.set_c(-Alt.a * p.x - Alt.b * p.y);
 
 	return Alt;
 }
@@ -155,7 +155,7 @@ Line Triangle::get_midline(int num_point) const {
 	Line Mid;
 	Point p, a1, a2;
 	num_to_point(num_point, p);
-	point_reassignment(p, p1, p2, p3, a1, a2);
+	point_reassignment(p, a1, a2);
 	Mid.set(Point((p.x + a1.x) / 2.0, (p.y + a1.y) / 2.0), Point((p.x + a2.x) / 2.0, (p.y + a2.y) / 2.0));
 
 	return Mid;
@@ -165,10 +165,10 @@ Line Triangle::get_perp_bis(int num_point) const {
 	Line Perp, L;
 	Point p, a1, a2;
 	num_to_point(num_point, p);
-	point_reassignment(p, p1, p2, p3, a1, a2);
+	point_reassignment(p, a1, a2);
 	L.set(a1, a2);
 	Perp = perpendicular(L);
-	Perp.c = -Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0;
+	Perp.set_c(-Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0);
 
 	return Perp;
 }
@@ -199,7 +199,7 @@ void Triangle::num_to_point(int num, Point& p) const {
 	else if (num == 3) p = p3;
 }
 
-void Triangle::point_reassignment(Point p, Point p1, Point p2, Point p3, Point& a1, Point& a2) {
+void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const {
 	if (p == p1) { 
 		a1 = p2; 
 		a2 = p3; 
@@ -234,6 +234,6 @@ bool Triangle::are_similar(Triangle t) const {
 }
 
 std::ostream& operator<<(std::ostream& os, Triangle& t) {
-	os << t.p1 << ", " << t.p2 << ", " << t.p3;
+	os << "(" << t.p1 << ", " << t.p2 << ", " << t.p3 << ")";
 	return os;
 }

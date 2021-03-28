@@ -155,7 +155,6 @@
     <ClCompile Include="polygon.cpp" />
     <ClInclude Include="tests\circle_tests.h" />
     <ClInclude Include="tests\hello_world.h" />
-    <ClCompile Include="tetragon.cpp" />
     <ClCompile Include="triangle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
@@ -171,9 +170,7 @@
     <ClInclude Include="menu.hpp" />
     <ClInclude Include="point.h" />
     <ClInclude Include="polygon.h" />
-    <ClInclude Include="tests\tetragon_tests.h" />
     <ClInclude Include="tests\triangle_tests.h" />
-    <ClInclude Include="tetragon.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>

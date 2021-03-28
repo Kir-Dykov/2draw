@@ -2,11 +2,6 @@
 #include <cmath>
 
 
-Point& Point::operator =(const Point& other) {
-	x = other.x;
-	y = other.y;
-	return *this;
-}
 void Point::set(double _x = 0, double _y = 0)
 {
 	x = _x;

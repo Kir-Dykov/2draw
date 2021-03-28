@@ -8,8 +8,7 @@ int circle_main()
 	cout << first << endl;
 	second.set(Point(0, 3), Point(0, 2));
 	cout << second << endl;
-	std::cout << "\nDistance point to circle: " << Circle::get_dist_pnttocir(Point(-10, 6), second);
-	std::cout << "\nDistance point to circle: " << Circle::get_dist_pnttocir(Point(10, 9), first);
+
 	std::cout << "\nIntersections of cicles: \n\t";
 	for (auto i : intersections(first, second)) 
 		cout << i << " ";

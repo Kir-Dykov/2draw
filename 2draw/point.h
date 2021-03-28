@@ -15,16 +15,18 @@ public:
 	
 	Point() { x = 0; y = 0; }
 	Point(double _x, double _y) { x = _x; y = _y; }
-	Point& operator =(const Point& other);
-
+	Point& operator =(const Point& other) { x = other.x; y = other.y; return *this; }
 	bool operator==(Point p) {return x == p.x && y == p.y;}
 
-	Vector operator-(Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
+	
 	Point operator+=(Vector s) { x += s.getx(); y += s.gety(); return *this; }
 	Point operator+(Vector s) {return Point(x + s.getx(), y + s.gety()); }
 };
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
+
+Vector operator-(Point one, Point another) { return Vector(one.x - another.x, one.y - another.y); } // Vector conntecting two points
+
 
 double distance(Point p1, Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = distance(p1, p2)
 

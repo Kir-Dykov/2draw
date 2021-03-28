@@ -1,51 +1,38 @@
 #include "line.h"
 #include "vector.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 
-const double PI = 3.14159265358979;
-void Line::set(Point _p1, Point _p2)
-{
-	p1 = _p1;
-	p2 = _p2;
-	a = p1.y - p2.y;
-	b = p2.x - p1.x;
-	c = p1.x * p2.y - p2.x * p1.y;
+void Line::set(Point p1, Point p2) {
+	_a = p1.y - p2.y;
+	_b = p2.x - p1.x;
+	_c = p1.x * p2.y - p2.x * p1.y;
 }
 
-void Line::set(double _a = 1, double _b = 1, double _c = 0)
-{
-	a = _a;
-	b = _b;
-	c = _c;
-}
 
-double Line::get_angle_rad() const {return atan(-a / b);}
 
-double Line::get_angle_deg() const {return atan(-a / b) * 180 / PI;}
+double Line::get_angle_rad() const {return atan(-_a / _b);}
 
-bool Line::operator==(Line L) const {
-	return a / L.a == b / L.b && b / L.b == c / L.c;
+double Line::get_angle_deg() const {return atan(-_a / _b) * 180 / M_PI;}
+
+bool Line::operator==(const Line L) const {
+	return _a / L._a == _b / L._b && _b / L._b == _c / L._c;
 }
 
 //TODO: пусть функци€ принимает точку, через которую должна проходить перпендикул€рна€ пр€ма€
-Line perpendicular(Line L) {
-	Line res;
-	res.a = L.b;
-	res.b = -L.a;
-	res.c = L.c;
-	return res;
+Line perpendicular(const Line L) {
+	return Line(L.b, -L.a, L.c);
 }
 
-bool are_parallel(Line L1, Line L2) {
+bool are_parallel(const Line L1, const Line L2) {
 	return L1.a / L2.a == L1.b / L2.b;
 }
 
-bool point_on_Line(Point p, Line L)
-{
+bool point_on_Line(const Point p, const Line L) {
 	return p.x * L.a + p.y * L.b + L.c == 0;
 }
 
-void Line::cout_line()
+void Line::cout_line() const
 {
 	if (a == 1)
 		cout << "x ";
@@ -82,10 +69,10 @@ double get_twoLines_radangle(Line L1, Line L2)
 
 double get_twoLines_degangle(Line L1, Line L2)
 {
-	if (get_twoLines_radangle(L1, L2) * 180.0 / PI > 90)
-		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
+	if (get_twoLines_radangle(L1, L2) * 180.0 / M_PI > 90)
+		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / M_PI;
 	else
-		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
+		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / M_PI;
 }
 
 int find_halfplane(Line L, Point p)
