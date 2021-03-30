@@ -28,13 +28,13 @@ double Line::get_angle_deg()
 	return atan(-a / b) * 180 / PI;
 }
 
-bool Line::operator==(Line L)
+bool Line::operator==(const Line L)
 {
 	return a / L.a == b / L.b && b / L.b == c / L.c;
 }
 
 //TODO: пусть функци€ принимает точку, через которую должна проходить перпендикул€рна€ пр€ма€
-Line perp_Line(Line L)
+Line perp_Line(const Line L)
 {
 	Line res;
 	res.a = L.b;
@@ -43,12 +43,12 @@ Line perp_Line(Line L)
 	return res;
 }
 
-bool are_parallel(Line L1, Line L2)
+bool are_parallel(const Line L1, const Line L2)
 {
 	return L1.a / L2.a == L1.b / L2.b;
 }
 
-bool point_on_Line(Point p, Line L)
+bool point_on_Line(const Point p, const Line L)
 {
 	return p.x * L.a + p.y * L.b + L.c == 0;
 }
@@ -77,13 +77,13 @@ void Line::cout_line()
 	cout << "= 0";
 }
 
-double get_twoLines_radangle(Line L1, Line L2)
+double get_twoLines_radangle(const Line L1, const Line L2)
 {
 	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));
 	return acos(a);
 }
 
-double get_twoLines_degangle(Line L1, Line L2)
+double get_twoLines_degangle(const Line L1, const Line L2)
 {
 	if (get_twoLines_radangle(L1, L2) * 180.0 / PI > 90)
 		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
@@ -91,7 +91,7 @@ double get_twoLines_degangle(Line L1, Line L2)
 		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
 }
 
-int find_halfplane(Line L, Point p)
+int find_halfplane(const Line L, const Point p)
 {
 	if (L.a > 0 || L.a == 0 && L.b > 0) {
 		if (p.x * L.a + p.y * L.b + L.c > 0)
@@ -110,4 +110,28 @@ int find_halfplane(Line L, Point p)
 		else
 			return 0;
 	}
+}
+
+std::ostream& operator<<(std::ostream& os, const Line& l) {
+	if (l.a == 1)
+		os << "x ";
+	else if (l.a == -1)
+		os << "-x ";
+	else if (l.a != 0)
+		os << l.a << "x ";
+	if (l.b == 1)
+		os << "+y ";
+	else if (l.b == -1)
+		os << "-y ";
+	else if (l.b != 0)
+		if (l.b > 0)
+			os << "+ " << l.b << "y ";
+		else
+			os << l.b << "y ";
+	if (l.c > 0)
+		os << "+" << l.c << " ";
+	else if (l.c < 0)
+		os << l.c << " ";
+	cout << "= 0";
+	return os;
 }
