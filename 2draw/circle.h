@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <vector>
 #include "point.h"
 
@@ -11,23 +13,23 @@ public:
 	Circle(double, double, double);
 	Circle();
 	// setters
-	void set(Point _center, double _radius);
-	void set(Point _center, Point other);
-    void set_radius(double);
-	void set_center(Point);
-	void set_centerx(double);
-	void set_centery(double);
+	void set(Point, double);
+	void set(Point, Point);
+    void set_radius(double _radius) { radius = _radius; }
+	void set_center(Point _center) { center = _center; }
+	void set_centerx(double _x) { center.x = _x; }
+	void set_centery(double _y) { center.y = _y; }
 
-	// Get circle parameters functions
-	double get_radius() const;
-	Point get_center() const;
-	double circumference() const;
-	double area() const;
+	// get circle parameters functions
+	double get_radius() const { return radius; }
+	Point get_center() const { return center; }
+	double circumference() const { return 2 * M_PI * radius; }
+	double area() const { return M_PI * radius * radius; }
 
 	// Some circle special functions
 	
 	// return 1 if point lies inside circle, 0 otherwise
-	bool is_in(Point) const;
+	bool is_in(Point p) const { return (point_distance(center, p) <= radius); }
 
 	// get the intersection points of two circles
 	friend std::vector<Point> intersections(Circle, Circle);
