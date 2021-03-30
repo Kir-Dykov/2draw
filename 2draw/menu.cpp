@@ -3,7 +3,6 @@
 #include "tests/circle_tests.h"
 #include "tests/point_tests.h"
 #include "tests/line_tests.h"
-#include "tests/tetragon_tests.h"
 #include "tests/triangle_tests.h"
 
 #include <string>
@@ -23,7 +22,6 @@ std::vector<MenuPos> menu_positions = {
 		MenuPos("Circle testing", circle_main),
 		MenuPos("Point testing", point_main),
 		MenuPos("Line testing", line_main),
-		MenuPos("Tetragon testing", tetragon_main),
 		MenuPos("Triangle testing", triangle_main),
 };
 

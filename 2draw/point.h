@@ -10,11 +10,11 @@ public:
 
 	void set_point(double, double);   //zadanie tochki:													p.set_point()
 	int find_quarter();    //nahozhdenie chetverti v kotoroy nahoditsa tochka:						p.find_quarter() 
-	
+
 	Point() { x = 0; y = 0; }
 	Point(double _x, double _y) { x = _x; y = _y; }
 
-	bool operator==(const Point p) {return x == p.x && y == p.y;}
+	bool operator==(const Point p) { return x == p.x && y == p.y; }
 
 	Vector operator-(Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
 };

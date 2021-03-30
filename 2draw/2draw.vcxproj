@@ -121,6 +121,14 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,13 +153,15 @@
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="point.cpp" />
     <ClCompile Include="polygon.cpp" />
+    <ClInclude Include="tests\circle_tests.h" />
     <ClInclude Include="tests\hello_world.h" />
-    <ClCompile Include="tetragon.cpp" />
     <ClCompile Include="triangle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="vector.cpp" />
+    <ClInclude Include="tests\line_tests.h" />
+    <ClInclude Include="tests\point_tests.h" />
     <ClInclude Include="tests\polygon_tests.h" />
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +170,7 @@
     <ClInclude Include="menu.hpp" />
     <ClInclude Include="point.h" />
     <ClInclude Include="polygon.h" />
-    <ClInclude Include="tetragon.h" />
+    <ClInclude Include="tests\triangle_tests.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>

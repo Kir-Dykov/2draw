@@ -1,26 +1,37 @@
 #pragma once
+#include <vector>
 #include "point.h"
 
 class Circle
 {
-public:
-	void set_circle(Point, double);		// set a circle by point and radius
-	void set_circleby2p(Point, Point);	// set a circle from two points
-
-	void set_radius(double);
-	double get_radius();
-	Point get_center();
-	void set_centerx(double);
-	double get_centerx();
-	void set_centery(double);
-	double get_centery();
-	static double get_dist_pnttocir(Point, Circle);	// get the distance from a point to a circle
-	static void find_cros_2circlespnts(Circle, Circle);// get the intersection points of two circles
-	static void cout_circle(Circle);
-	static double get_length(Circle);
-	static double get_square(Circle);
-	static double get_diameter(Circle);
 private:
 	Point center;
 	double radius;
+public:
+	Circle(double, double, double);
+	Circle();
+	// setters
+	void set(Point _center, double _radius);
+	void set(Point _center, Point other);
+    void set_radius(double);
+	void set_center(Point);
+	void set_centerx(double);
+	void set_centery(double);
+
+	// Get circle parameters functions
+	double get_radius() const;
+	Point get_center() const;
+	double circumference() const;
+	double area() const;
+
+	// Some circle special functions
+	
+	// return 1 if point lies inside circle, 0 otherwise
+	bool is_in(Point) const;
+
+	// get the intersection points of two circles
+	friend std::vector<Point> intersections(Circle, Circle);
+
+	// Output circle
+	friend std::ostream& operator<<(std::ostream& os, Circle& c);
 };

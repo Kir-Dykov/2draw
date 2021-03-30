@@ -5,8 +5,11 @@ using namespace std;
 
 class Vector
 {
-public:
+
+private:
 	double x, y;	//koordinati x y
+
+public:
 
 	Vector(double _x = 0, double _y = 0) { x = _x; y = _y; }
 
@@ -25,6 +28,9 @@ public:
 	double abs() { return sqrt(x * x + y * y); }
 	double arg() { return atan2(x, y); }
 
+	friend double determinant(Vector, Vector);
+	friend double dot(Vector, Vector);
+	friend double cos(Vector, Vector);
+
 };
 
-double determinant(Vector, Vector);
