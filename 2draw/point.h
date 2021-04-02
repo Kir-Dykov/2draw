@@ -8,7 +8,7 @@ class Point
 public:
 	double x, y;	//koordinati x y
 
-	void set_point(double, double);   //zadanie tochki:													p.set_point()
+	void set(double, double);   //zadanie tochki:													p.set_point()
 	int find_quarter();    //nahozhdenie chetverti v kotoroy nahoditsa tochka:						p.find_quarter() 
 
 	Point() { x = 0; y = 0; }
@@ -21,7 +21,7 @@ public:
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
 
-double point_distance(const Point p1, const Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = point_distance(p1, p2)
+double distance(const Point p1, const Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = point_distance(p1, p2)
 
 Point sym_point_x(const Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Ox:			q = sym_point_x(p)
 Point sym_point_y(const Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Îy:			q = sym_point_y(p)

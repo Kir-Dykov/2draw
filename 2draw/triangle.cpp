@@ -146,7 +146,7 @@ Line Triangle::get_altitude(int num_point) const {
 	point_reassignment(p, a1, a2);
 	L.set(a1, a2);
 	Alt = perpendicular(L);
-	Alt.set_c(-Alt.a * p.x - Alt.b * p.y);
+	Alt.set_argument_c(-Alt.a * p.x - Alt.b * p.y);
 
 	return Alt;
 }
@@ -168,7 +168,7 @@ Line Triangle::get_perp_bis(int num_point) const {
 	point_reassignment(p, a1, a2);
 	L.set(a1, a2);
 	Perp = perpendicular(L);
-	Perp.set_c(-Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0);
+	Perp.set_argument_c(-Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0);
 
 	return Perp;
 }

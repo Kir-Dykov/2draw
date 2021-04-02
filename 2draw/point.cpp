@@ -1,7 +1,7 @@
 #include "point.h"
 #include <cmath>
 
-void Point::set_point(double _x = 0, double _y = 0)
+void Point::set(double _x = 0, double _y = 0)
 {
 	x = _x;
 	y = _y;
@@ -39,7 +39,7 @@ Point sym_point_y(const Point p)
 	return a;
 }
 
-double point_distance(const Point p1, const Point p2)
+double distance(const Point p1, const Point p2)
 {
 	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }

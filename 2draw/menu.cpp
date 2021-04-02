@@ -1,5 +1,5 @@
 #include "tests/hello_world.h"
-#include "tests/polygon_tests.h"
+//#include "tests/polygon_tests.h"
 #include "tests/circle_tests.h"
 #include "tests/point_tests.h"
 #include "tests/line_tests.h"
@@ -18,7 +18,7 @@
 // second parameter is the name of a function that is to be executed
 std::vector<MenuPos> menu_positions = {
 		MenuPos("Hello World Programm", hello_world_main),
-		MenuPos("Polygon testing", polygon_main),
+		//MenuPos("Polygon testing", polygon_main),
 		MenuPos("Circle testing", circle_main),
 		MenuPos("Point testing", point_main),
 		MenuPos("Line testing", line_main),

@@ -9,12 +9,10 @@ int point_main() {
 	b.set(2, 3);
 	cout << "A's quarter is - " << a.find_quarter() << endl;
 	cout << "Point B is - ";
-	b.cout_point();
-	cout << endl;
+	cout << b << endl;
 	m = middlepoint(a, b);
 	cout << "A, B's middle point is - ";
-	m.cout_point();
-	cout << endl;
+	cout << m << endl;
 
 	return 0;
 }

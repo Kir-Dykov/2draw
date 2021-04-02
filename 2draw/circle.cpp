@@ -19,7 +19,7 @@ void Circle::set(Point _center, double _radius) {
 }
 void Circle::set(Point _center, Point other) {
 	center = _center;
-	radius = point_distance(_center, other);
+	radius = distance(_center, other);
 }
 
 std::ostream& operator<<(std::ostream& os, Circle& c) {
@@ -29,7 +29,7 @@ std::ostream& operator<<(std::ostream& os, Circle& c) {
 
 std::vector<Point> intersections(Circle circle1, Circle circle2) {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
-	double centers_distance = point_distance(circle1.center, circle2.center);
+	double centers_distance = distance(circle1.center, circle2.center);
 	if (centers_distance == 0 && circle1.radius == circle2.radius) {		// coincide
 		return { circle1.center, circle2.center };
 	}

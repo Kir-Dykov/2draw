@@ -7,9 +7,11 @@ public:
 	Point p1, p2;							//2 tochki, zadayshie pryamuy							
 	double a, b, c;							//koefficienti uravneniya pryamoi
 
-	void set_line(Point, Point);		//zadanie pryamoi cherez 2 tocki (uravnenie zadayotsa avtomatichski) L.set(p1, p2)
-	void set_line(int, int, int);	//zadanie pryamoi uravneniem							L.set(a, b, c)
+	void set(Point, Point);		//zadanie pryamoi cherez 2 tocki (uravnenie zadayotsa avtomatichski) L.set(p1, p2)
+	void set(int, int, int);	//zadanie pryamoi uravneniem							L.set(a, b, c)
 
+
+	void set_argument_c(double _c) { c = _c; }
 	double get_angle_rad();			//vichislenie ugla mezhdu pryamoi i osiu Ox v radianah	a = L.get_angle_rad()
 	double get_angle_deg();			//vichislenie ugla mezhdu pryamoi i osiu Ox v gradusah	a = L.get_angle_deg()
 
@@ -18,7 +20,7 @@ public:
 	bool operator==(const Line);				//operator sovpadenia dvuh pryamih						L1 == L2
 };
 std::ostream& operator<<(std::ostream& os, const Line& l);
-Line perp_Line(const Line);			//sozdanie pryamoi, perpendiculyarnoi dannoi			L2 = perp_Line(L1)
+Line perpendicular(const Line);			//sozdanie pryamoi, perpendiculyarnoi dannoi			L2 = perp_Line(L1)
 bool are_parallel(const Line, const Line);	//opredelenie parallelnosti dvuh pryamih				bool f = are_parallel(L1, L2)
 bool point_on_Line(const Point, const Line);	//opredelenie prinadlezhnosti tochki pryamoi			bool f = point_on_Line(p, L)
 

@@ -29,7 +29,7 @@ public:
 	// Some circle special functions
 	
 	// return 1 if point lies inside circle, 0 otherwise
-	bool is_in(Point p) const { return (point_distance(center, p) <= radius); }
+	bool is_in(Point p) const { return (distance(center, p) <= radius); }
 
 	// get the intersection points of two circles
 	friend std::vector<Point> intersections(Circle, Circle);

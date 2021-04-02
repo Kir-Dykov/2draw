@@ -2,7 +2,7 @@
 #include <math.h>
 
 const double PI = 3.14159265358979;
-void Line::set_line(Point _p1, Point _p2)
+void Line::set(Point _p1, Point _p2)
 {
 	p1 = _p1;
 	p2 = _p2;
@@ -11,7 +11,7 @@ void Line::set_line(Point _p1, Point _p2)
 	c = p1.x * p2.y - p2.x * p1.y;
 }
 
-void Line::set_line(int _a = 1, int _b = 1, int _c = 0)
+void Line::set(int _a = 1, int _b = 1, int _c = 0)
 {
 	a = _a;
 	b = _b;
@@ -34,7 +34,7 @@ bool Line::operator==(const Line L)
 }
 
 //TODO: пусть функци€ принимает точку, через которую должна проходить перпендикул€рна€ пр€ма€
-Line perp_Line(const Line L)
+Line perpendicular(const Line L)
 {
 	Line res;
 	res.a = L.b;
