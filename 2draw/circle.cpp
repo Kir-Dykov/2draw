@@ -12,23 +12,23 @@ Circle::Circle() {
 	radius = 0;
 }
 
-void Circle::set(Point _center, double _radius) {
+void Circle::set(const Point _center, const double _radius) {
 	center.x = _center.x;
 	center.y = _center.y;
 	radius = _radius;
 }
 
-void Circle::set(Point _center, Point other) {
+void Circle::set(const Point _center, const Point other) {
 	center = _center;
 	radius = distance(_center, other);
 }
 
-std::ostream& operator<<(std::ostream& os, Circle& c) {
+std::ostream& operator<<(std::ostream& os, const Circle& c) {
 	os << "the circle with the radius of " << c.radius << " and the center at " << c.center;
 	return os;
 }
 
-std::vector<Point> intersections(Circle circle1, Circle circle2) {
+std::vector<Point> intersections(const Circle circle1, const Circle circle2) {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
 	double centers_distance = distance(circle1.center, circle2.center);
 	if (centers_distance == 0 && circle1.radius == circle2.radius) {		// coincide

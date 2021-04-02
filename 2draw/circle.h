@@ -13,12 +13,12 @@ public:
 	Circle(double, double, double);
 	Circle();
 	// setters
-	void set(Point, double);
-	void set(Point, Point);
-    void set_radius(double _radius) { radius = _radius; }
-	void set_center(Point _center) { center = _center; }
-	void set_centerx(double _x) { center.x = _x; }
-	void set_centery(double _y) { center.y = _y; }
+	void set(const Point, const double);
+	void set(const Point, const Point);
+    void set_radius(const double _radius) { radius = _radius; }
+	void set_center(const Point _center) { center = _center; }
+	void set_centerx(const double _x) { center.x = _x; }
+	void set_centery(const double _y) { center.y = _y; }
 
 	// get circle parameters functions
 	double get_radius() const { return radius; }
@@ -29,11 +29,11 @@ public:
 	// Some circle special functions
 	
 	// return 1 if point lies inside circle, 0 otherwise
-	bool is_in(Point p) const { return (distance(center, p) <= radius); }
+	bool is_in(const Point p) const { return (distance(center, p) <= radius); }
 
 	// get the intersection points of two circles
-	friend std::vector<Point> intersections(Circle, Circle);
+	friend std::vector<Point> intersections(const Circle, const Circle);
 
 	// Output circle
-	friend std::ostream& operator<<(std::ostream& os, Circle& c);
+	friend std::ostream& operator<<(std::ostream& os, const Circle& c);
 };
