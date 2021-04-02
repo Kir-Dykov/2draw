@@ -1,7 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "triangle.h"
-#include <cmath>
-
-const double PI = 3.14159265358979;
 
 void Triangle::set(Point _p1, Point _p2, Point _p3) {
 	p1 = _p1;
@@ -15,32 +14,40 @@ Triangle::Triangle(Point _p1, Point _p2, Point _p3) {
 	p3 = _p3;
 }
 
+void Triangle::num2point(int num, Point& p) const {
+	// determining the vertex by number
+	if (num == 1) p = p1;
+	else if (num == 2) p = p2;
+	else if (num == 3) p = p3;
+}
+
 double Triangle::get_angle(int num_point) const {
-	Line A, B;
-	Point p;
-	double angle;
-	num_to_point(num_point, p);
+	Line A, B;					// lines lying on the sides of a given vertex
+	Point p;					// vertex
+	// selecting a vertex
+	num2point(num_point, p);
+	// finding two lines of a selected vertex
 	if (p == p1) {
 		A.set(p1, p2);
 		B.set(p1, p3); 
 	}
-	if (p == p2) {
+	else if (p == p2) {
 		A.set(p2, p1); 
 		B.set(p2, p3); 
 	}
-	if (p == p3) {
+	else if (p == p3) {
 		A.set(p3, p1); 
 		B.set(p3, p2); 
 	}
-	angle = get_twoLines_radangle(A, B);
 
-	return angle;
+	return get_twoLines_radangle(A, B);
 }
 
 double Triangle::get_side(int num_point1, int num_point2) const {
-	Point p1, p2;
-	num_to_point(num_point1, p1);
-	num_to_point(num_point2, p2);
+	Point p1, p2;	// vertices
+	// selecting a vertex
+	num2point(num_point1, p1);
+	num2point(num_point2, p2);
 
 	return distance(p1, p2);
 }
@@ -50,25 +57,26 @@ double Triangle::perimeter() const {
 }
 
 double Triangle::area() const {
-	double p = perimeter() / 2;
+	double p = perimeter() / 2;		// perimeter
+	// finding the lengths of the sides
 	double a = distance(p1, p2);
 	double b = distance(p2, p3);
 	double c = distance(p1, p3);
 
-	return sqrt(p * (p - a) * (p - b) * (p - c));
+	return sqrt(p * (p - a) * (p - b) * (p - c));	// Heron's formula
 }
 
 int Triangle::triangle_type() const {
 	double eps = 0.00000000000001;
-	bool is_right = false, is_obtise = false;
+	bool is_right = false, is_obtuse = false;
 	for (int i = 0; i < 3; i++) {
-		if (get_angle(i + 1) > PI / 2.0 - eps && get_angle(i + 1) < PI / 2.0 + eps) 
+		if (get_angle(i + 1) > M_PI / 2.0 - eps && get_angle(i + 1) < M_PI / 2.0 + eps) 
 			is_right = true;
-		if (get_angle(i + 1) > PI / 2.0) is_obtise = true;
+		if (get_angle(i + 1) > M_PI / 2.0) is_obtuse = true;
 	}
 
 	if (is_right == true) return 1;
-	if (is_obtise == true) return 2;
+	if (is_obtuse == true) return 2;
 	return 3;
 }
 
@@ -87,10 +95,12 @@ Circle Triangle::get_circumcircle() const {
 
 // we get the center of inscribed circle by solving the system of linear equations (two bisectrixes intersection) and r = S/p
 Circle Triangle::get_inscribed_circle() const {
-	Circle ic;
-	Line B1, B2;
+	Circle ic;		// answer - inscribed circle
+	Line B1, B2;	// bisectors of a vertices
+	// finding the bisector of a vertex
 	B1 = get_bisectrix(2);
 	B2 = get_bisectrix(3);
+	// set circle
 	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
 	ic.set_centerx((-B1.b * ic.get_center().x - B1.c) / B1.a);
 	ic.set_radius(2 * area() / perimeter());
@@ -98,27 +108,50 @@ Circle Triangle::get_inscribed_circle() const {
 	return ic;
 }
 
+void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const {
+	// finding the other two vertices
+	if (p == p1) {
+		a1 = p2;
+		a2 = p3;
+	}
+	else if (p == p2) {
+		a1 = p1;
+		a2 = p3;
+	}
+	else if (p == p3) {
+		a1 = p1;
+		a2 = p2;
+	}
+}
+
 Line Triangle::get_median(int num_point) const {
-	Point p, a1, a2, m;
-	Line M;
-	num_to_point(num_point, p);
+	Point p, a1, a2, medianbase;		// vertices and base of the median 
+	Line M;								// median
+	// selecting a vertex
+	num2point(num_point, p);
+	// finding the other two vertices
 	point_reassignment(p, a1, a2);
-	m.x = (a1.x + a2.x) * 0.5;
-	m.y = (a1.y + a2.y) * 0.5;
-	M.set(m, p);
+	// finding the coordinates of the base of the median
+	medianbase.x = (a1.x + a2.x) * 0.5;
+	medianbase.y = (a1.y + a2.y) * 0.5;
+	M.set(medianbase, p);
 
 	return M;
 }
 
 Line Triangle::get_bisectrix(int num_point) const {
 	Line B, L;
-	Point p, a1, a2, bis;
-	double a, b, c, m;
-	num_to_point(num_point, p);
+	Point p, a1, a2, bis;			// vertices and
+	double a, b, c, m;				// the length of the sides
+	// selecting a vertex
+	num2point(num_point, p);
+	// finding the other two vertices
 	point_reassignment(p, a1, a2);
+	// finding the lengths of the sides
 	a = distance(p, a1);
 	b = distance(p, a2);
 	c = distance(a1, a2);
+	// set side
 	L.set(a1, a2);
 	m = a * c / (a + b);
 	Vector v;
@@ -140,10 +173,13 @@ Line Triangle::get_bisectrix(int num_point) const {
 }
 
 Line Triangle::get_altitude(int num_point) const {
-	Line Alt, L;
-	Point p, a1, a2;
-	num_to_point(num_point, p);
+	Line Alt, L;				// altitude and side (straight)
+	Point p, a1, a2;			// vertices
+	// selecting a vertex
+	num2point(num_point, p);
+	// finding the other two vertices
 	point_reassignment(p, a1, a2);
+	// set side (straight)
 	L.set(a1, a2);
 	Alt = perpendicular(L);
 	Alt.set_argument_c(-Alt.a * p.x - Alt.b * p.y);
@@ -152,20 +188,26 @@ Line Triangle::get_altitude(int num_point) const {
 }
 
 Line Triangle::get_midline(int num_point) const {
-	Line Mid;
-	Point p, a1, a2;
-	num_to_point(num_point, p);
+	Line Mid;			// midline
+	Point p, a1, a2;	// vertices
+	// selecting a vertex
+	num2point(num_point, p);
+	// finding the other two vertices
 	point_reassignment(p, a1, a2);
+	//set midline
 	Mid.set(Point((p.x + a1.x) / 2.0, (p.y + a1.y) / 2.0), Point((p.x + a2.x) / 2.0, (p.y + a2.y) / 2.0));
 
 	return Mid;
 }
 
 Line Triangle::get_perp_bis(int num_point) const {
-	Line Perp, L;
-	Point p, a1, a2;
-	num_to_point(num_point, p);
+	Line Perp, L;		// and side (straight)
+	Point p, a1, a2;	// vertices
+	// selecting a vertex
+	num2point(num_point, p);
+	// finding the other two vertices
 	point_reassignment(p, a1, a2);
+	// set side (straigth)
 	L.set(a1, a2);
 	Perp = perpendicular(L);
 	Perp.set_argument_c(-Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0);
@@ -191,27 +233,6 @@ bool Triangle::operator==(Triangle T) const {
 						return true;
 
 	return false;
-}
-
-void Triangle::num_to_point(int num, Point& p) const {
-	if (num == 1) p = p1;
-	else if (num == 2) p = p2;
-	else if (num == 3) p = p3;
-}
-
-void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const {
-	if (p == p1) { 
-		a1 = p2; 
-		a2 = p3; 
-	}
-	if (p == p2) { 
-		a1 = p1;
-		a2 = p3;
-	}
-	if (p == p3) {
-		a1 = p1;
-		a2 = p2; 
-	}
 }
 
 bool Triangle::are_congruent(Triangle t) const {

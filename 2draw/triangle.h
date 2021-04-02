@@ -49,7 +49,7 @@ public:
 
 	// Subsidary functions
 	// converts 1 to p1, 2 to p2, 3 to p3
-	void num_to_point(int, Point&) const;
+	void num2point(int, Point&) const;
 	// if we have received a main point p, this func changes a1 and a2 to other points of a Triangle
 	void point_reassignment(Point, Point&, Point&) const;
 

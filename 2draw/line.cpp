@@ -1,7 +1,7 @@
-#include "line.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
+#include "line.h"
 
-const double PI = 3.14159265358979;
 void Line::set(Point _p1, Point _p2)
 {
 	p1 = _p1;
@@ -25,7 +25,7 @@ double Line::get_angle_rad()
 
 double Line::get_angle_deg()
 {
-	return atan(-a / b) * 180 / PI;
+	return atan(-a / b) * 180 / M_PI;
 }
 
 bool Line::operator==(const Line L)
@@ -53,30 +53,6 @@ bool point_on_Line(const Point p, const Line L)
 	return p.x * L.a + p.y * L.b + L.c == 0;
 }
 
-void Line::cout_line()
-{
-	if (a == 1)
-		cout << "x ";
-	else if (a == -1)
-		cout << "-x ";
-	else if (a != 0)
-		cout << a << "x ";
-	if (b == 1)
-		cout << "+y ";
-	else if (b == -1)
-		cout << "-y ";
-	else if (b != 0)
-		if (b > 0)
-			cout << "+ " << b << "y ";
-		else
-			cout << b << "y ";
-	if (c > 0)
-		cout << "+" << c << " ";
-	else if (c < 0)
-		cout << c << " ";
-	cout << "= 0";
-}
-
 double get_twoLines_radangle(const Line L1, const Line L2)
 {
 	double a = (L1.a * L2.a + L1.b * L2.b) / (sqrt(L1.a * L1.a + L1.b * L1.b) * sqrt(L2.a * L2.a + L2.b * L2.b));
@@ -85,10 +61,10 @@ double get_twoLines_radangle(const Line L1, const Line L2)
 
 double get_twoLines_degangle(const Line L1, const Line L2)
 {
-	if (get_twoLines_radangle(L1, L2) * 180.0 / PI > 90)
-		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
+	if (get_twoLines_radangle(L1, L2) * 180.0 / M_PI > 90)
+		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / M_PI;
 	else
-		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / PI;
+		return 180 - get_twoLines_radangle(L1, L2) * 180.0 / M_PI;
 }
 
 int find_halfplane(const Line L, const Point p)

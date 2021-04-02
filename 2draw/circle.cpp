@@ -1,6 +1,6 @@
 #include "circle.h"
 
-Circle::Circle(double _x = 0, double _y = 0, double _r = 0) {
+Circle::Circle(double _x = 0, double _y = 0, double _r = 1) {
 	center.x = 0;
 	center.y = 0;
 	radius = 0;
@@ -17,6 +17,7 @@ void Circle::set(Point _center, double _radius) {
 	center.y = _center.y;
 	radius = _radius;
 }
+
 void Circle::set(Point _center, Point other) {
 	center = _center;
 	radius = distance(_center, other);
