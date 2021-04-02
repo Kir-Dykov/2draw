@@ -26,28 +26,23 @@ int triangle_main()
 
 	cout << "Triangle bisectrix: ";
 	bis = t.get_bisectrix(1);
-	bis.cout_line();
-	cout << endl;
+	cout << bis << endl;
 
 	cout << "Triangle altitude: ";
 	alt = t.get_altitude(2);
-	alt.cout_line();
-	cout << endl;
+	cout << alt<< endl;
 
 	cout << "Triangle median: ";
 	med = t.get_median(3);
-	med.cout_line();
-	cout << endl;
+	cout << med << endl;
 
 	cout << "Triangle midline: ";
 	mid = t.get_midline(3);
-	mid.cout_line();
-	cout << endl;
+	cout << mid <<endl;
 
 	cout << "Triangle perp. bisector: ";
 	perp = t.get_perp_bis(3);
-	perp.cout_line();
-	cout << endl;
+	cout << perp <<endl;
 
 	cout << "Tetragon circumcircle: ";
 	cir = t.get_circumcircle();

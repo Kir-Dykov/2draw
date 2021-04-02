@@ -11,10 +11,8 @@ int line_main() {
 	a.set(1, 4, 0);
 	b.set(p1, p2);
 	cout << "Lines: " << endl;
-	a.cout_line();
-	cout << endl;
-	b.cout_line();
-	cout << endl;
+	cout << a << endl;
+	cout << b <<endl;
 	cout << "Are lines parallel?: ";
 	cout << are_parallel(a, b) << endl;
 	cout << "Point p: ";
