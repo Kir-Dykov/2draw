@@ -10,7 +10,7 @@ int point_main() {
 	cout << "A's quarter is - " << a.find_quarter() << endl;
 	cout << "Point B is - ";
 	cout << b << endl;
-	m = middlepoint(a, b);
+	m = a.middlepoint(b);
 	cout << "A, B's middle point is - ";
 	cout << m << endl;
 

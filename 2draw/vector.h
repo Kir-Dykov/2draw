@@ -5,7 +5,6 @@ using namespace std;
 
 class Vector
 {
-
 private:
 	double x, y;	//koordinati x y
 public:

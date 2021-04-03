@@ -5,27 +5,17 @@
 void Triangle::set(Point _p1, Point _p2, Point _p3) {
 	try {
 		if (!exist(_p1, _p2, _p3)) throw "Triangle doesn't exist";
-		else {
-			p1 = _p1;
-			p2 = _p2;
-			p3 = _p3;
-		}
+		else { p1 = _p1; p2 = _p2; p3 = _p3; }
 	}
 	catch (const char* exception) {
-		cerr << "Error: " << exception << '\n';
+		cerr << "Error: " << exception << endl;
 	}
-}
-
-Triangle::Triangle(Point _p1, Point _p2, Point _p3) {
-	p1 = _p1;
-	p2 = _p2;
-	p3 = _p3;
 }
 
 bool Triangle::exist(Point _p1, Point _p2, Point _p3) {
 	Line L;
 	L.set(_p1, _p2);
-	if (point_on_Line(_p3, L)) return 0;
+	if (L.point_on_Line(_p3)) return 0;
 	return 1;
 }
 
@@ -48,7 +38,7 @@ double Triangle::get_angle(int num_point) const {
 		B.set(p3, p2); 
 	}
 
-	return get_twoLines_radangle(A, B);
+	return A.get_twoLines_radangle(B);
 }
 
 double Triangle::get_side(int num_point1, int num_point2) const {
@@ -57,19 +47,19 @@ double Triangle::get_side(int num_point1, int num_point2) const {
 	num2point(num_point1, p1);
 	num2point(num_point2, p2);
 
-	return distance(p1, p2);
+	return p1.distance(p2);
 }
 
-double Triangle::perimeter() const {
-	return distance(p1, p2) + distance(p1, p3) + distance(p2, p3);
+double Triangle::perimeter() {
+	return p1.distance(p2) + p1.distance(p3) + p2.distance(p3);
 }
 
-double Triangle::area() const {
+double Triangle::area() {
 	double p = perimeter() / 2;		// perimeter
 	// finding the lengths of the sides
-	double a = distance(p1, p2);
-	double b = distance(p2, p3);
-	double c = distance(p1, p3);
+	double a = p1.distance(p2);
+	double b = p2.distance(p3);
+	double c = p1.distance(p3);
 
 	return sqrt(p * (p - a) * (p - b) * (p - c));	// Heron's formula
 }
@@ -96,13 +86,13 @@ Circle Triangle::get_circumcircle() const {
 		(p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / D);
 	cc.set_centery(((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * \
 		(p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / -D);
-	cc.set_radius(distance(cc.get_center(), p1));
+	cc.set_radius(cc.get_center().distance(p1));
 
 	return cc;
 }
 
 
-Circle Triangle::get_inscribed_circle() const {
+Circle Triangle::get_inscribed_circle() {
 	// Method: we get the center of inscribed circle by solving the system of
 	// linear equations (two bisectrixes intersection) and r = S/p
 	Circle ic;		// answer - inscribed circle
@@ -113,7 +103,7 @@ Circle Triangle::get_inscribed_circle() const {
 	// set circle
 	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
 	ic.set_centerx((-B1.b * ic.get_center().x - B1.c) / B1.a);
-	ic.set_radius(2 * area() / perimeter());
+	ic.set_radius(2 * (*this).area() / (*this).perimeter());
 
 	return ic;
 }
@@ -145,9 +135,9 @@ Line Triangle::get_bisectrix(int num_point) const {
 	// finding the other two vertices
 	point_reassignment(p, a1, a2);
 	// finding the lengths of the sides
-	a = distance(p, a1);
-	b = distance(p, a2);
-	c = distance(a1, a2);
+	a = p.distance(a1);
+	b = p.distance(a2);
+	c = a1.distance(a2);
 	// set side
 	L.set(a1, a2);
 	m = a * c / (a + b);
@@ -180,7 +170,7 @@ Line Triangle::get_altitude(int num_point) const {
 	point_reassignment(p, a1, a2);
 	// set side (line)
 	L.set(a1, a2);
-	Alt = perpendicular(L);
+	Alt = L.perpendicular();
 	Alt.set_argument_c(-Alt.a * p.x - Alt.b * p.y);
 
 	return Alt;
@@ -208,7 +198,7 @@ Line Triangle::get_perp_bis(int num_point) const {
 	point_reassignment(p, a1, a2);
 	// set side (line)
 	L.set(a1, a2);
-	Perp = perpendicular(L);
+	Perp = L.perpendicular();
 	Perp.set_argument_c(-Perp.a * (a1.x + a2.x) / 2.0 - Perp.b * (a1.y + a2.y) / 2.0);
 
 	return Perp;
@@ -250,13 +240,12 @@ void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const {
 bool Triangle::operator==(Triangle T) const {
 	// Method: Triangles are congruent if you can get one from another by rotations and reflections
 	// This method does not take much time cause there are only 3! = 6 iterations of cycle
-	Triangle t(p1, p2, p3);
 	for (int i = 1; i <= 3; i++)
 		for (int j = 1; j <= 3; j++)
 			for (int k = 1; k <= 3; k++)
 				if (i != j && j != k && i != k)
-					if (t.get_side(1, 2) == T.get_side(i, j) && t.get_side(2, 3) == \
-						T.get_side(j, k) && t.get_side(1, 3) == T.get_side(i, k))
+					if ((*this).get_side(1, 2) == T.get_side(i, j) && (*this).get_side(2, 3) == \
+						T.get_side(j, k) && (*this).get_side(1, 3) == T.get_side(i, k))
 						return true;
 
 	return false;

@@ -1,28 +1,34 @@
 #pragma once
 #include <iostream>
 #include "vector.h"
-using namespace std;
 
-class Point
-{
+class Point {
+private:
+	double x, y;
+
+	// Friends
+	friend class Line;
+	friend class Circle;
+	friend class Triangle;
+	friend class Polygon;
+	friend std::ostream& operator<<(std::ostream&, const Point&);
 public:
-	double x, y;	//koordinati x y
-
-	void set(double, double);   //zadanie tochki:													p.set_point()
-	int find_quarter();    //nahozhdenie chetverti v kotoroy nahoditsa tochka:						p.find_quarter() 
-
 	Point() { x = 0; y = 0; }
 	Point(double _x, double _y) { x = _x; y = _y; }
+	// set the point by x and y
+	void set(double, double);
 
+	// Other functions
+	// distance between 2 points
+	double distance(const Point); 
+	// the middle point between 2 points
+	Point middlepoint(const Point);
+	// find the quarter where the point is lying
+	int find_quarter();
+
+	// Operators
 	bool operator==(const Point p) { return x == p.x && y == p.y; }
-
 	Vector operator-(const Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
 };
 
-std::ostream& operator<<(std::ostream& os, const Point& p);
-
-double distance(const Point p1, const Point p2); //vichislenie rasstoyaniya mezhdy tochkami:				r = point_distance(p1, p2)
-
-Point sym_point_x(const Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Ox:			q = sym_point_x(p)
-Point sym_point_y(const Point);   //sozdanie tochki, simmetrichnoi zadannoi otnositelno osi Îy:			q = sym_point_y(p)
-Point middlepoint(const Point, Point);
+std::ostream& operator<<(std::ostream& os, const Point& p) { os << "(" << p.x << ", " << p.y << ")"; return os; }

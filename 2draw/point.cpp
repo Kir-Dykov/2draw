@@ -1,14 +1,12 @@
 #include "point.h"
 #include <cmath>
 
-void Point::set(double _x = 0, double _y = 0)
-{
+void Point::set(double _x = 0, double _y = 0) {
 	x = _x;
 	y = _y;
 }
 
-int Point::find_quarter()
-{
+int Point::find_quarter(){
 	if (x > 0 && y > 0)
 		return 1;
 	else if (x < 0 && y > 0)
@@ -20,33 +18,13 @@ int Point::find_quarter()
 	else return 0;
 }
 
-
-std::ostream& operator<<(std::ostream& os, const Point& p) { os << "(" << p.x << ", " << p.y << ")"; return os; }
-
-Point sym_point_x(const Point p)
-{
-	Point a;
-	a.x = p.x;
-	a.y = -p.y;
-	return a;
+double Point::distance(const Point p) {
+	return sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
 }
 
-Point sym_point_y(const Point p)
-{
-	Point a;
-	a.x = -p.x;
-	a.y = p.y;
-	return a;
-}
-
-double distance(const Point p1, const Point p2)
-{
-	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
-}
-
-Point middlepoint(const Point p1, const Point p2) {
-	Point p;
-	p.x = (p1.x + p2.x) / 2;
-	p.y = (p1.y + p2.y) / 2;
-	return p;
+Point Point::middlepoint(const Point p) {
+	Point m;
+	m.x = (x + p.x) / 2;
+	m.y = (y + p.y) / 2;
+	return m;
 }

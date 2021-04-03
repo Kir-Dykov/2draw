@@ -8,12 +8,14 @@ class Triangle
 {
 private:
 	Point p1, p2, p3;
+
+	// Friends
+	friend std::ostream& operator<<(std::ostream& os, Triangle& t);
 public:
-	Triangle() {};
-	Triangle(Point, Point, Point);
+	Triangle() { p1.x = 0; p2.x = 1; p3.x = 0; p1.y = 0; p2.y = 0; p3.y = 1; };
+	Triangle(Point _p1, Point _p2, Point _p3) { p1 = _p1; p2 = _p2; p3 = _p3; };
 	// Triangle existence function
 	bool exist(Point, Point, Point);
-
 	// sets the Triangle using 3 points
 	void set(const Point, Point, Point);
 
@@ -27,15 +29,15 @@ public:
 
 	// Some triangular properties
 	// finds the perimeter of the Triangle
-	double perimeter() const;
+	double perimeter();
 	// finds the area of the Triangle
-	double area() const;
+	double area();
 	// finds the type of the Triangle (right - 1, obtise - 2, acute - 3)
 	int triangle_type() const;
 
 	// Triangle and a circle
 	Circle get_circumcircle() const;
-	Circle get_inscribed_circle() const;
+	Circle get_inscribed_circle();
 
 	// Median, bisectix, altitude, midpoint, perp. bisector
 	// finds the equation for the median taken from the chosen Triangle vertex
@@ -58,7 +60,6 @@ public:
 	// Triangle and a point
 	// returns 1 if point belongs to triangle and 0 otherwise
 	bool is_in(const Point);
-
-	// Friends
-	friend std::ostream& operator<<(std::ostream& os, Triangle& t);
 };
+
+std::ostream& operator<<(std::ostream&, Triangle&);

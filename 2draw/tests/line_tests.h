@@ -14,17 +14,17 @@ int line_main() {
 	cout << a << endl;
 	cout << b <<endl;
 	cout << "Are lines parallel?: ";
-	cout << are_parallel(a, b) << endl;
+	cout << a.is_parallel_to(b) << endl;
 	cout << "Point p: ";
 	cout << p1 << endl;
 	cout << "Is p laying on the a-line?: ";
-	cout << point_on_Line(p1, a) << endl;
-	cout << "The angle between a-line and b-line is: " << get_twoLines_degangle(a, b) << endl;
+	cout << a.point_on_Line(p1) << endl;
+	cout << "The angle between a-line and b-line is: " << a.get_twoLines_degangle(b) << endl;
 
 	Point p3;
 	p3.set(-1.4, 2.1212323);
-	cout << "Is point lower or higher than a-line: " << find_halfplane(a, p3) << endl;
-	cout << "Is point lower or higher than b-line: " << find_halfplane(b, p3) << endl;
+	cout << "Is point lower or higher than a-line: " << a.find_halfplane(p3) << endl;
+	cout << "Is point lower or higher than b-line: " << b.find_halfplane(p3) << endl;
 
 	//cout << endl << "Does p1 belong to a: " << a.point_line_belonging(p1) << endl;
 	return 0;

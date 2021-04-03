@@ -5,7 +5,7 @@
 #include "vector.h"
 #include "point.h"
 
-bool Polygon::is_convex() const{
+bool Polygon::is_convex() {
 	//if (is_selfx())
 	//	return 0;
 
@@ -122,7 +122,7 @@ std::ostream& operator<<(std::ostream& os, const Polygon& p) {
 	return os;
 }
 
-bool Polygon::is_in(Point p) const {
+bool Polygon::is_in(Point p) {
 	double det_0 = determinant(vertexes[0] - vertexes.back(), p - vertexes.back());
 	for (unsigned int i = 0; i < vertexes.size()-1; i += 1) {
 		double det = determinant(vertexes[i + 1] - vertexes[i], p - vertexes[i]);

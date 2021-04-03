@@ -3,36 +3,50 @@
 
 class Line
 {
+private:
+	Point p1, p2; 					
+	double a, b, c;	
+
+	// Friends
+	friend class Point;
+	friend class Circle;
+	friend class Triangle;
+	friend class Polygon;
+	friend std::ostream& operator<<(std::ostream&, const Line&);
 public:
-	Point p1, p2;				//2 tochki, zadayshie pryamuy							
-	double a, b, c;				//koefficienti uravneniya pryamoi
-
-	//zadanie pryamoi cherez 2 tocki (uravnenie zadayotsa avtomatichski)
+	Line() { p1.x = 0; p2.x = 1; p1.y = 0; p2.y = 1; a = 1; b = -1; c = 0; };
+	Line(Point _p1, Point _p2) { p1 = _p1; p2 = _p2; a = p1.y - p2.y; b = p2.x - p1.x; c = p1.x * p2.y - p2.x * p1.y; };
+	Line(double _a, double _b, double _c) { a = _a; b = _b; c = _c; p1.x = -c / a; p1.y = 0; p2.x = -(b + c) / a; p2.y = 1; };
+	// Setters
+	// set line by 2 points
 	void set(Point, Point);
-	//zadanie pryamoi uravneniem
-	void set(int, int, int);
-
-
+	// set line by coeffietients of its equation
+	void set(double, double, double);
+	// set the C coeffitient of line
 	void set_argument_c(double _c) { c = _c; }
-	//vichislenie ugla mezhdu pryamoi i osiu Ox v radianah
+
+	// Getters
+	// angle between line and Ox in radians
 	double get_angle_rad();
-	//vichislenie ugla mezhdu pryamoi i osiu Ox v gradusah
+	// ... in degrees
 	double get_angle_deg();
 
-	//operator sovpadenia dvuh pryamih
+	// Other functions
+	// are lines parallel
+	bool is_parallel_to(const Line L);
+	// point line belonging
+	bool point_on_Line(const Point);
+	// angle between 2 lines in radians
+	double get_twoLines_radangle(const Line);
+	// ... in degrees
+	double get_twoLines_degangle(const Line);
+	// finding point halfplane 1 - above the line, -1 - below the line, 0 - on a line
+	int find_halfplane(const Point);
+	// drawing a line perpendicular to the given line
+	Line perpendicular();
+
+	// Operators
 	bool operator==(const Line);
 };
-std::ostream& operator<<(std::ostream& os, const Line& l);
-//sozdanie pryamoi, perpendiculyarnoi dannoi
-Line perpendicular(const Line);
-//opredelenie parallelnosti dvuh pryamih
-bool are_parallel(const Line, const Line);
-//opredelenie prinadlezhnosti tochki pryamoi
-bool point_on_Line(const Point, const Line);
 
-//nahozhdenie ugla mezhdu pryamimi v radianah	double
-double get_twoLines_radangle(const Line, const Line);
-//nahozhdenie ugla mezhdu pryamimi v gradusah double
-double get_twoLines_degangle(const Line, const Line);
-//v kakoi poluploskosti ot pryamoi lezhit tochka 1 - vishe pryamoi, -1 - nizhe pryamoi, 0 - na pryamoi
-int find_halfplane(const Line, const Point);
+std::ostream& operator<<(std::ostream& os, const Line& l);
