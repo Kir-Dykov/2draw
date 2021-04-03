@@ -55,13 +55,10 @@ int triangle_main()
 	cout << "Triangle type: " << t.triangle_type() << endl;
 
 	Point r1, r2, r3;
-	r1.set(0, 6.5);
+	r1.set(4, 3);
 	r2.set(0, 5);
 	r3.set(-2, 5);
 	s.set(r1, r2, r3);
-
-	cout << "Is t congruent to s: " << t.are_congruent(s) << endl;
-	cout << "Is t similar to s: " << t.are_similar(s) << endl;
 
 	cout << endl << "Does r1 belong to t: " << t.is_in(r1) << endl;
 	return 0;

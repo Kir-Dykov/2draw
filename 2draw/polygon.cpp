@@ -3,6 +3,7 @@
 #include <vector>
 #include "polygon.h"
 #include "vector.h"
+#include "point.h"
 
 bool Polygon::is_convex() const{
 	//if (is_selfx())

@@ -16,7 +16,7 @@ public:
 
 	bool operator==(const Point p) { return x == p.x && y == p.y; }
 
-	Vector operator-(Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
+	Vector operator-(const Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
 };
 
 std::ostream& operator<<(std::ostream& os, const Point& p);
