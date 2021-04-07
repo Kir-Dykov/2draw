@@ -22,14 +22,14 @@ public:
 	// distance between 2 points
 	double distance(const Point) const; 
 	// the middle point between 2 points
-	Point middlepoint(const Point);
+	Point middlepoint(const Point) const;
 	// find the quarter where the point is lying
-	int find_quarter();
+	int find_quarter() const;
 
 	// Operators
-	bool operator==(const Point p) { return x == p.x && y == p.y; }
+	bool operator==(const Point p) const { return x == p.x && y == p.y; }
 	
-	Point operator+(const Vector s) { return Point(x + s.x, y + s.y); }
+	Point operator+(const Vector s) const { return Point(x + s.x, y + s.y); }
 	Point operator+=(Vector s) {
 		x += s.x;
 		y += s.y;

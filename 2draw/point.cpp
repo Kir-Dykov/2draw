@@ -6,7 +6,7 @@ void Point::set(double _x = 0, double _y = 0) {
 	y = _y;
 }
 
-int Point::find_quarter(){
+int Point::find_quarter() const{
 	if (x > 0 && y > 0)
 		return 1;
 	else if (x < 0 && y > 0)
@@ -22,7 +22,7 @@ double Point::distance(const Point p) const{
 	return sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
 }
 
-Point Point::middlepoint(const Point p) {
+Point Point::middlepoint(const Point p) const{
 	Point m;
 	m.x = (x + p.x) / 2;
 	m.y = (y + p.y) / 2;
