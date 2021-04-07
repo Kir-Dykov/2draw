@@ -71,8 +71,8 @@ int polygon_main() {
 		};
 
 		Polygon p = convex_hull(v);
-		std::cout << p << endl;
-		std::cout << p.area() << endl;
+		std::cout << "convex hull is " << p << endl;
+		std::cout << "area of the convex hull is " << p.area() << endl;
 	}
 	std::cout << "\n\n\n";
 	{

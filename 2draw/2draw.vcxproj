@@ -169,6 +169,7 @@
     <ClInclude Include="line.h" />
     <ClInclude Include="menu.hpp" />
     <ClInclude Include="point.h" />
+    <ClInclude Include="tests\polygon_tests.h" />
     <ClInclude Include="tests\triangle_tests.h" />
     <ClInclude Include="triangle.h" />
     <ClInclude Include="vector.h" />

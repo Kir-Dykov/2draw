@@ -11,30 +11,28 @@ class Polygon {
 
 private:
 	std::vector<Point> vertexes;
+
 public:
 	
-	const std::vector<Point>& v = vertexes;
-
 	Polygon() {};
-
 	Polygon(initializer_list<Point> l) : vertexes(l) {};
 
-	void append(Point new_point) { 
-		vertexes.push_back(new_point); 
+	Polygon& operator=(const Polygon& other) {
+		vertexes = other.vertexes;
+		return *this;
 	}
-	void append(initializer_list<Point> l) {
-		vertexes.insert(vertexes.end(), l.begin(), l.end());
-	}
+
+	void append(Point new_point) { vertexes.push_back(new_point); }
+	void append(initializer_list<Point> l) { vertexes.insert(vertexes.end(), l.begin(), l.end()); }
 
 	inline Point operator [] (unsigned int idx) const { return vertexes[idx]; }
-
 
 	Polygon operator+=(Vector s) {
 		for (int i = 0; i < vertexes.size(); i++) vertexes[i] += s;
 		return *this;
 	}
 
-	// unimplemented (is_selfx is short for is_self_intersecting)
+	// @todo 
 	//bool is_selfx();
 
 	bool is_convex();
@@ -47,10 +45,10 @@ public:
 
 	double area() const;
 
-	bool is_in(Point); // returns 1 if point belongs to polygon and 0 otherwise
+	bool is_in(Point) const; // returns 1 if point belongs to polygon and 0 otherwise
 
 	friend Polygon convex_hull(const vector<Point> f);
-
+	friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
 };
 
 Polygon convex_hull(const vector<Point> f);

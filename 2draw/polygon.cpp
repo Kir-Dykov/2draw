@@ -115,14 +115,14 @@ double Polygon::area() const{
 }
 
 std::ostream& operator<<(std::ostream& os, const Polygon& p) {
-	for (unsigned int i = 0; i < p.v.size(); i++)
+	for (unsigned int i = 0; i < p.vertexes.size(); i++)
 	{
-		os << p[i] << " ";
+		os << p.vertexes[i] << " ";
 	}
 	return os;
 }
 
-bool Polygon::is_in(Point p) {
+bool Polygon::is_in(Point p) const {
 	double det_0 = determinant(vertexes[0] - vertexes.back(), p - vertexes.back());
 	for (unsigned int i = 0; i < vertexes.size()-1; i += 1) {
 		double det = determinant(vertexes[i + 1] - vertexes[i], p - vertexes[i]);
@@ -173,7 +173,7 @@ Polygon convex_hull(const vector<Point> _f) {
 	
 	for (size_t i = 3; i < f.size(); i++)
 	{
-		cout << hull << endl;
+		
 		if (determinant(hull[head] - hull[head - 1], f[i] - hull[head]) > 0) {
 			hull.append(f[i]);
 			head++;
@@ -187,6 +187,5 @@ Polygon convex_hull(const vector<Point> _f) {
 			hull.vertexes.resize(head + (size_t)1);
 		}
 	}
-
 	return hull;
 }
