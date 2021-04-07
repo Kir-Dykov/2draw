@@ -20,19 +20,19 @@ void Line::set(double _a, double _b, double _c) {
 	p2.y = 1;
 }
 
-double Line::get_angle_rad() {
+double Line::get_angle_rad() const{
 	return atan(-a / b);
 }
 
-double Line::get_angle_deg() {
+double Line::get_angle_deg() const{
 	return atan(-a / b) * 180 / M_PI;
 }
 
-bool Line::operator==(const Line L) {
+bool Line::operator==(const Line L) const {
 	return a / L.a == b / L.b && b / L.b == c / L.c;
 }
 
-Line Line::perpendicular() {
+Line Line::perpendicular() const {
 	Line res;
 	res.a = b;
 	res.b = -a;
@@ -40,27 +40,27 @@ Line Line::perpendicular() {
 	return res;
 }
 
-bool Line::is_parallel_to(const Line L) {
+bool Line::is_parallel_to(const Line L) const{
 	return a / L.a == b / L.b;
 }
 
-bool Line::point_on_Line(const Point p) {
+bool Line::point_on_Line(const Point p) const {
 	return p.x * a + p.y * b + c == 0;
 }
 
-double Line::get_twoLines_radangle(const Line L) {
+double Line::get_twoLines_radangle(const Line L) const {
 	double ang = (a * L.a + b * L.b) / (sqrt(a * a + L.b * L.b) * sqrt(L.a * L.a + L.b * L.b));
 	return acos(ang);
 }
 
-double Line::get_twoLines_degangle(const Line L) {
+double Line::get_twoLines_degangle(const Line L) const {
 	if ((*this).get_twoLines_radangle(L) * 180.0 / M_PI > 90)
 		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
 	else
 		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
 }
 
-int Line::find_halfplane(const Point p) {
+int Line::find_halfplane(const Point p) const {
 	if (a > 0 || a == 0 && b > 0) {
 		if (p.x * a + p.y * b + c > 0)
 			return 1;

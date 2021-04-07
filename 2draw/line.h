@@ -7,12 +7,6 @@ private:
 	Point p1, p2; 					
 	double a, b, c;	
 
-	// Friends
-	friend class Point;
-	friend class Circle;
-	friend class Triangle;
-	friend class Polygon;
-	friend std::ostream& operator<<(std::ostream&, const Line&);
 public:
 	Line() { p1.x = 0; p2.x = 1; p1.y = 0; p2.y = 1; a = 1; b = -1; c = 0; };
 	Line(Point _p1, Point _p2) { p1 = _p1; p2 = _p2; a = p1.y - p2.y; b = p2.x - p1.x; c = p1.x * p2.y - p2.x * p1.y; };
@@ -27,26 +21,31 @@ public:
 
 	// Getters
 	// angle between line and Ox in radians
-	double get_angle_rad();
+	double get_angle_rad() const;
 	// ... in degrees
-	double get_angle_deg();
+	double get_angle_deg() const;
 
 	// Other functions
 	// are lines parallel
-	bool is_parallel_to(const Line L);
+	bool is_parallel_to(const Line L) const;
 	// point line belonging
-	bool point_on_Line(const Point);
+	bool point_on_Line(const Point) const;
 	// angle between 2 lines in radians
-	double get_twoLines_radangle(const Line);
+	double get_twoLines_radangle(const Line) const;
 	// ... in degrees
-	double get_twoLines_degangle(const Line);
+	double get_twoLines_degangle(const Line) const;
 	// finding point halfplane 1 - above the line, -1 - below the line, 0 - on a line
-	int find_halfplane(const Point);
+	int find_halfplane(const Point) const;
 	// drawing a line perpendicular to the given line
-	Line perpendicular();
+	Line perpendicular() const;
 
 	// Operators
-	bool operator==(const Line);
-};
+	bool operator==(const Line) const;
 
-std::ostream& operator<<(std::ostream& os, const Line& l);
+	// Friends
+	friend class Point;
+	friend class Circle;
+	friend class Triangle;
+	friend class Polygon;
+	friend std::ostream& operator<<(std::ostream&, const Line&);
+};
