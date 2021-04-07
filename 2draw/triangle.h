@@ -15,7 +15,7 @@ public:
 	Triangle() { p1.x = 0; p2.x = 1; p3.x = 0; p1.y = 0; p2.y = 0; p3.y = 1; };
 	Triangle(Point _p1, Point _p2, Point _p3) { p1 = _p1; p2 = _p2; p3 = _p3; };
 	// Triangle existence function
-	bool exist(Point, Point, Point);
+	bool exist(Point, Point, Point) const;
 	// sets the Triangle using 3 points
 	void set(const Point, Point, Point);
 
@@ -29,15 +29,15 @@ public:
 
 	// Some triangular properties
 	// finds the perimeter of the Triangle
-	double perimeter();
+	double perimeter() const;
 	// finds the area of the Triangle
-	double area();
+	double area() const;
 	// finds the type of the Triangle (right - 1, obtise - 2, acute - 3)
 	int triangle_type() const;
 
 	// Triangle and a circle
 	Circle get_circumcircle() const;
-	Circle get_inscribed_circle();
+	Circle get_inscribed_circle() const;
 
 	// Median, bisectix, altitude, midpoint, perp. bisector
 	// finds the equation for the median taken from the chosen Triangle vertex
@@ -59,7 +59,7 @@ public:
 
 	// Triangle and a point
 	// returns 1 if point belongs to triangle and 0 otherwise
-	bool is_in(const Point);
+	bool is_in(const Point) const;
 };
 
 std::ostream& operator<<(std::ostream&, Triangle&);

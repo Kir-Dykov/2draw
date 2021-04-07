@@ -12,7 +12,7 @@ void Triangle::set(Point _p1, Point _p2, Point _p3) {
 	}
 }
 
-bool Triangle::exist(Point _p1, Point _p2, Point _p3) {
+bool Triangle::exist(Point _p1, Point _p2, Point _p3) const {
 	Line L;
 	L.set(_p1, _p2);
 	if (L.point_on_Line(_p3)) return 0;
@@ -41,7 +41,7 @@ double Triangle::get_angle(int num_point) const {
 	return A.get_twoLines_radangle(B);
 }
 
-double Triangle::get_side(int num_point1, int num_point2) const {
+double Triangle::get_side(int num_point1, int num_point2) const{
 	Point p1, p2;	// vertices
 	// selecting a vertex
 	num2point(num_point1, p1);
@@ -50,11 +50,11 @@ double Triangle::get_side(int num_point1, int num_point2) const {
 	return p1.distance(p2);
 }
 
-double Triangle::perimeter() {
+double Triangle::perimeter() const{
 	return p1.distance(p2) + p1.distance(p3) + p2.distance(p3);
 }
 
-double Triangle::area() {
+double Triangle::area() const{
 	double p = perimeter() / 2;		// perimeter
 	// finding the lengths of the sides
 	double a = p1.distance(p2);
@@ -64,7 +64,7 @@ double Triangle::area() {
 	return sqrt(p * (p - a) * (p - b) * (p - c));	// Heron's formula
 }
 
-int Triangle::triangle_type() const {
+int Triangle::triangle_type() const{
 	double eps = 0.00000000000001;
 	bool is_right = false, is_obtuse = false;
 	for (int i = 0; i < 3; i++) {
@@ -78,7 +78,7 @@ int Triangle::triangle_type() const {
 	return 3;
 }
 
-Circle Triangle::get_circumcircle() const {
+Circle Triangle::get_circumcircle() const{
 	// Method: https://www.wikiwand.com/ru/%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BE%D0%BA%D1%80%D1%83%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D1%8C
 	Circle cc;
 	double D = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
@@ -92,7 +92,7 @@ Circle Triangle::get_circumcircle() const {
 }
 
 
-Circle Triangle::get_inscribed_circle() {
+Circle Triangle::get_inscribed_circle() const{
 	// Method: we get the center of inscribed circle by solving the system of
 	// linear equations (two bisectrixes intersection) and r = S/p
 	Circle ic;		// answer - inscribed circle
@@ -108,7 +108,7 @@ Circle Triangle::get_inscribed_circle() {
 	return ic;
 }
 
-Line Triangle::get_median(int num_point) const {
+Line Triangle::get_median(int num_point) const{
 	// Method: we just find the mid point of the opposite side and draw a line through two points
 	Point p, a1, a2, medianbase;		// vertices and base of the median 
 	Line M;								// median
@@ -124,7 +124,7 @@ Line Triangle::get_median(int num_point) const {
 	return M;
 }
 
-Line Triangle::get_bisectrix(int num_point) const {
+Line Triangle::get_bisectrix(int num_point) const{
 	// Method: using the bisectrix properties (AB/AC = MB/MC), we find the point of bisectrix 
 	// intersection with the triangle side and draw a line through two points
 	Line B, L;
@@ -159,7 +159,7 @@ Line Triangle::get_bisectrix(int num_point) const {
 	return B;
 }
 
-Line Triangle::get_altitude(int num_point) const {
+Line Triangle::get_altitude(int num_point) const{
 	// Method: we draw a perp. line to the opposite side and using its equation Ax + By + C = 0 
 	// choose such C, that this line intersects our point 
 	Line Alt, L;				// altitude and side (line)
@@ -176,7 +176,7 @@ Line Triangle::get_altitude(int num_point) const {
 	return Alt;
 }
 
-Line Triangle::get_midline(int num_point) const {
+Line Triangle::get_midline(int num_point) const{
 	Line Mid;			// midline
 	Point p, a1, a2;	// vertices
 	// selecting a vertex
@@ -189,7 +189,7 @@ Line Triangle::get_midline(int num_point) const {
 	return Mid;
 }
 
-Line Triangle::get_perp_bis(int num_point) const {
+Line Triangle::get_perp_bis(int num_point) const{
 	Line Perp, L;		// add side (line)
 	Point p, a1, a2;	// vertices
 	// selecting a vertex
@@ -204,7 +204,7 @@ Line Triangle::get_perp_bis(int num_point) const {
 	return Perp;
 }
 
-bool Triangle::is_in(Point p) {
+bool Triangle::is_in(Point p) const{
 	// Finding out if the point belongs to triangle using cross products
 	double det_0 = determinant(Vector(p1 - p3), Vector(p - p3));
 	double det_1 = determinant(Vector(p2 - p1), Vector(p - p1));
@@ -214,14 +214,14 @@ bool Triangle::is_in(Point p) {
 	return 1;
 }
 
-void Triangle::num2point(const int num, Point& p) const {
+void Triangle::num2point(const int num, Point& p) const{
 	// determining the vertex by number
 	if (num == 1) p = p1;
 	else if (num == 2) p = p2;
 	else if (num == 3) p = p3;
 }
 
-void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const {
+void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const{
 	// finding the other two vertices
 	if (p == p1) {
 		a1 = p2;
@@ -237,7 +237,7 @@ void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const {
 	}
 }
 
-bool Triangle::operator==(Triangle T) const {
+bool Triangle::operator==(Triangle T) const{
 	// Method: Triangles are congruent if you can get one from another by rotations and reflections
 	// This method does not take much time cause there are only 3! = 6 iterations of cycle
 	for (int i = 1; i <= 3; i++)
