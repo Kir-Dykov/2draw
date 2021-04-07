@@ -28,3 +28,5 @@ Point Point::middlepoint(const Point p) {
 	m.y = (y + p.y) / 2;
 	return m;
 }
+
+std::ostream& operator<<(std::ostream& os, const Point& p) { os << "(" << p.x << ", " << p.y << ")"; return os; }

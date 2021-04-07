@@ -53,4 +53,5 @@ public:
 
 };
 
+Polygon convex_hull(const vector<Point> f);
 std::ostream& operator<<(std::ostream& os, const Polygon& p);

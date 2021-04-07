@@ -146,13 +146,13 @@ Line Triangle::get_bisectrix(int num_point) const {
 	if (L.a == 0) v.set(1, 0);
 	if (L.b == 0) v.set(0, 1);
 	v = v * m;
-	if (a1.x + v.getx() < a1.x && a1.x + v.getx() > a2.x || a1.x + v.getx() > a1.x && a1.x + v.getx() < a2.x) {
-		bis.x = a1.x + v.getx();
-		bis.y = a1.y + v.gety();
+	if (a1.x + v.x < a1.x && a1.x + v.x > a2.x || a1.x + v.x > a1.x && a1.x + v.x < a2.x) {
+		bis.x = a1.x + v.x;
+		bis.y = a1.y + v.y;
 	}
 	else {
-		bis.x = a1.x - v.getx();
-		bis.y = a1.y - v.gety();
+		bis.x = a1.x - v.x;
+		bis.y = a1.y - v.y;
 	}
 	B.set(bis, p);
 

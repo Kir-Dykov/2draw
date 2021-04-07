@@ -4,17 +4,17 @@
 
 class Point {
 private:
-	double x, y;
-
 	// Friends
-	friend class Line;
-	friend class Circle;
-	friend class Triangle;
-	friend class Polygon;
-	friend std::ostream& operator<<(std::ostream&, const Point&);
+	
 public:
+	double x, y;
 	Point() { x = 0; y = 0; }
 	Point(double _x, double _y) { x = _x; y = _y; }
+	Point& operator=(const Point& other) {
+		x = other.x;
+		y = other.y;
+		return *this;
+	}
 	// set the point by x and y
 	void set(double, double);
 
@@ -28,7 +28,19 @@ public:
 
 	// Operators
 	bool operator==(const Point p) { return x == p.x && y == p.y; }
-	Vector operator-(const Point other) { return Vector(x - other.x, y - other.y); } // Vector conntecting two points
+	
+	Point operator+(const Vector s) { return Point(x + s.x, y + s.y); }
+	Point operator+=(Vector s) {
+		x += s.x;
+		y += s.y;
+		return *this;
+	}
+	friend Vector operator-(const Point to, const Point from) { return Vector(to.x - from.x, to.y - from.y); } // Vector connecting two points
+	
+	friend class Line;
+	friend class Circle;
+	friend class Triangle;
+	friend class Polygon;
+	friend std::ostream& operator<<(std::ostream&, const Point&);
 };
-
-std::ostream& operator<<(std::ostream& os, const Point& p) { os << "(" << p.x << ", " << p.y << ")"; return os; }
+z

@@ -152,8 +152,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="point.cpp" />
+    <ClInclude Include="polygon.h" />
     <ClInclude Include="tests\circle_tests.h" />
     <ClInclude Include="tests\hello_world.h" />
+    <ClCompile Include="polygon.cpp" />
     <ClCompile Include="triangle.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>

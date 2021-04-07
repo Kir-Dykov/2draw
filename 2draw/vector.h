@@ -5,15 +5,12 @@ using namespace std;
 
 class Vector
 {
-private:
-	double x, y;	//koordinati x y
 public:
+	double x, y;	//koordinati x y
 
 	Vector(double _x = 0, double _y = 0) { x = _x; y = _y; }
 
 	void set(double _x, double _y) { x = _x; y = _y; }
-	double getx() { return x; }
-	double gety() { return y; }
 
 	bool operator==(Vector other) { return other.x==x && other.y==y; }
 	bool operator!=(Vector other) { return other.x != x || other.y != y; }
@@ -26,7 +23,7 @@ public:
 	double abs() { return sqrt(x * x + y * y); }
 	double arg() { return atan2(x, y); }
 
-	friend double determinant(Vector, Vector);
+	friend double determinant(Vector, Vector); // determinant of the 2x2 matrix formed by two vector-column's
 	friend double dot(Vector, Vector);
 	friend double cos(Vector, Vector);
 

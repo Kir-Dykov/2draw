@@ -135,8 +135,8 @@ bool Polygon::is_in(Point p) {
 
 
 //Graham scan algorithm
-Polygon convex_hull(const vector<Point> f) {
-
+Polygon convex_hull(const vector<Point> _f) {
+	vector<Point> f = _f;
 	if (f.size() == 3)
 	{
 		Polygon hull = { f[0], f[1], f[2] };
@@ -168,11 +168,12 @@ Polygon convex_hull(const vector<Point> f) {
 
 	hull.append({ f[0], f[1], f[2] });
 
-	int head = 2;
+	size_t head = 2;
 
-	for (int i = 3; i < f.size(); i++)
+	
+	for (size_t i = 3; i < f.size(); i++)
 	{
-		
+		cout << hull << endl;
 		if (determinant(hull[head] - hull[head - 1], f[i] - hull[head]) > 0) {
 			hull.append(f[i]);
 			head++;
@@ -183,7 +184,7 @@ Polygon convex_hull(const vector<Point> f) {
 				head--;
 			}
 			hull.vertexes[head] = f[i];
-			hull.vertexes.resize(head + 1);
+			hull.vertexes.resize(head + (size_t)1);
 		}
 	}
 
