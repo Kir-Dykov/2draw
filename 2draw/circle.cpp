@@ -1,27 +1,26 @@
 #include "circle.h"
 
 Circle::Circle(double _x = 0, double _y = 0, double _r = 1) {
-	center.x = 0;
-	center.y = 0;
-	radius = 0;
+	c.x = 0;
+	c.y = 0;
+	r = 0;
 }
 
 Circle::Circle() {
-	center.x = 0;
-	center.y = 0;
-	radius = 0;
+	c.x = 0;
+	c.y = 0;
+	r = 0;
 }
 
 void Circle::set(const Point _center, const double _radius) {
-	center.x = _center.x;
-	center.y = _center.y;
-	radius = _radius;
+	c.x = _center.x;
+	c.y = _center.y;
+	r = _radius;
 }
 
 void Circle::set(const Point _center, const Point other) {
-	Point cen = _center;
-	center = _center;
-	radius = cen.distance(other);
+	c = _center;
+	r = c.distance(other);
 }
 
 std::ostream& operator<<(std::ostream& os, const Circle& c) {
@@ -29,31 +28,31 @@ std::ostream& operator<<(std::ostream& os, const Circle& c) {
 	return os;
 }
 
-std::vector<Point> Circle::intersections(const Circle circle) {
+std::vector<Point> Circle::intersections(const Circle circle) const {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
-	double centers_distance = (*this).center.distance(circle.center);
-	if (centers_distance == 0 && (*this).radius == circle.radius) {		// coincide
-		return { (*this).center, circle.center };
+	double centers_distance = c.distance(circle.center);
+	if (centers_distance == 0 && r == circle.radius) {		// coincide
+		return { c, circle.c };
 	}
-	else if (centers_distance > (*this).radius + circle.radius) {			// don't intersect
+	else if (centers_distance > r + circle.radius) {			// don't intersect
 		return vector<Point>(0);
 	}
-	else if (centers_distance < abs((*this).radius - circle.radius)) {		// one to the other
+	else if (centers_distance < abs(r - circle.r)) {		// one to the other
 		return vector<Point>(0);
 	}
 	else // touch or intersect at two points
 	{
-		double a = ((*this).get_radius() * (*this).get_radius() - circle.get_radius() * circle.get_radius() + \
+		double a = (r * r - circle.r * circle.r + \
 			centers_distance * centers_distance) / (2 * centers_distance);
-		double h = sqrt((*this).get_radius() * (*this).get_radius() - a * a);
+		double h = sqrt(r * r - a * a);
 		Point tmppnt;
-		tmppnt.x = (*this).center.x + a / centers_distance * (circle.center.x - (*this).center.x);
-		tmppnt.y = (*this).center.y + a / centers_distance * (circle.center.y - (*this).center.y);
+		tmppnt.x = c.x + a / centers_distance * (circle.c.x - c.x);
+		tmppnt.y = c.y + a / centers_distance * (circle.c.y - c.y);
 		Point first_intersection, second_intersection;
-		first_intersection.x = tmppnt.x + h / centers_distance * (circle.center.y - (*this).center.y);
-		first_intersection.y = tmppnt.y - h / centers_distance * (circle.center.x - (*this).center.x);
-		second_intersection.x = tmppnt.x - h / centers_distance * (circle.center.y - (*this).center.y);
-		second_intersection.y = tmppnt.y + h / centers_distance * (circle.center.x - (*this).center.x);
+		first_intersection.x = tmppnt.x + h / centers_distance * (circle.c.y - c.y);
+		first_intersection.y = tmppnt.y - h / centers_distance * (circle.c.x - c.x);
+		second_intersection.x = tmppnt.x - h / centers_distance * (circle.c.y - c.y);
+		second_intersection.y = tmppnt.y + h / centers_distance * (circle.c.x - c.x);
 		if (first_intersection == second_intersection)
 			return { first_intersection };
 		else

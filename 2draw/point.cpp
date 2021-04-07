@@ -18,7 +18,7 @@ int Point::find_quarter(){
 	else return 0;
 }
 
-double Point::distance(const Point p) {
+double Point::distance(const Point p) const{
 	return sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
 }
 

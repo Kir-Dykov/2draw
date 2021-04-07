@@ -20,7 +20,7 @@ public:
 
 	// Other functions
 	// distance between 2 points
-	double distance(const Point); 
+	double distance(const Point) const; 
 	// the middle point between 2 points
 	Point middlepoint(const Point);
 	// find the quarter where the point is lying
@@ -43,4 +43,4 @@ public:
 	friend class Polygon;
 	friend std::ostream& operator<<(std::ostream&, const Point&);
 };
-z
+

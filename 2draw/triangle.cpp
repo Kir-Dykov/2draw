@@ -86,7 +86,7 @@ Circle Triangle::get_circumcircle() const {
 		(p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / D);
 	cc.set_centery(((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * \
 		(p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / -D);
-	cc.set_radius(cc.get_center().distance(p1));
+	cc.set_radius(cc.center.distance(p1));
 
 	return cc;
 }
@@ -102,7 +102,7 @@ Circle Triangle::get_inscribed_circle() {
 	B2 = get_bisectrix(3);
 	// set circle
 	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
-	ic.set_centerx((-B1.b * ic.get_center().x - B1.c) / B1.a);
+	ic.set_centerx((-B1.b * ic.center.x - B1.c) / B1.a);
 	ic.set_radius(2 * (*this).area() / (*this).perimeter());
 
 	return ic;
