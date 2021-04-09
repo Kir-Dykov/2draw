@@ -103,3 +103,16 @@ std::ostream& operator<<(std::ostream& os, const Line& l) {
 	cout << "= 0";
 	return os;
 }
+
+Point Line::intersection_point_lines(const Line second) const {
+	// Cramer's method
+	// find the determinant of the matrix of the system
+	double general_det = determinant(Vector(a, second.a), Vector(b, second.b));
+	// finding determinant for x-coordinate
+	double x_det = determinant(Vector(-c, -second.c), Vector(b, second.b));
+	// finding determinant for y-coordinate
+	double y_det = determinant(Vector(a, second.a), Vector(-c, -second.c));
+
+	// returning the coordinates of the intersection point
+	return (Point(x_det / general_det, y_det / general_det));
+}
