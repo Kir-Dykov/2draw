@@ -19,29 +19,27 @@ int triangle_main()
 
 	cout << "Triangle area: " << t.area() << endl;
 
-	cout << "Triangle angles: ";
-	for (int i = 1; i <= 3; i++)
-		cout << t.get_angle(i) << "  ";
-	cout << endl;
+	cout << "Triangle angles: "<< t.get_angle(t.first_vertex) << " " << t.get_angle(t.second_vertex) << " " << \
+		t.get_angle(t.third_vertex) << '\n';
 
 	cout << "Triangle bisectrix: ";
-	bis = t.get_bisectrix(1);
+	bis = t.get_bisectrix(t.first_vertex);
 	cout << bis << endl;
 
 	cout << "Triangle altitude: ";
-	alt = t.get_altitude(2);
+	alt = t.get_altitude(t.second_vertex);
 	cout << alt<< endl;
 
 	cout << "Triangle median: ";
-	med = t.get_median(3);
+	med = t.get_median(t.third_vertex);
 	cout << med << endl;
 
 	cout << "Triangle midline: ";
-	mid = t.get_midline(3);
+	mid = t.get_midline(t.third_vertex);
 	cout << mid <<endl;
 
 	cout << "Triangle perp. bisector: ";
-	perp = t.get_perp_bis(3);
+	perp = t.get_perp_bis(t.third_vertex);
 	cout << perp <<endl;
 
 	cout << "Tetragon circumcircle: ";

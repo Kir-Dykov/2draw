@@ -19,21 +19,18 @@ bool Triangle::exist(Point _p1, Point _p2, Point _p3) const {
 	return 1;
 }
 
-double Triangle::get_angle(int num_point) const {
+double Triangle::get_angle(const Point vertex) const {
 	Line A, B;					// lines lying on the sides of a given vertex
-	Point p;					// vertex
-	// selecting a vertex
-	num2point(num_point, p);
 	// finding two lines of a selected vertex
-	if (p == p1) {
+	if (vertex == p1) {
 		A.set(p1, p2);
 		B.set(p1, p3); 
 	}
-	else if (p == p2) {
+	else if (vertex == p2) {
 		A.set(p2, p1); 
 		B.set(p2, p3); 
 	}
-	else if (p == p3) {
+	else if (vertex == p3) {
 		A.set(p3, p1); 
 		B.set(p3, p2); 
 	}
@@ -41,7 +38,7 @@ double Triangle::get_angle(int num_point) const {
 	return A.get_twoLines_radangle(B);
 }
 
-double Triangle::get_side(int num_point1, int num_point2) const{
+double Triangle::get_side(const int num_point1, const int num_point2) const {
 	Point p1, p2;	// vertices
 	// selecting a vertex
 	num2point(num_point1, p1);
@@ -64,18 +61,21 @@ double Triangle::area() const{
 	return sqrt(p * (p - a) * (p - b) * (p - c));	// Heron's formula
 }
 
-int Triangle::triangle_type() const{
-	double eps = 0.00000000000001;
-	bool is_right = false, is_obtuse = false;
-	for (int i = 0; i < 3; i++) {
-		if (get_angle(i + 1) > M_PI / 2.0 - eps && get_angle(i + 1) < M_PI / 2.0 + eps) 
-			is_right = true;
-		if (get_angle(i + 1) > M_PI / 2.0) is_obtuse = true;
-	}
-
-	if (is_right == true) return 1;
-	if (is_obtuse == true) return 2;
-	return 3;
+int Triangle::triangle_type() const {
+	double first_side, second_side, third_side;
+	first_side = p1.distance(p2);
+	second_side = p1.distance(p3);
+	third_side = p2.distance(p3);
+	if (first_side * first_side == second_side * second_side + third_side * third_side || \
+		second_side * second_side == first_side * first_side + third_side * third_side || \
+		third_side * third_side == first_side * first_side + second_side * second_side)
+		return 1;
+	else if (first_side * first_side > second_side * second_side + third_side * third_side || \
+		second_side * second_side > first_side * first_side + third_side * third_side || \
+		third_side * third_side > first_side * first_side + second_side * second_side)
+		return 2;
+	else
+		return 3;
 }
 
 Circle Triangle::get_circumcircle() const{
@@ -91,52 +91,17 @@ Circle Triangle::get_circumcircle() const{
 	return cc;
 }
 
-
-Circle Triangle::get_inscribed_circle() const{
-	// Method: we get the center of inscribed circle by solving the system of
-	// linear equations (two bisectrixes intersection) and r = S/p
-	Circle ic;		// answer - inscribed circle
-	Line B1, B2;	// bisectors of a vertices
-	// finding the bisector of a vertex
-	B1 = get_bisectrix(2);
-	B2 = get_bisectrix(3);
-	// set circle
-	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
-	ic.set_centerx((-B1.b * ic.center.x - B1.c) / B1.a);
-	ic.set_radius(2 * (*this).area() / (*this).perimeter());
-
-	return ic;
-}
-
-Line Triangle::get_median(int num_point) const{
-	// Method: we just find the mid point of the opposite side and draw a line through two points
-	Point p, a1, a2, medianbase;		// vertices and base of the median 
-	Line M;								// median
-	// selecting a vertex
-	num2point(num_point, p);
-	// finding the other two vertices
-	point_reassignment(p, a1, a2);
-	// finding the coordinates of the base of the median
-	medianbase.x = (a1.x + a2.x) * 0.5;
-	medianbase.y = (a1.y + a2.y) * 0.5;
-	M.set(medianbase, p);
-
-	return M;
-}
-
-Line Triangle::get_bisectrix(int num_point) const{
+Line Triangle::get_bisectrix(const Point vertex) const {
 	// Method: using the bisectrix properties (AB/AC = MB/MC), we find the point of bisectrix 
 	// intersection with the triangle side and draw a line through two points
 	Line B, L;
-	Point p, a1, a2, bis;			// vertices and
-	double a, b, c, m;				// the length of the sides
-	// selecting a vertex
-	num2point(num_point, p);
+	Point a1, a2, bis;			// vertices and
+	double a, b, c, m;			// the length of the sides
 	// finding the other two vertices
-	point_reassignment(p, a1, a2);
+	point_reassignment(vertex, a1, a2);
 	// finding the lengths of the sides
-	a = p.distance(a1);
-	b = p.distance(a2);
+	a = vertex.distance(a1);
+	b = vertex.distance(a2);
 	c = a1.distance(a2);
 	// set side
 	L.set(a1, a2);
@@ -154,48 +119,72 @@ Line Triangle::get_bisectrix(int num_point) const{
 		bis.x = a1.x - v.x;
 		bis.y = a1.y - v.y;
 	}
-	B.set(bis, p);
+	B.set(bis, vertex);
 
 	return B;
 }
 
-Line Triangle::get_altitude(int num_point) const{
+Circle Triangle::get_inscribed_circle() const{
+	// Method: we get the center of inscribed circle by solving the system of
+	// linear equations (two bisectrixes intersection) and r = S/p
+	Circle ic;		// answer - inscribed circle
+	Line B1, B2;	// bisectors of a vertices
+	// finding the bisector of a vertex
+	B1 = get_bisectrix(p2);
+	B2 = get_bisectrix(p3);
+	// set circle
+	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
+	ic.set_centerx((-B1.b * ic.center.x - B1.c) / B1.a);
+	ic.set_radius(2 * (*this).area() / (*this).perimeter());
+
+	return ic;
+}
+
+Line Triangle::get_median(const Point vertex) const{
+	// Method: we just find the mid point of the opposite side and draw a line through two points
+	Point a1, a2, medianbase;		// vertices and base of the median 
+	Line M;								// median
+	// finding the other two vertices
+	point_reassignment(vertex, a1, a2);
+	// finding the coordinates of the base of the median
+	medianbase.x = (a1.x + a2.x) * 0.5;
+	medianbase.y = (a1.y + a2.y) * 0.5;
+	M.set(medianbase, vertex);
+
+	return M;
+}
+
+Line Triangle::get_altitude(const Point vertex) const{
 	// Method: we draw a perp. line to the opposite side and using its equation Ax + By + C = 0 
 	// choose such C, that this line intersects our point 
-	Line Alt, L;				// altitude and side (line)
-	Point p, a1, a2;			// vertices
-	// selecting a vertex
-	num2point(num_point, p);
+	Line Alt, L;			// altitude and side (line)
+	Point a1, a2;			// vertices
 	// finding the other two vertices
-	point_reassignment(p, a1, a2);
+	point_reassignment(vertex, a1, a2);
 	// set side (line)
 	L.set(a1, a2);
 	Alt = L.perpendicular();
-	Alt.set_argument_c(-Alt.a * p.x - Alt.b * p.y);
+	Alt.set_argument_c(-Alt.a * vertex.x - Alt.b * vertex.y);
 
 	return Alt;
 }
 
-Line Triangle::get_midline(int num_point) const{
-	Line Mid;			// midline
-	Point p, a1, a2;	// vertices
-	// selecting a vertex
-	num2point(num_point, p);
+Line Triangle::get_midline(const Point vertex) const{
+	Line Mid;		// midline
+	Point a1, a2;	// vertices
 	// finding the other two vertices
-	point_reassignment(p, a1, a2);
+	point_reassignment(vertex, a1, a2);
 	//set midline
-	Mid.set(Point((p.x + a1.x) / 2.0, (p.y + a1.y) / 2.0), Point((p.x + a2.x) / 2.0, (p.y + a2.y) / 2.0));
+	Mid.set(Point((vertex.x + a1.x) / 2.0, (vertex.y + a1.y) / 2.0), Point((vertex.x + a2.x) / 2.0, (vertex.y + a2.y) / 2.0));
 
 	return Mid;
 }
 
-Line Triangle::get_perp_bis(int num_point) const{
+Line Triangle::get_perp_bis(const Point vertex) const{
 	Line Perp, L;		// add side (line)
-	Point p, a1, a2;	// vertices
-	// selecting a vertex
-	num2point(num_point, p);
+	Point a1, a2;		// vertices
 	// finding the other two vertices
-	point_reassignment(p, a1, a2);
+	point_reassignment(vertex, a1, a2);
 	// set side (line)
 	L.set(a1, a2);
 	Perp = L.perpendicular();
@@ -204,7 +193,7 @@ Line Triangle::get_perp_bis(int num_point) const{
 	return Perp;
 }
 
-bool Triangle::is_in(Point p) const{
+bool Triangle::is_in(const Point p) const{
 	// Finding out if the point belongs to triangle using cross products
 	double det_0 = determinant(Vector(p1 - p3), Vector(p - p3));
 	double det_1 = determinant(Vector(p2 - p1), Vector(p - p1));
@@ -221,7 +210,7 @@ void Triangle::num2point(const int num, Point& p) const{
 	else if (num == 3) p = p3;
 }
 
-void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const{
+void Triangle::point_reassignment(const Point p, Point& a1, Point& a2) const{
 	// finding the other two vertices
 	if (p == p1) {
 		a1 = p2;
@@ -237,7 +226,7 @@ void Triangle::point_reassignment(Point p, Point& a1, Point& a2) const{
 	}
 }
 
-bool Triangle::operator==(Triangle T) const{
+bool Triangle::operator==(const Triangle T) const{
 	// Method: Triangles are congruent if you can get one from another by rotations and reflections
 	// This method does not take much time cause there are only 3! = 6 iterations of cycle
 	for (int i = 1; i <= 3; i++)
