@@ -18,11 +18,11 @@ int Point::find_quarter() const{
 	else return 0;
 }
 
-double Point::distance(const Point p) const{
+double Point::distance(const Point& p) const{
 	return sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
 }
 
-Point Point::middlepoint(const Point p) const{
+Point Point::middlepoint(const Point& p) const{
 	Point m;
 	m.x = (x + p.x) / 2;
 	m.y = (y + p.y) / 2;

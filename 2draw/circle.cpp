@@ -45,14 +45,14 @@ std::vector<Point> Circle::intersections(const Circle circle) const {
 		double a = (r * r - circle.r * circle.r + \
 			centers_distance * centers_distance) / (2 * centers_distance);
 		double h = sqrt(r * r - a * a);
-		Point tmppnt;
-		tmppnt.x = c.x + a / centers_distance * (circle.c.x - c.x);
-		tmppnt.y = c.y + a / centers_distance * (circle.c.y - c.y);
+		Point tmp_pnt;
+		tmp_pnt.x = c.x + a / centers_distance * (circle.c.x - c.x);
+		tmp_pnt.y = c.y + a / centers_distance * (circle.c.y - c.y);
 		Point first_intersection, second_intersection;
-		first_intersection.x = tmppnt.x + h / centers_distance * (circle.c.y - c.y);
-		first_intersection.y = tmppnt.y - h / centers_distance * (circle.c.x - c.x);
-		second_intersection.x = tmppnt.x - h / centers_distance * (circle.c.y - c.y);
-		second_intersection.y = tmppnt.y + h / centers_distance * (circle.c.x - c.x);
+		first_intersection.x = tmp_pnt.x + h / centers_distance * (circle.c.y - c.y);
+		first_intersection.y = tmp_pnt.y - h / centers_distance * (circle.c.x - c.x);
+		second_intersection.x = tmp_pnt.x - h / centers_distance * (circle.c.y - c.y);
+		second_intersection.y = tmp_pnt.y + h / centers_distance * (circle.c.x - c.x);
 		if (first_intersection == second_intersection)
 			return { first_intersection };
 		else

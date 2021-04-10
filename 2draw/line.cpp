@@ -1,7 +1,7 @@
 #include "consts.h"
 #include "line.h"
 
-void Line::set(Point _p1, Point _p2) {
+void Line::set(const Point& _p1, const Point& _p2) {
 	p1 = _p1;
 	p2 = _p2;
 	a = p1.y - p2.y;
@@ -27,7 +27,7 @@ double Line::get_angle_deg() const{
 	return atan(-a / b) * 180 / PI;
 }
 
-bool Line::operator==(const Line L) const {
+bool Line::operator==(const Line& L) const {
 	return a / L.a == b / L.b && b / L.b == c / L.c;
 }
 
@@ -39,7 +39,7 @@ Line Line::perpendicular() const {
 	return res;
 }
 
-Line Line::perp2point_on_line(const Point pnt) const {
+Line Line::perp2point_on_line(const Point& pnt) const {
 	Line res;
 	res.a = -b;
 	res.b = a;
@@ -48,20 +48,20 @@ Line Line::perp2point_on_line(const Point pnt) const {
 	return res;
 }
 
-bool Line::is_parallel_to(const Line L) const{
+bool Line::is_parallel_to(const Line& L) const{
 	return a / L.a == b / L.b;
 }
 
-bool Line::point_on_Line(const Point p) const {
+bool Line::point_on_Line(const Point& p) const {
 	return p.x * a + p.y * b + c == 0;
 }
 
-double Line::get_twoLines_radangle(const Line L) const {
+double Line::get_twoLines_radangle(const Line& L) const {
 	double ang = (a * L.a + b * L.b) / ((sqrt(a * a + b * b) * sqrt(L.a * L.a + L.b * L.b)));
 	return acos(ang);
 }
 
-double Line::get_twoLines_degangle(const Line L) const
+double Line::get_twoLines_degangle(const Line& L) const
 {
 	if ((*this).get_twoLines_radangle(L) * 180.0 / PI > 90)
 		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / PI;
@@ -69,7 +69,7 @@ double Line::get_twoLines_degangle(const Line L) const
 		return (*this).get_twoLines_radangle(L) * 180.0 / PI;
 }
 
-int Line::find_halfplane(const Point p) const {
+int Line::find_halfplane(const Point& p) const {
 	if (a > 0 || a == 0 && b > 0) {
 		if (p.x * a + p.y * b + c > 0)
 			return 1;
@@ -113,7 +113,7 @@ std::ostream& operator<<(std::ostream& os, const Line& l) {
 	return os;
 }
 
-Point Line::intersection_point_lines(const Line second) const {
+Point Line::intersection(const Line& second) const {
 	// Cramer's method
 	// find the determinant of the matrix of the system
 	double general_det = determinant(Vector(a, second.a), Vector(b, second.b));
