@@ -9,7 +9,7 @@ int circle_main()
 	second.set(Point(0, 3), Point(0, 2));
 	cout << second << endl;
 
-	std::cout << "\nIntersections of cicles: \n";
+	std::cout << "\nIntersections of circles: \n";
 	for (auto i : first.intersections(second)) 
 		cout << i << " ";
 	std::cout << "\n";

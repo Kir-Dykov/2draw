@@ -1,15 +1,15 @@
 #include "circle.h"
 
 Circle::Circle(double _x = 0, double _y = 0, double _r = 1) {
-	c.x = 0;
-	c.y = 0;
-	r = 0;
+	c.x = _x;
+	c.y = _y;
+	r = _r;
 }
 
 Circle::Circle() {
 	c.x = 0;
 	c.y = 0;
-	r = 0;
+	r = 1;
 }
 
 void Circle::set(const Point _center, const double _radius) {
@@ -24,7 +24,7 @@ void Circle::set(const Point _center, const Point other) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Circle& c) {
-	os << "the circle with the radius of " << c.radius << " and the center at " << c.center;
+	os << "radius: " << c.radius << ", center: " << c.center;
 	return os;
 }
 

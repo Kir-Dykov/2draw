@@ -19,7 +19,7 @@ int line_main() {
 	cout << p1 << endl;
 	cout << "Is p laying on the a-line?: ";
 	cout << a.point_on_Line(p1) << endl;
-	cout << "The angle between a-line and b-line is: " << a.get_twoLines_degangle(b) << endl;
+	cout << "The angle between a-line and b-line is: " << a.get_twoLines_radangle(b) << endl;
 
 	Point p3;
 	p3.set(-1.4, 2.1212323);

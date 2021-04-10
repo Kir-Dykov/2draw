@@ -58,15 +58,16 @@ bool Line::point_on_Line(const Point p) const {
 }
 
 double Line::get_twoLines_radangle(const Line L) const {
-	double ang = (a * L.a + b * L.b) / (sqrt(a * a + L.b * L.b) * sqrt(L.a * L.a + L.b * L.b));
+	double ang = (a * L.a + b * L.b) / ((sqrt(a * a + b * b) * sqrt(L.a * L.a + L.b * L.b)));
 	return acos(ang);
 }
 
-double Line::get_twoLines_degangle(const Line L) const {
+double Line::get_twoLines_degangle(const Line L) const
+{
 	if ((*this).get_twoLines_radangle(L) * 180.0 / M_PI > 90)
 		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
 	else
-		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
+		return (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
 }
 
 int Line::find_halfplane(const Point p) const {

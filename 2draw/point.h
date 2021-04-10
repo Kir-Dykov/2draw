@@ -3,9 +3,6 @@
 #include "vector.h"
 
 class Point {
-private:
-	// Friends
-	
 public:
 	double x, y;
 	Point() { x = 0; y = 0; }
