@@ -1,6 +1,5 @@
 #pragma once
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "consts.h"
 #include <vector>
 #include "point.h"
 
@@ -37,8 +36,8 @@ public:
 	void set_centerx(const double _x) { c.x = _x; }
 	void set_centery(const double _y) { c.y = _y; }
 
-	double circumference() const { return 2 * M_PI * r; }
-	double area() const { return M_PI * r * r; }
+	double circumference() const { return 2 * PI * r; }
+	double area() const { return PI * r * r; }
 
 	// Some circle special functions
 	// return 1 if point lies inside circle, 0 otherwise

@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="point.cpp" />
+    <ClInclude Include="consts.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="tests\circle_tests.h" />
     <ClInclude Include="tests\hello_world.h" />

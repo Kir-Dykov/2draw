@@ -1,5 +1,5 @@
 #pragma once
-#define _USE_MATH_DEFINES
+#include "consts.h"
 #include <math.h>
 #include "../polygon.h"
 #include <iostream>
@@ -13,7 +13,7 @@ int polygon_main() {
 		std::cout << "it's center: \n";
 		std::cout << p.center_of_mass() << endl;
 
-		p.rotate(M_PI / 4);
+		p.rotate(PI / 4);
 
 		std::cout << "it's points after rotation by pi/4:\n" << p << endl;
 		std::cout << "Is (0.5, 0.5) inside polygon? " << p.is_in(Point(0.5, 0.5)) << endl;
@@ -31,7 +31,7 @@ int polygon_main() {
 		cout << "it's center: \n";
 		cout << p.center_of_mass() << endl;
 
-		p.rotate(M_PI / 4);
+		p.rotate(PI / 4);
 
 		cout << "it's points after rotation by pi/4:\n" << p << endl;
 
@@ -45,7 +45,7 @@ int polygon_main() {
 	{
 		Polygon p;
 		for (int i = 0; i < 8; i++)
-			p.append(Point(cos(2*M_PI * i / 8), sin(2*M_PI * i / 8)));
+			p.append(Point(cos(2* PI * i / 8), sin(2* PI * i / 8)));
 
 		cout << "points in octagon: " << p << endl;
 		cout << "it's center: " << p.center_of_mass() << endl;
@@ -79,12 +79,12 @@ int polygon_main() {
 		const int N = 1000000;
 		Polygon p;
 		for (int i = 0; i < N; i++)
-			p.append(Point(cos(2 * M_PI * (double)i / (double)N), sin(2 * M_PI * (double)i / (double)N)));
+			p.append(Point(cos(2 * PI * (double)i / (double)N), sin(2 * PI * (double)i / (double)N)));
 
 		std::cout << "1'000'000-gon approximating a circle" << endl;
 		std::cout << "it's center (should be (0,0)): " << p.center_of_mass() << endl;
 		std::cout << "it's area (should be good aproximation of pi): " << p.area() << endl;
-		std::cout << "difference from actual pi value: " << p.area() - M_PI << endl;
+		std::cout << "difference from actual pi value: " << p.area() - PI << endl;
 		std::cout << "Is (0, 0) inside polygon? (should be 1) : " << p.is_in(Point(0, 0)) << endl;
 		std::cout << "Is (1, 0) inside polygon? (should be 1) : " << p.is_in(Point(1, 0)) << endl;
 		std::cout << "Is (1, 1) inside polygon? (should be 0) : " << p.is_in(Point(1, 1)) << endl;

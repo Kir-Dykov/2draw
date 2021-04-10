@@ -1,5 +1,4 @@
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "consts.h"
 #include "line.h"
 
 void Line::set(Point _p1, Point _p2) {
@@ -25,7 +24,7 @@ double Line::get_angle_rad() const{
 }
 
 double Line::get_angle_deg() const{
-	return atan(-a / b) * 180 / M_PI;
+	return atan(-a / b) * 180 / PI;
 }
 
 bool Line::operator==(const Line L) const {
@@ -64,10 +63,10 @@ double Line::get_twoLines_radangle(const Line L) const {
 
 double Line::get_twoLines_degangle(const Line L) const
 {
-	if ((*this).get_twoLines_radangle(L) * 180.0 / M_PI > 90)
-		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
+	if ((*this).get_twoLines_radangle(L) * 180.0 / PI > 90)
+		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / PI;
 	else
-		return (*this).get_twoLines_radangle(L) * 180.0 / M_PI;
+		return (*this).get_twoLines_radangle(L) * 180.0 / PI;
 }
 
 int Line::find_halfplane(const Point p) const {
