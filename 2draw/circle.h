@@ -10,11 +10,13 @@ private:
 	Point c;
 	double r;
 
-	// Friends
-	friend std::ostream& operator<<(std::ostream& os, const Circle& cir);
 public:
 	Circle(double, double, double);
 	Circle();
+	Circle(const Circle& other) {
+		c = other.center;
+		r = other.radius;
+	}
 	Circle& operator =(const Circle& other) {
 		c = other.center;
 		r = other.radius;
@@ -24,6 +26,7 @@ public:
 	// "getters"
 	const Point& center = c;
 	const double& radius = r;
+
 	// Setters
 	// set the circle by center point and radius
 	void set(const Point, const double);
@@ -34,9 +37,6 @@ public:
 	void set_centerx(const double _x) { c.x = _x; }
 	void set_centery(const double _y) { c.y = _y; }
 
-	
-
-
 	double circumference() const { return 2 * M_PI * r; }
 	double area() const { return M_PI * r * r; }
 
@@ -46,7 +46,7 @@ public:
 
 	// get the intersection points of two circles
 	std::vector<Point> intersections(const Circle) const;
+
 };
 
-// Output circle
 std::ostream& operator<<(std::ostream&, const Circle&);

@@ -14,6 +14,7 @@ private:
 public:
 	Triangle() { p1.x = 0; p2.x = 1; p3.x = 0; p1.y = 0; p2.y = 0; p3.y = 1; };
 	Triangle(Point _p1, Point _p2, Point _p3) { p1 = _p1; p2 = _p2; p3 = _p3; };
+	Triangle(const Triangle& other) { p1 = other.p1; p2 = other.p2; p3 = other.p3; };
 	// Triangle existence function
 	bool exist(Point, Point, Point) const;
 	// sets the Triangle using 3 points

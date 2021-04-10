@@ -9,7 +9,7 @@ public:
 	double x, y;	//koordinati x y
 
 	Vector(double _x = 0, double _y = 0) { x = _x; y = _y; }
-
+	Vector(const Vector& other) { x = other.x; y = other.y; }
 	void set(double _x, double _y) { x = _x; y = _y; }
 
 	bool operator==(const Vector other) const{ return other.x==x && other.y==y; }

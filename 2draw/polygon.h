@@ -13,10 +13,10 @@ private:
 	std::vector<Point> vertexes;
 
 public:
-	
+
 	Polygon() {};
 	Polygon(initializer_list<Point> l) : vertexes(l) {};
-
+	Polygon(const Polygon& other) { vertexes = other.vertexes; }
 	Polygon& operator=(const Polygon& other) {
 		vertexes = other.vertexes;
 		return *this;
