@@ -18,17 +18,17 @@ int triangle_main()
 	cout << "Triangle area: " << t.area() << endl;
 
 	cout << "Triangle bisectrix: ";
-	bis = t.get_bisectrix(t.second_vertex);
+	bis = t.get_bisectrix(t.point2);
 	cout << bis;
 	cout << endl;
 
 	cout << "Triangle altitude: ";
-	bis = t.get_altitude(t.second_vertex);
+	bis = t.get_altitude(t.point2);
 	cout << bis;
 	cout << endl;
 
 	cout << "Triangle median: ";
-	bis = t.get_median(t.second_vertex);
+	bis = t.get_median(t.point2);
 	cout << bis;
 	cout << endl;
 

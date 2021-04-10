@@ -81,7 +81,7 @@ void Polygon::rotate(double angle) {
 		}
 }
 
-void Polygon::rotate(const Point center, double angle) {
+void Polygon::rotate(const Point& center, double angle) {
 	//just applying rotation matrix to all points
 
 	double cos_ = cos(angle);
@@ -122,7 +122,7 @@ std::ostream& operator<<(std::ostream& os, const Polygon& p) {
 	return os;
 }
 
-bool Polygon::is_in(Point p) const {
+bool Polygon::is_in(const Point& p) const {
 	double det_0 = determinant(vertexes[0] - vertexes.back(), p - vertexes.back());
 	for (unsigned int i = 0; i < vertexes.size()-1; i += 1) {
 		double det = determinant(vertexes[i + 1] - vertexes[i], p - vertexes[i]);
@@ -135,7 +135,7 @@ bool Polygon::is_in(Point p) const {
 
 
 //Graham scan algorithm
-Polygon convex_hull(const vector<Point> _f) {
+Polygon convex_hull(const vector<Point>& _f) {
 	vector<Point> f = _f;
 	if (f.size() == 3)
 	{

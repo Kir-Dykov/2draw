@@ -28,7 +28,7 @@ public:
 	bool operator==(const Point& p) const { return x == p.x && y == p.y; }
 	
 	Point operator+(const Vector& s) const { return Point(x + s.x, y + s.y); }
-	Point operator+=(Vector& s) {
+	Point operator+=(const Vector& s) {
 		x += s.x;
 		y += s.y;
 		return *this;

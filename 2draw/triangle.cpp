@@ -2,7 +2,7 @@
 #include <math.h>
 #include "triangle.h"
 
-void Triangle::set(Point _p1, Point _p2, Point _p3) {
+void Triangle::set(const Point& _p1, const Point& _p2, const Point& _p3) {
 	try {
 		if (!exist(_p1, _p2, _p3)) throw "Triangle doesn't exist";
 		else { p1 = _p1; p2 = _p2; p3 = _p3; }
@@ -13,7 +13,7 @@ void Triangle::set(Point _p1, Point _p2, Point _p3) {
 	}
 }
 
-bool Triangle::exist(Point _p1, Point _p2, Point _p3) const {
+bool Triangle::exist(const Point& _p1, const Point& _p2, const Point& _p3) const {
 	Line L;
 	L.set(_p1, _p2);
 	if (L.point_on_Line(_p3)) return 0;
@@ -21,7 +21,7 @@ bool Triangle::exist(Point _p1, Point _p2, Point _p3) const {
 	return 1;
 }
 
-double Triangle::get_angle(const Point vertex) const {
+double Triangle::get_angle(const Point& vertex) const {
 	Line A, B;					// lines lying on the sides of a given vertex
 	// finding two lines of a selected vertex
 	if (vertex == p1) {
@@ -107,7 +107,7 @@ Circle Triangle::get_inscribed_circle() const{
 	return ic;
 }
 
-Line Triangle::get_median(const Point vertex) const{
+Line Triangle::get_median(const Point& vertex) const{
 	// Method: we just find the mid point of the opposite side and draw a line through two points
 	Point a1, a2, medianbase;		// vertices and base of the median 
 	Line M;								// median
@@ -121,7 +121,7 @@ Line Triangle::get_median(const Point vertex) const{
 	return M;
 }
 
-Line Triangle::get_bisectrix(const Point vertex) const {
+Line Triangle::get_bisectrix(const Point& vertex) const {
 	// Method: using the bisectrix properties (AB/AC = MB/MC), we find the point of bisectrix 
 	// intersection with the triangle side and draw a line through two points
 	Line B, L;
@@ -149,7 +149,7 @@ Line Triangle::get_bisectrix(const Point vertex) const {
 	return B;
 }
 
-Line Triangle::get_altitude(const Point vertex) const{
+Line Triangle::get_altitude(const Point& vertex) const{
 	// Method: we draw a perp. line to the opposite side and using its equation Ax + By + C = 0 
 	// choose such C, that this line intersects our point 
 	Line Alt, L;			// altitude and side (line)
@@ -164,7 +164,7 @@ Line Triangle::get_altitude(const Point vertex) const{
 	return Alt;
 }
 
-Line Triangle::get_midline(const Point vertex) const{
+Line Triangle::get_midline(const Point& vertex) const{
 	Line Mid;		// midline
 	Point a1, a2;	// vertices
 	// finding the other two vertices
@@ -175,7 +175,7 @@ Line Triangle::get_midline(const Point vertex) const{
 	return Mid;
 }
 
-Line Triangle::get_perp_bis(const Point vertex) const{
+Line Triangle::get_perp_bis(const Point& vertex) const{
 	Line Perp, L;		// add side (line)
 	Point a1, a2;		// vertices
 	// finding the other two vertices
@@ -188,7 +188,7 @@ Line Triangle::get_perp_bis(const Point vertex) const{
 	return Perp;
 }
 
-bool Triangle::is_in(const Point p) const{
+bool Triangle::is_in(const Point& p) const{
 	// Finding out if the point belongs to triangle using cross products
 	double det_0 = determinant(Vector(p1 - p3), Vector(p - p3));
 	double det_1 = determinant(Vector(p2 - p1), Vector(p - p1));
@@ -205,7 +205,7 @@ void Triangle::num2point(const int num, Point& p) const{
 	else if (num == 3) p = p3;
 }
 
-void Triangle::point_reassignment(const Point p, Point& a1, Point& a2) const{
+void Triangle::point_reassignment(const Point& p, Point& a1, Point& a2) const{
 	// finding the other two vertices
 	if (p == p1) {
 		a1 = p2;
@@ -221,7 +221,7 @@ void Triangle::point_reassignment(const Point p, Point& a1, Point& a2) const{
 	}
 }
 
-bool Triangle::operator==(const Triangle T) const{
+bool Triangle::operator==(const Triangle& T) const{
 	// Method: Triangles are congruent if you can get one from another by rotations and reflections
 	// This method does not take much time cause there are only 3! = 6 iterations of cycle
 	for (int i = 1; i <= 3; i++)
@@ -240,7 +240,7 @@ std::ostream& operator<<(std::ostream& os, Triangle& t) {
 	return os;
 }
 
-Circle Triangle::get_excircle(const Point vertex) const {
+Circle Triangle::get_excircle(const Point& vertex) const {
 	// vertex - the vertex opposite which there will be a circle
 	Point second_vertex, third_vertex;	// the other two vertices
 	// finding the other two vertices
