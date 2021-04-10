@@ -10,9 +10,9 @@ int triangle_main()
 	Circle cir;
 
 	Point p1, p2, p3;
-	p1.set(1, 0);
-	p2.set(2, 0);
-	p3.set(4, 0);
+	p1.set(-2, -10);
+	p2.set(-3, -1);
+	p3.set(-2, 0);
 	t.set(p1, p2, p3);
 
 	cout << "Triangle area: " << t.area() << endl;
@@ -33,13 +33,11 @@ int triangle_main()
 	cout << endl;
 
 	cout << "Triangle circumcircle: ";
-	cir = t.get_circumcircle();
-	cout << cir;
+	cout << t.get_circumcircle();
 	cout << endl;
 
 	cout << "Triangle inscribed circle: ";
-	cir = t.get_inscribed_circle();
-	cout << cir;
+	cout << t.get_inscribed_circle();
 	cout << endl;
 
 	return 0;

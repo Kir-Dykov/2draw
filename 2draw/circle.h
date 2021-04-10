@@ -11,7 +11,7 @@ private:
 	double r;
 
 	// Friends
-	friend std::ostream& operator<<(std::ostream& os, const Circle& c);
+	friend std::ostream& operator<<(std::ostream& os, const Circle& cir);
 public:
 	Circle(double, double, double);
 	Circle();

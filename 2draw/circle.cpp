@@ -23,8 +23,8 @@ void Circle::set(const Point _center, const Point other) {
 	r = c.distance(other);
 }
 
-std::ostream& operator<<(std::ostream& os, const Circle& c) {
-	os << "radius: " << c.radius << ", center: " << c.center;
+std::ostream& operator<<(std::ostream& os, const Circle& cir) {
+	os << "radius: " << cir.radius << ", center: " << cir.center;
 	return os;
 }
 

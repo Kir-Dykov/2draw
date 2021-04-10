@@ -17,6 +17,7 @@ bool Triangle::exist(Point _p1, Point _p2, Point _p3) const {
 	Line L;
 	L.set(_p1, _p2);
 	if (L.point_on_Line(_p3)) return 0;
+	if (_p1 == _p2 || _p2 == _p3 || _p1 == _p3) return 0;
 	return 1;
 }
 
@@ -89,6 +90,37 @@ Circle Triangle::get_circumcircle() const{
 	return cc;
 }
 
+
+Circle Triangle::get_inscribed_circle() const{
+	// Method: we get the center of inscribed circle by solving the system of
+	// linear equations (two bisectrixes intersection) and r = S/p
+	Circle ic;		// answer - inscribed circle
+	Line B1, B2;	// bisectors of a vertices
+	// finding the bisector of a vertex
+	B1 = get_bisectrix(p1);
+	B2 = get_bisectrix(p2);
+	// set circle
+	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
+	ic.set_centerx((-B1.b * ((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b) - B1.c) / B1.a);
+	ic.set_radius(2 * (*this).area() / (*this).perimeter());
+
+	return ic;
+}
+
+Line Triangle::get_median(const Point vertex) const{
+	// Method: we just find the mid point of the opposite side and draw a line through two points
+	Point a1, a2, medianbase;		// vertices and base of the median 
+	Line M;								// median
+	// finding the other two vertices
+	point_reassignment(vertex, a1, a2);
+	// finding the coordinates of the base of the median
+	medianbase.x = (a1.x + a2.x) * 0.5;
+	medianbase.y = (a1.y + a2.y) * 0.5;
+	M.set(medianbase, vertex);
+
+	return M;
+}
+
 Line Triangle::get_bisectrix(const Point vertex) const {
 	// Method: using the bisectrix properties (AB/AC = MB/MC), we find the point of bisectrix 
 	// intersection with the triangle side and draw a line through two points
@@ -109,47 +141,12 @@ Line Triangle::get_bisectrix(const Point vertex) const {
 	if (L.a == 0) v.set(1, 0);
 	if (L.b == 0) v.set(0, 1);
 	v = v * m;
-	if (a1.x + v.x < a1.x && a1.x + v.x > a2.x || a1.x + v.x > a1.x && a1.x + v.x < a2.x) {
-		bis.x = a1.x + v.x;
-		bis.y = a1.y + v.y;
-	}
-	else {
-		bis.x = a1.x - v.x;
-		bis.y = a1.y - v.y;
-	}
+
+	bis.x = a1.x + v.x;
+	bis.y = a1.y + v.y;
 	B.set(bis, vertex);
 
 	return B;
-}
-
-Circle Triangle::get_inscribed_circle() const{
-	// Method: we get the center of inscribed circle by solving the system of
-	// linear equations (two bisectrixes intersection) and r = S/p
-	Circle ic;		// answer - inscribed circle
-	Line B1, B2;	// bisectors of a vertices
-	// finding the bisector of a vertex
-	B1 = get_bisectrix(p2);
-	B2 = get_bisectrix(p3);
-	// set circle
-	ic.set_centery(((B1.c * B2.a) / B1.a - B2.c) / ((-B1.b * B2.a) / B1.a + B2.b));
-	ic.set_centerx((-B1.b * ic.center.x - B1.c) / B1.a);
-	ic.set_radius(2 * (*this).area() / (*this).perimeter());
-
-	return ic;
-}
-
-Line Triangle::get_median(const Point vertex) const{
-	// Method: we just find the mid point of the opposite side and draw a line through two points
-	Point a1, a2, medianbase;		// vertices and base of the median 
-	Line M;								// median
-	// finding the other two vertices
-	point_reassignment(vertex, a1, a2);
-	// finding the coordinates of the base of the median
-	medianbase.x = (a1.x + a2.x) * 0.5;
-	medianbase.y = (a1.y + a2.y) * 0.5;
-	M.set(medianbase, vertex);
-
-	return M;
 }
 
 Line Triangle::get_altitude(const Point vertex) const{
