@@ -26,7 +26,6 @@ public:
 	void append(initializer_list<Point> l) { vertexes.insert(vertexes.end(), l.begin(), l.end()); }
 
 	inline Point operator [] (unsigned int idx) const { return vertexes[idx]; }
-
 	Polygon operator+=(const Vector& s) {
 		for (int i = 0; i < vertexes.size(); i++) vertexes[i] += s;
 		return *this;
@@ -47,7 +46,7 @@ public:
 
 	bool is_in(const Point&) const; // returns 1 if point belongs to polygon and 0 otherwise
 
-	friend Polygon convex_hull(const vector<Point>& f);
+	friend Polygon convex_hull(const vector<Point>& points);
 	friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
 };
 

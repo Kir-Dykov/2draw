@@ -133,7 +133,6 @@ bool Polygon::is_in(const Point& p) const {
 	return 1;
 }
 
-
 //Graham scan algorithm
 Polygon convex_hull(const vector<Point>& _f) {
 	vector<Point> f = _f;

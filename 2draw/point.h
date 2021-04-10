@@ -33,7 +33,9 @@ public:
 		y += s.y;
 		return *this;
 	}
-	friend Vector operator-(const Point& to, const Point& from) { return Vector(to.x - from.x, to.y - from.y); } // Vector connecting two points
+
+	// Vector connecting two points
+	friend Vector operator-(const Point& to, const Point& from) { return Vector(to.x - from.x, to.y - from.y); } 
 	
 	friend std::ostream& operator<<(std::ostream&, const Point&);
 };
