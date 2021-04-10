@@ -23,7 +23,7 @@ int triangle_main()
 		t.get_angle(t.third_vertex) << '\n';
 
 	cout << "Triangle bisectrix: ";
-	bis = t.get_bisectrix(t.first_vertex);
+	bis = t.get_bisectrix(t.third_vertex);
 	cout << bis << endl;
 
 	cout << "Triangle altitude: ";

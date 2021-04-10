@@ -43,6 +43,7 @@ public:
 	// Triangle and a circle
 	Circle get_circumcircle() const;
 	Circle get_inscribed_circle() const;
+	/*Circle get_excircle(const Point) const;*/
 
 	// Median, bisectix, altitude, midpoint, perp. bisector
 	// finds the equation for the median taken from the chosen Triangle vertex

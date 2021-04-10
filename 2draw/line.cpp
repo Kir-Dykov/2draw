@@ -40,6 +40,15 @@ Line Line::perpendicular() const {
 	return res;
 }
 
+Line Line::perp2point_on_line(const Point pnt) const {
+	Line res;
+	res.a = -b;
+	res.b = a;
+	res.c = -a * pnt.y + b * pnt.x;
+
+	return res;
+}
+
 bool Line::is_parallel_to(const Line L) const{
 	return a / L.a == b / L.b;
 }

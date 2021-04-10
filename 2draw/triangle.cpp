@@ -240,8 +240,28 @@ bool Triangle::operator==(const Triangle T) const{
 	return false;
 }
 
-
 std::ostream& operator<<(std::ostream& os, Triangle& t) {
 	os << "(" << t.p1 << ", " << t.p2 << ", " << t.p3 << ")";
 	return os;
 }
+
+//Circle Triangle::get_excircle(const Point vertex) const {
+//	// vertex - the vertex opposite which there will be a circle
+//	Point second_vertex, third_vertex;	// the other two vertices
+//	// finding the other two vertices
+//	point_reassignment(vertex, second_vertex, third_vertex);
+//	Line bisect_second_vertex, bisect_third_vertex;			// bisectors of two other vertices
+//	// finding the bisector the other two vertices
+//	bisect_second_vertex = get_bisectrix(second_vertex);
+//	bisect_third_vertex = get_bisectrix(third_vertex);
+//	Line perp2bis_second_vert, perp2bis_third_vert;			// perpendicular to bisectors
+//	// finding perpendicular to bisectors
+//	perp2bis_second_vert = bisect_second_vertex.perp2point_on_line(second_vertex);
+//	perp2bis_third_vert = bisect_third_vertex.perp2point_on_line(third_vertex);
+//	Point intersection = perp2bis_second_vert.intersection_point_lines(perp2bis_third_vert);
+//	double radius = (*this).area() / ((*this).perimeter() - second_vertex.distance(third_vertex));
+//	Circle res;
+//	res.set(intersection, radius);
+//	cout << intersection << ' ' << radius << '\n';
+//	return res;
+//}

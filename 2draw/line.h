@@ -38,6 +38,7 @@ public:
 	int find_halfplane(const Point) const;
 	// drawing a line perpendicular to the given line
 	Line perpendicular() const;
+	Line perp2point_on_line(const Point) const;
 	// finds the intersection point of two lines
 	Point intersection_point_lines(const Line) const;
 	// Operators
