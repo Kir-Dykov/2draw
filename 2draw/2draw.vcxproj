@@ -168,6 +168,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="utilities.cpp" />
     <ClCompile Include="vector.cpp" />
     <ClInclude Include="tests\line_tests.h" />
     <ClInclude Include="tests\point_tests.h" />
@@ -179,7 +180,9 @@
     <ClInclude Include="point.h" />
     <ClInclude Include="tests\polygon_tests.h" />
     <ClInclude Include="tests\triangle_tests.h" />
+    <ClInclude Include="tests\utilities_tests.h" />
     <ClInclude Include="triangle.h" />
+    <ClInclude Include="utilities.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

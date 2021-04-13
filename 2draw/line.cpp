@@ -129,6 +129,6 @@ Point Line::intersection(const Line& second) const {
 Line Line::parallel(const Point& P) const {
 	Line LP;
 	LP.a = a; LP.b = b;
-	LP.c = -a * P.x - b * P.y;
+	LP.c = -a * P.x - b * P.y; // value, such that when we plug-in point P into formula a*x+b*y+c we get 0
 	return LP;
 }

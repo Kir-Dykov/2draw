@@ -1,6 +1,10 @@
 #pragma once
 #include <iostream>
+
+using namespace std;
+
 int hello_world_main() {
-	std::cout << "Hello World!!!";
+	cout << "Hello World!!!\n";
+	
 	return 0;
 }
