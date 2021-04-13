@@ -125,3 +125,10 @@ Point Line::intersection(const Line& second) const {
 	// returning the coordinates of the intersection point
 	return (Point(x_det / general_det, y_det / general_det));
 }
+
+Line Line::parallel(const Point& P) const {
+	Line LP;
+	LP.a = a; LP.b = b;
+	LP.c = -a * P.x - b * P.y;
+	return LP;
+}

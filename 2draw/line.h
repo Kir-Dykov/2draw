@@ -44,6 +44,8 @@ public:
 	Line perp2point_on_line(const Point&) const;
 	// finds the intersection point of two lines
 	Point intersection(const Line&) const;
+	// finds a parallel line through the point
+	Line parallel(const Point&) const;
 	// Operators
 	bool operator==(const Line&) const;
 
