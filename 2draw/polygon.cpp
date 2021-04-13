@@ -227,3 +227,14 @@ Polygon convex_hull(const vector<Point>& _f) {
 	}
 	return hull;
 }
+
+double Polygon::perimeter() {
+	double res = sqrt((vertexes[vertexes.size() - 1].x - vertexes[0].x) * (vertexes[vertexes.size() - 1].x - vertexes[0].x) \
+		+ (vertexes[vertexes.size() - 1].y - vertexes[0].y) * (vertexes[vertexes.size() - 1].y - vertexes[0].y));
+	for (int i = 0; i < vertexes.size() - 1; i++)
+	{
+		res += sqrt((vertexes[i].x - vertexes[i + 1].x) * (vertexes[i].x - vertexes[i + 1].x) + (vertexes[i].y - vertexes[i + 1].y) \
+			* (vertexes[i].y - vertexes[i + 1].y));
+	}
+	return res;
+}
