@@ -2,6 +2,7 @@
 #include "consts.h"
 #include <vector>
 #include "point.h"
+#include "line.h"
 
 class Circle
 {
@@ -45,7 +46,7 @@ public:
 
 	// get the intersection points of two circles
 	std::vector<Point> intersections(const Circle) const;
-
+	std::vector<Line> tangents(const Point) const;
 };
 
 std::ostream& operator<<(std::ostream&, const Circle&);

@@ -254,7 +254,7 @@ Circle Triangle::get_excircle(const Point& vertex) const {
 	perp2bis_second_vert = bisect_second_vertex.perp2point_on_line(second_vertex);
 	perp2bis_third_vert = bisect_third_vertex.perp2point_on_line(third_vertex);
 	Point intersection = perp2bis_second_vert.intersection(perp2bis_third_vert);
-	double radius = (*this).area() / ((*this).perimeter() - second_vertex.distance(third_vertex));
+	double radius = (*this).area() / ((*this).perimeter()/2 - second_vertex.distance(third_vertex));
 	Circle res;
 	res.set(intersection, radius);
 	cout << intersection << ' ' << radius << '\n';

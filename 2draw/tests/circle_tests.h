@@ -11,9 +11,14 @@ int circle_main()
 
 	std::cout << "\nIntersections of circles: \n";
 	for (auto i : first.intersections(second)) 
-		cout << i << " ";
+		std::cout << i << " ";
 	std::cout << "\n";
 
 	std::cout << endl << "Does (-1, 3) belong to the second circle: " << second.is_in(Point(-1, 3)) << endl;
+	
+	std::cout << "\nTangents of circles: \n";
+	for (auto i : first.tangents(Point(8,7)))
+		std::cout << i << " ";
+	std::cout << "\n";
 	return 0;
 }

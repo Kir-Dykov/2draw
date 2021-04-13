@@ -35,10 +35,10 @@ std::vector<Point> Circle::intersections(const Circle circle) const {
 		return { c, circle.c };
 	}
 	else if (centers_distance > r + circle.radius) {			// don't intersect
-		return vector<Point>(0);
+		return std::vector<Point>(0);
 	}
 	else if (centers_distance < abs(r - circle.r)) {		// one to the other
-		return vector<Point>(0);
+		return std::vector<Point>(0);
 	}
 	else // touch or intersect at two points
 	{
@@ -58,4 +58,25 @@ std::vector<Point> Circle::intersections(const Circle circle) const {
 		else
 			return { first_intersection, second_intersection };
 	}
+}
+
+std::vector<Line> Circle::tangents(const Point p) const {
+	//gроверка на принадлежность точки окр
+
+	double dist = (p.x - center.x) * (p.x - center.x) + (p.y - center.y) * (p.y - center.y);
+	if (dist == r * r) {
+		Line linedist(Point(p.x, p.y), Point(center.x, center.y));
+		Line ans = linedist.perp2point_on_line(Point(p.x, p.y));
+		return { ans };
+	}
+	else if (dist > r * r) {
+		double distcas = dist - r * r;
+		Circle second(p.x, p.y, sqrt(distcas));
+		std::vector<Point> tangen_points;
+		tangen_points = (*this).intersections(second);
+		Line first_tan(tangen_points[0], Point(p.x, p.y)), second_tan(tangen_points[1], Point(p.x, p.y));
+		return { first_tan, second_tan };
+	}
+	else
+		return std::vector<Line>(0);
 }
