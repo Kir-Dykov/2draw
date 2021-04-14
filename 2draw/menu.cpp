@@ -5,7 +5,7 @@
 #include "tests/line_tests.h"
 #include "tests/triangle_tests.h"
 #include "tests/utilities_tests.h"
-//#include "graphics/opengl_tests.h"
+#include "graphics/opengl_tests.h"
 
 
 #include <string>
@@ -27,7 +27,7 @@ std::vector<MenuPos> menu_positions = {
 		MenuPos("Line testing", line_main),
 		MenuPos("Triangle testing", triangle_main),
 		MenuPos("Utilities testing", utilities_main),
-		//MenuPos("OpenGL testing", opengl_main),
+		MenuPos("OpenGL testing", opengl_main),
 };
 
 std::ostream& operator<<(std::ostream& os, const MenuPos& mp) { os << mp.name; return os; }
