@@ -92,6 +92,19 @@ int polygon_main() {
 		std::cout << "Is (-0.999, 0) inside polygon? (should be 1) : " << p.is_in(Point(-0.999, 0)) << endl;
 	}
 	
+	std::cout << "\n\n\n";
 
+	{
+		vector<Point> v = {
+			Point(0,0),
+			Point(0,3),
+			Point(3,0),
+			Point(3,3),
+		};
+
+		Polygon p = convex_hull(v);
+		std::cout << "inscribed circle: " << p.inscribed_circle() << endl;
+		std::cout << "perimeter: " << p.perimeter() << endl;
+	}
 	return 0;
 }

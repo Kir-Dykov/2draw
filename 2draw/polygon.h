@@ -50,7 +50,8 @@ public:
 	friend Polygon convex_hull(const vector<Point>& points);
 	//prints coordinates of each vertex
 	friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
-	double perimeter();
+	double perimeter() const;
+	Circle inscribed_circle() const;
 };
 
 Polygon convex_hull(const vector<Point>& f);

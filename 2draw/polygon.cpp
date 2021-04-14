@@ -228,7 +228,7 @@ Polygon convex_hull(const vector<Point>& _f) {
 	return hull;
 }
 
-double Polygon::perimeter() {
+double Polygon::perimeter() const {
 	double res = sqrt((vertexes[vertexes.size() - 1].x - vertexes[0].x) * (vertexes[vertexes.size() - 1].x - vertexes[0].x) \
 		+ (vertexes[vertexes.size() - 1].y - vertexes[0].y) * (vertexes[vertexes.size() - 1].y - vertexes[0].y));
 	for (int i = 0; i < vertexes.size() - 1; i++)
@@ -237,4 +237,29 @@ double Polygon::perimeter() {
 			* (vertexes[i].y - vertexes[i + 1].y));
 	}
 	return res;
+}
+Circle Polygon::inscribed_circle() const {
+	Triangle first_trian(vertexes[vertexes.size() - 1], vertexes[0], vertexes[1]);
+	Triangle second_trian(vertexes[0], vertexes[1], vertexes[2]);
+	Line first_bis, second_bis;
+	first_bis = first_trian.get_bisectrix(vertexes[0]);
+	second_bis = second_trian.get_bisectrix(vertexes[1]);
+	Point generalpoint = first_bis.intersection(second_bis);
+	for (int i = 2; i < vertexes.size() - 1; i++)
+	{
+		Triangle tmp_trian(vertexes[i - 1], vertexes[i], vertexes[i + 1]);
+		Line tmp_bis = tmp_trian.get_bisectrix(vertexes[i]);
+		Point tmp_point = tmp_bis.intersection(second_bis);
+		if (tmp_point == generalpoint || tmp_bis == second_bis) continue;
+		else  return Circle(-1,-1,-1);
+	}
+	Triangle tmp_trian(vertexes[vertexes.size() - 2], vertexes[vertexes.size() - 1], vertexes[0]);
+	Line tmp_bis = tmp_trian.get_bisectrix(vertexes[vertexes.size() - 1]);
+	Point tmp_point = tmp_bis.intersection(second_bis);
+	if (tmp_point == generalpoint || tmp_bis == second_bis) {
+		Circle res;
+		res.set(generalpoint, (*this).area() / ((*this).perimeter() / 2));
+		return res;
+	}
+	return Circle(-1, -1, -1);
 }
