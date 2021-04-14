@@ -47,6 +47,7 @@ public:
 	// get the intersection points of two circles
 	std::vector<Point> intersections(const Circle) const;
 	std::vector<Line> tangents(const Point) const;
+	std::vector<Point> intersections_line(const Point, const Point) const;
 };
 
 std::ostream& operator<<(std::ostream&, const Circle&);

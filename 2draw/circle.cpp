@@ -80,3 +80,23 @@ std::vector<Line> Circle::tangents(const Point p) const {
 	else
 		return std::vector<Line>(0);
 }
+
+std::vector<Point> Circle::intersections_line(const Point first, const Point second) const {
+	double k = (first.y - second.y) / (first.x - second.x);
+	double b = first.y - k * first.x;
+	//находим дискриминант квадратного уравнения
+	double d = (pow((2 * k * b - 2 * c.x - 2 * c.y * k), 2) - (4 + 4 * k * k) * (b * b - r * r + c.x * c.x + c.y * c.y - 2 * c.y * b));
+
+	//если он равен 0, уравнение не имеет решения
+	if (d < 0)  return vector<Point>(0);
+
+	//иначе находим корни квадратного уравнения
+	double x1 = ((-(2 * k * b - 2 * c.x - 2 * c.y * k) - sqrt(d)) / (2 + 2 * k * k));
+	double x2 = ((-(2 * k * b - 2 * c.x - 2 * c.y * k) + sqrt(d)) / (2 + 2 * k * k));
+	//если абсциссы точек совпадают, то пересечение только в одной точке    
+	if (x1 == x2) return { Point(x1, first.y) };
+	//иначе находим ординаты точек пересечения 
+	double y1 = k * x1 + b;
+	double y2 = k * x2 + b;
+	return { Point(x1,y1), Point(x2,y2) };
+}
