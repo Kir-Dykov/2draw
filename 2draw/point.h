@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
 #include "vector.h"
+#include "object.h"
 
-class Point {
+class Point : public Object {
 public:
 	double x, y;
 	Point() { x = 0; y = 0; }
@@ -18,7 +19,7 @@ public:
 
 	// Other functions
 	// distance between 2 points
-	double distance(const Point&) const; 
+	
 	// the middle point between 2 points
 	Point middlepoint(const Point&) const;
 	// find the quarter where the point is lying
@@ -34,8 +35,14 @@ public:
 		return *this;
 	}
 
+	void Draw() const;
+
 	// Vector connecting two points
 	friend Vector operator-(const Point& to, const Point& from) { return Vector(to.x - from.x, to.y - from.y); } 
 	
 	friend std::ostream& operator<<(std::ostream&, const Point&);
+};
+
+inline double distance(const Point& p, const Point& q) {
+	return sqrt((q.x - p.x) * (q.x - p.x) + (q.y - p.y) * (q.y - p.y));
 };

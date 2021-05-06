@@ -132,3 +132,7 @@ Line Line::parallel(const Point& P) const {
 	LP.c = -a * P.x - b * P.y; // value, such that when we plug-in point P into formula a*x+b*y+c we get 0
 	return LP;
 }
+
+void Line::Draw() const {
+
+}

@@ -3,10 +3,11 @@
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
+#include "object.h"
 
 //polygon is defined by series of points
 //each pair of adjacent points defines an edge of polygon
-class Polygon {
+class Polygon : public Object {
 
 private:
 	std::vector<Point> vertexes;
@@ -51,7 +52,8 @@ public:
 	//prints coordinates of each vertex
 	friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
 	double perimeter() const;
-	Circle inscribed_circle() const;
+
+	void Draw() const;
 };
 
 Polygon convex_hull(const vector<Point>& f);

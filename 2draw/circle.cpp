@@ -20,7 +20,7 @@ void Circle::set(const Point _center, const double _radius) {
 
 void Circle::set(const Point _center, const Point other) {
 	c = _center;
-	r = c.distance(other);
+	r = distance(c, other);
 }
 
 std::ostream& operator<<(std::ostream& os, const Circle& cir) {
@@ -28,31 +28,31 @@ std::ostream& operator<<(std::ostream& os, const Circle& cir) {
 	return os;
 }
 
-std::vector<Point> Circle::intersections(const Circle circle) const {
+std::vector<Point> Circle::intersections(const Circle other) const {
 	// Algorithm: https://planetcalc.ru/8098/?license=1
-	double centers_distance = c.distance(circle.center);
-	if (centers_distance == 0 && r == circle.radius) {		// coincide
-		return { c, circle.c };
+	double centers_distance = distance(c, other.center);
+	if (centers_distance == 0 && r == other.radius) {		// coincide
+		return { c, other.c };
 	}
-	else if (centers_distance > r + circle.radius) {			// don't intersect
+	else if (centers_distance > r + other.radius) {			// don't intersect
 		return std::vector<Point>(0);
 	}
-	else if (centers_distance < abs(r - circle.r)) {		// one to the other
+	else if (centers_distance < abs(r - other.r)) {		// one to the other
 		return std::vector<Point>(0);
 	}
 	else // touch or intersect at two points
 	{
-		double a = (r * r - circle.r * circle.r + \
+		double a = (r * r - other.r * other.r + \
 			centers_distance * centers_distance) / (2 * centers_distance);
 		double h = sqrt(r * r - a * a);
 		Point tmp_pnt;
-		tmp_pnt.x = c.x + a / centers_distance * (circle.c.x - c.x);
-		tmp_pnt.y = c.y + a / centers_distance * (circle.c.y - c.y);
+		tmp_pnt.x = c.x + a / centers_distance * (other.c.x - c.x);
+		tmp_pnt.y = c.y + a / centers_distance * (other.c.y - c.y);
 		Point first_intersection, second_intersection;
-		first_intersection.x = tmp_pnt.x + h / centers_distance * (circle.c.y - c.y);
-		first_intersection.y = tmp_pnt.y - h / centers_distance * (circle.c.x - c.x);
-		second_intersection.x = tmp_pnt.x - h / centers_distance * (circle.c.y - c.y);
-		second_intersection.y = tmp_pnt.y + h / centers_distance * (circle.c.x - c.x);
+		first_intersection.x = tmp_pnt.x + h / centers_distance * (other.c.y - c.y);
+		first_intersection.y = tmp_pnt.y - h / centers_distance * (other.c.x - c.x);
+		second_intersection.x = tmp_pnt.x - h / centers_distance * (other.c.y - c.y);
+		second_intersection.y = tmp_pnt.y + h / centers_distance * (other.c.x - c.x);
 		if (first_intersection == second_intersection)
 			return { first_intersection };
 		else
@@ -99,4 +99,19 @@ std::vector<Point> Circle::intersections_line(const Point first, const Point sec
 	double y1 = k * x1 + b;
 	double y2 = k * x2 + b;
 	return { Point(x1,y1), Point(x2,y2) };
+}
+
+
+void Circle::Draw() const {
+	glBegin(GL_TRIANGLE_FAN);
+	glColor3ub(red, green, blue);/*rand() % 128 + 128*/
+	const int N = 7*(int)(sqrt(radius));
+	glVertex2f(center.x, center.y);
+	float d_angle = 2 * PI / N;
+	float angle = 0;
+	for (int i = 0; i <= N; i++) {
+		angle += d_angle;
+		glVertex2f(radius * cos(angle) + center.x, radius * sin(angle) + center.y);
+	}
+	glEnd();
 }

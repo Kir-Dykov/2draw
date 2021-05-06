@@ -1,142 +1,116 @@
-//docs.gl
-//https://www.youtube.com/playlist?list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <string>
+#include <stdlib.h>
+#include <cmath>
 #include <iostream>
-#include <fstream>
-#include <sstream>
+#include <ctime>
+#include <random>
+#include <vector>
+#include <string>
+#include "glut.h"
+
+#include "point.h"
+#include "circle.h"
+
 using namespace std;
+GLint Width = 1600, Height = 900;
+const int DELAY = 20;
 
+ObjectList objects;
 
-struct ShaderProgramSource {
-    string VertexSource;
-    string FragmentSource;
-};
-static ShaderProgramSource ParseShader(const string& filepath) {
-    ifstream stream(filepath);
-
-    enum class ShaderType {
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
-
-    string line;
-    stringstream ss[2];
-    ShaderType type = ShaderType::NONE;
-    while (getline(stream, line)) {
-        if (line.find("#shader") != string::npos) {
-            if (line.find("vertex") != string::npos) {
-                type = ShaderType::VERTEX;
-            }
-            else if (line.find("fragment") != string::npos) {
-                type = ShaderType::FRAGMENT;
-            }
-        } else {
-            ss[(int)type] << line << '\n';
-        }
-    }
-
-    return {ss[0].str(), ss[1].str()};
+void Display(void) {
+	glClearColor(0, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	/*calls of drawing functions*/
+	
+	objects.Draw();
+	
+	glFinish();
 }
 
-static unsigned int CompileShader(unsigned int type, const std::string& source) {
-    unsigned int id = glCreateShader(type);
-    const char* src = source.c_str();
-    glShaderSource(id, 1, &src, nullptr);
-    glCompileShader(id);
-
-    int result;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-    if (result == GL_FALSE) {
-        int length;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));
-        glGetShaderInfoLog(id, length, &length, message);
-        cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") <<" shader! " << endl;
-        cout << message << endl;
-        glDeleteShader(id);
-        return 0;
-    }
-    return id;
-}
-
-static int CreateShader(const std::string vertexShader, const std::string fragmentShader) {
-    unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-    glLinkProgram(program);
-    glValidateProgram(program);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-    return program;
-}
-
-int opengl_main(void)
+/* Функция вызывается при изменении размеров окна */
+void Reshape(GLint w, GLint h)
 {
-    GLFWwindow* window;
+	Width = w;
+	Height = h;
+	/* устанавливаем размеры области отображения */
+	glViewport(0, 0, w, h);
 
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+	/* ортографическая проекция */
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, w, 0, h, -1.0, 1.0);
 
-   
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
+/* Функция обрабатывает сообщения от клавиатуры */
+void Keyboard(int key, int, int)
+{
+	
+}
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+void MouseFunc(int button, int state, int x, int y)
+{
+	//cout << button << " " << state << " " << x << " " << y << endl;
+	if (state == GLUT_DOWN)
+	{
+		if (button == GLUT_LEFT_BUTTON)
+		{
+			
+			/* action */
+			
 
-    if (glewInit() != GLEW_OK) {
-        std::cout << "error!!" << std::endl;
-    }
+			glutPostRedisplay();
+		}
+	}
+}
 
-    float positions[6] = {
-        -0.5f, -0.5f,
-         0.0f,  0.5f,
-         0.5f, -0.5f,
-    };
 
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-    
-    ShaderProgramSource source = ParseShader("graphics/shaders/basic.shader");
+void Loop(int) {
+	/*dynamic actions go there*/
+	glutPostRedisplay();
+	glutTimerFunc(DELAY, Loop, 1);
+}
 
-    unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
-    glUseProgram(shader);
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+void MotionFunc(int x, int y) {
+	//cout << "Motion " << x << " " << y << endl;
+	glutPostRedisplay();
+}
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+void PassiveMotionFunc(int x, int y) {
+	//cout << "Passive motion " << x << " " << y << endl;
+	
+	
+	glutPostRedisplay();
+}
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+/* Главный цикл приложения */
+int opengl_main()
+{
+	Circle c(Width / 2, Height / 2, 50);
+	c.set_look(255, 192, 128);
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
-    glDeleteProgram(shader);
+	objects.append(c);
+	
+	glutInitDisplayMode(GLUT_RGB);
+	glutInitWindowSize(Width, Height);
+	glutCreateWindow("2draw");
 
-    glfwTerminate();
-    return 0;
+	glutDisplayFunc(Display);
+	glutReshapeFunc(Reshape);
+	//glutTimerFunc(DELAY, Loop, 1);
+	glutSpecialFunc(Keyboard);
+	glutMouseFunc(MouseFunc);
+	//glutKeyboardFunc(Keyboard);
+
+	glutMotionFunc(MotionFunc);
+	glutPassiveMotionFunc(PassiveMotionFunc);
+
+
+	glutMainLoop();
+
+	return 0;
 }

@@ -3,9 +3,9 @@
 #include "circle.h"
 #include "vector.h"
 #include <string>
+#include "object.h"
 
-class Triangle
-{
+class Triangle : public Object {
 private:
 	Point p1, p2, p3;
 
@@ -67,6 +67,8 @@ public:
 	// Triangle and a point
 	// returns 1 if point belongs to triangle and 0 otherwise
 	bool is_in(const Point&) const;
+
+	void Draw() const;
 };
 
 std::ostream& operator<<(std::ostream&, Triangle&);

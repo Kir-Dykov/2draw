@@ -18,10 +18,6 @@ int Point::find_quarter() const{
 	else return 0;
 }
 
-double Point::distance(const Point& p) const{
-	return sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
-}
-
 Point Point::middlepoint(const Point& p) const{
 	Point m;
 	m.x = (x + p.x) / 2;
@@ -30,3 +26,7 @@ Point Point::middlepoint(const Point& p) const{
 }
 
 std::ostream& operator<<(std::ostream& os, const Point& p) { os << "(" << p.x << ", " << p.y << ")"; return os; }
+
+void Point::Draw() const {
+
+}

@@ -1,8 +1,8 @@
 #pragma once
 #include "point.h"
+#include "object.h"
 
-class Line
-{
+class Line : public Object {
 private:
 	Point p1, p2; 					
 	double a, b, c;	
@@ -48,6 +48,8 @@ public:
 	Line parallel(const Point&) const;
 	// Operators
 	bool operator==(const Line&) const;
+
+	void Draw() const;
 
 	friend std::ostream& operator<<(std::ostream&, const Line&);
 

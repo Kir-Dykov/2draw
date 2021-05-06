@@ -1,10 +1,10 @@
 #pragma once
 
 #include <math.h>
+
 using namespace std;
 
-class Vector
-{
+class Vector {
 public:
 	double x, y;	//koordinati x y
 
@@ -26,6 +26,5 @@ public:
 	friend double determinant(Vector, Vector); // determinant of the 2x2 matrix formed by two vector-column's
 	friend double dot(Vector, Vector);
 	friend double cos(Vector, Vector);
-
 };
 

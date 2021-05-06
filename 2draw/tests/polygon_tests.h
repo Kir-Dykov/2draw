@@ -103,7 +103,6 @@ int polygon_main() {
 		};
 
 		Polygon p = convex_hull(v);
-		std::cout << "inscribed circle: " << p.inscribed_circle() << endl;
 		std::cout << "perimeter: " << p.perimeter() << endl;
 	}
 	return 0;

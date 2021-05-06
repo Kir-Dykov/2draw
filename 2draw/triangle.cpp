@@ -46,28 +46,28 @@ double Triangle::get_side(const int num_point1, const int num_point2) const {
 	num2point(num_point1, p1);
 	num2point(num_point2, p2);
 
-	return p1.distance(p2);
+	return distance(p1, p2);
 }
 
 double Triangle::perimeter() const{
-	return p1.distance(p2) + p1.distance(p3) + p2.distance(p3);
+	return distance(p1, p2) + distance(p1, p3) + distance(p2, p3);
 }
 
 double Triangle::area() const{
 	double p = perimeter() / 2;		// perimeter
 	// finding the lengths of the sides
-	double a = p1.distance(p2);
-	double b = p2.distance(p3);
-	double c = p1.distance(p3);
+	double a = distance(p1, p2);
+	double b = distance(p2, p3);
+	double c = distance(p1, p3);
 
 	return sqrt(p * (p - a) * (p - b) * (p - c));	// Heron's formula
 }
 
 int Triangle::triangle_type() const {
 	double first_side, second_side, third_side;
-	first_side = p1.distance(p2);
-	second_side = p1.distance(p3);
-	third_side = p2.distance(p3);
+	first_side = distance(p1, p2);
+	second_side = distance(p1, p3);
+	third_side = distance(p2, p3);
 	if (first_side * first_side == second_side * second_side + third_side * third_side || \
 		second_side * second_side == first_side * first_side + third_side * third_side || \
 		third_side * third_side == first_side * first_side + second_side * second_side)
@@ -86,7 +86,7 @@ Circle Triangle::get_circumcircle() const{
 	double D = 2 * (p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y));
 	cc.set_centerx(((p1.x * p1.x + p1.y * p1.y) * (p2.y - p3.y) + (p2.x * p2.x + p2.y * p2.y) * (p3.y - p1.y) + (p3.x * p3.x + p3.y * p3.y) * (p1.y - p2.y)) / D);
 	cc.set_centery(((p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + (p2.x * p2.x + p2.y * p2.y) * (p3.x - p1.x) + (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x)) / -D);
-	cc.set_radius(cc.center.distance(p1));
+	cc.set_radius(distance(cc.center, p1));
 	return cc;
 }
 
@@ -130,9 +130,9 @@ Line Triangle::get_bisectrix(const Point& vertex) const {
 	// finding the other two vertices
 	point_reassignment(vertex, a1, a2);
 	// finding the lengths of the sides
-	a = vertex.distance(a1);
-	b = vertex.distance(a2);
-	c = a1.distance(a2);
+	a = distance(vertex, a1);
+	b = distance(vertex, a2);
+	c = distance(a1, a2);
 	// set side
 	L.set(a1, a2);
 	m = a * c / (a + b);
@@ -254,9 +254,13 @@ Circle Triangle::get_excircle(const Point& vertex) const {
 	perp2bis_second_vert = bisect_second_vertex.perp2point_on_line(second_vertex);
 	perp2bis_third_vert = bisect_third_vertex.perp2point_on_line(third_vertex);
 	Point intersection = perp2bis_second_vert.intersection(perp2bis_third_vert);
-	double radius = (*this).area() / ((*this).perimeter()/2 - second_vertex.distance(third_vertex));
+	double radius = (*this).area() / ((*this).perimeter()/2 - distance(second_vertex, third_vertex));
 	Circle res;
 	res.set(intersection, radius);
 	cout << intersection << ' ' << radius << '\n';
 	return res;
+}
+
+void Triangle::Draw() const {
+
 }

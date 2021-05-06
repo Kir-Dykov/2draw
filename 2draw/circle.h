@@ -1,17 +1,20 @@
 #pragma once
+#include "object.h"
 #include "consts.h"
 #include <vector>
 #include "point.h"
 #include "line.h"
 
-class Circle
-{
+class Circle : public Object {
 private:
 	Point c;
 	double r;
 
 public:
-	Circle(double, double, double);
+	const Point& center = c;
+	const double& radius = r;
+
+	Circle(double _x, double _y, double _r);
 	Circle();
 	Circle(const Circle& other) {
 		c = other.center;
@@ -22,10 +25,6 @@ public:
 		r = other.radius;
 		return *this;
 	}
-
-	// "getters"
-	const Point& center = c;
-	const double& radius = r;
 
 	// Setters
 	// set the circle by center point and radius
@@ -42,12 +41,14 @@ public:
 
 	// Some circle special functions
 	// return 1 if point lies inside circle, 0 otherwise
-	bool is_in(const Point p) const { return (c.distance(p) <= r); }
+	bool is_in(const Point p) const { return (distance(c, p) <= r); }
 
 	// get the intersection points of two circles
 	std::vector<Point> intersections(const Circle) const;
 	std::vector<Line> tangents(const Point) const;
 	std::vector<Point> intersections_line(const Point, const Point) const;
+
+	void Draw() const;
 };
 
 std::ostream& operator<<(std::ostream&, const Circle&);
