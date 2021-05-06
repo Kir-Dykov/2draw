@@ -103,15 +103,32 @@ std::vector<Point> Circle::intersections_line(const Point first, const Point sec
 
 
 void Circle::Draw() const {
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3ub(red, green, blue);/*rand() % 128 + 128*/
-	const int N = 7*(int)(sqrt(radius));
-	glVertex2f(center.x, center.y);
-	float d_angle = 2 * PI / N;
-	float angle = 0;
-	for (int i = 0; i <= N; i++) {
-		angle += d_angle;
-		glVertex2f(radius * cos(angle) + center.x, radius * sin(angle) + center.y);
+	if (filled) {
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3ub(red, green, blue);/*rand() % 128 + 128*/
+		const int N = 7 * (int)(sqrt(radius));
+		glVertex2f(center.x, center.y);
+		float d_angle = 2 * PI / N;
+		float angle = 0;
+		for (int i = 0; i <= N; i++) {
+			angle += d_angle;
+			glVertex2f(radius * cos(angle) + center.x, radius * sin(angle) + center.y);
+		}
+		glEnd();
 	}
-	glEnd();
+	else {
+		glBegin(GL_LINES);
+		glColor3ub(red, green, blue);/*rand() % 128 + 128*/
+		const int N = 7 * (int)(sqrt(radius));
+		glVertex2f(radius * cos(0) + center.x, radius * sin(0) + center.y);
+		float d_angle = 2 * PI / N;
+		float angle = 0;
+		for (int i = 0; i <= N; i++) {
+			angle += d_angle;
+			glVertex2f(radius * cos(angle) + center.x, radius * sin(angle) + center.y);
+			glVertex2f(radius * cos(angle) + center.x, radius * sin(angle) + center.y);
+		}
+		glEnd();
+	}
+	
 }

@@ -80,20 +80,27 @@ void MotionFunc(int x, int y) {
 	glutPostRedisplay();
 }
 
+Circle circle_filled(Width * 1 / 10, Height * 9 / 10, 50);
+Circle circle_not_filled(Width * 2 / 10, Height * 9 / 10, 50);
+
 void PassiveMotionFunc(int x, int y) {
 	//cout << "Passive motion " << x << " " << y << endl;
-	
-	
+	circle_filled.set_radius(x);
+	circle_not_filled.set_radius(x);
+
 	glutPostRedisplay();
 }
+
 
 /* Главный цикл приложения */
 int opengl_main()
 {
-	Circle c(Width / 2, Height / 2, 50);
-	c.set_look(255, 192, 128);
+	
+	circle_filled.set_look(255, 192, 128);
+	objects.append(circle_filled);
 
-	objects.append(c);
+	circle_not_filled.set_look(255, 128, 192, false);
+	objects.append(circle_not_filled);
 	
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
