@@ -82,6 +82,7 @@ void MotionFunc(int x, int y) {
 
 Circle circle_filled(Width * 1 / 10, Height * 9 / 10, 50);
 Circle circle_not_filled(Width * 2 / 10, Height * 9 / 10, 50);
+Point p(Width * 3 / 10, Height * 9 / 10);
 
 void PassiveMotionFunc(int x, int y) {
 	//cout << "Passive motion " << x << " " << y << endl;
@@ -101,6 +102,9 @@ int opengl_main()
 
 	circle_not_filled.set_look(255, 128, 192, false);
 	objects.append(circle_not_filled);
+
+	p.set_look(128, 192, 255);
+	objects.append(p);
 	
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
