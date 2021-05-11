@@ -262,5 +262,25 @@ Circle Triangle::get_excircle(const Point& vertex) const {
 }
 
 void Triangle::Draw() const {
+	if (filled) {
+		glBegin(GL_TRIANGLES);
 
+		glColor3ub(red, green, blue);
+		glVertex2f(p1.x, p1.y);
+		glVertex2f(p2.x, p2.y);
+		glVertex2f(p3.x, p3.y);
+
+		glEnd;
+	}
+	else {
+		glBegin(GL_LINE_STRIP);
+
+		glColor3ub(red, green, blue);
+		glVertex2f(p1.x, p1.y);
+		glVertex2f(p2.x, p2.y);
+		glVertex2f(p3.x, p3.y);
+		glVertex2f(p1.x, p1.y);
+
+		glEnd;
+	}
 }
