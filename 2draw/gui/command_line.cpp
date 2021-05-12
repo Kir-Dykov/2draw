@@ -54,6 +54,9 @@ parse_start:
 				c2 = (Circle*)commands[i].obj;
 			}
 		}
+		if (c1 == nullptr || c2 == nullptr) {
+			goto error;
+		}
 		vector<Point> pp = c1->intersections(*c2);
 		obj = new Line(pp[0], pp[1]);
 		type = "line";
