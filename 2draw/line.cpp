@@ -134,5 +134,8 @@ Line Line::parallel(const Point& P) const {
 }
 
 void Line::Draw() const {
-
+	glBegin(GL_LINES);
+	glVertex2f(0, (*this).c);
+	glVertex2f(100, 100 * (*this).a + 100 * (*this).b + 100 * (*this).c);
+	glEnd();
 }

@@ -21,7 +21,9 @@ GLint Width = 1080, Height = 720;
 
 extern vector<CommandLine> commands;
 bool editing_a_command;
+bool moving_a_point;
 CommandLine* command_to_edit;
+CommandLine* point_to_move;
 
 void Display(void) {
 	glClearColor(0, 0, 0, 1);
@@ -91,6 +93,15 @@ void Keyboard(unsigned char key, int, int) {
 	}
 }
 
+<<<<<<< HEAD
+void MouseFunc(int button, int state, int x, int y)
+{
+	y = Height - y;
+	cout << button << " " << state << " " << x << " " << y << endl;
+	if (button == GLUT_LEFT_BUTTON)
+	{
+		if (state == GLUT_DOWN) {
+=======
 void MouseFunc(int button, int state, int x, int y) {
 	cout << button << " " << state << " " << x << " " << y << endl;
 
@@ -100,10 +111,11 @@ void MouseFunc(int button, int state, int x, int y) {
 
 			//checks if clicked on some command line
 			//makes it editable by typing on keyboard
+>>>>>>> 3c4ae08412eb9b223bca9abd9c0f80ee7bb152ec
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].is_in(x, Height - y)) {
+				if (commands[i].is_in(x, y)) {
 					editing_a_command = true;
-					if (command_to_edit != nullptr){
+					if (command_to_edit != nullptr) {
 						command_to_edit->Compile();
 					}
 
@@ -113,11 +125,30 @@ void MouseFunc(int button, int state, int x, int y) {
 					goto break_all; //no need to check wether user clicked on some object before exiting
 				}
 			}
+<<<<<<< HEAD
+			for (size_t i = 0; i < commands.size(); i++) {
+				if (commands[i].type == "point") cout << distance((*(Point*)commands[i].obj), Point(x, y)) << " ";
+				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
+				{
+					moving_a_point = true;
+					point_to_move = &(commands[i]);
+					cout << "yes";
+				}
+			}
+=======
 
+<<<<<<< HEAD
+=======
+			
+
+>>>>>>> 3c4ae08412eb9b223bca9abd9c0f80ee7bb152ec
+>>>>>>> e53b469f7ba146a3beb274d0efe6a076ca8d58ca
 			break_all:
 			glutPostRedisplay();
 		}
 	}
+
+	
 }
 
 
@@ -129,13 +160,22 @@ void Loop(int) {
 */
 
 void MotionFunc(int x, int y) {
+	y = Height - y;
 	//cout << "Motion " << x << " " << y << endl;
+<<<<<<< HEAD
 
 	/*my_point->command = my_point->symbol + "point " + x + " " + y;
 	my_point->Compile();
 	*/
 
 	glutPostRedisplay();
+=======
+	if (moving_a_point) {
+		point_to_move->command = point_to_move->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+		point_to_move->Compile();
+		glutPostRedisplay();
+	}
+>>>>>>> e53b469f7ba146a3beb274d0efe6a076ca8d58ca
 }
 
 
