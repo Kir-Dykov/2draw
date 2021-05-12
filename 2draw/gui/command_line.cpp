@@ -1,18 +1,37 @@
 #include "command_line.h"
 
+//NEVER erase from that vector.
 vector<CommandLine> commands;
+
+CommandLine::CommandLine(double _x, double _y) {
+	x = _x;
+	y = _y;
+	index = commands.size()-1;
+}
+
+void CommandLine::DeleteObject() {
+	for (size_t i = 0; i < dependencies.size(); i++) {
+		for (size_t j = 0; j < commands[i].dependent_from_this.size(); j++) {
+			if (commands[i].dependent_from_this[j] == index) {
+				commands[i].dependent_from_this.erase(commands[i].dependent_from_this.begin() + j);
+				break;
+			}
+		}
+	}
+	delete obj;
+	obj = nullptr;
+}
 
 void CommandLine::Compile() {
 
-
 	type = "";
 	symbol = "";
-	delete obj;
-	obj = nullptr;
+	
 	std::istringstream iss(command);
 	string keyword;
 
 	if (command == "") {
+		DeleteObject();
 		goto success;
 	}
 
@@ -26,9 +45,14 @@ parse_start:
 			iss.clear();
 			goto error;
 		}
-		obj = new Point(x, y);
-		type = "point";
-
+		if (type != "point") {
+			DeleteObject();
+			obj = new Point(x, y);
+			type = "point";
+		}
+		else {
+			((Point*)obj)->set(x, y);
+		}		
 	}
 	else if (keyword == "circle") {
 		double x, y, r;
@@ -43,16 +67,23 @@ parse_start:
 	else if (keyword == "triangle") {
 		string p1, p2, p3;
 		iss >> p1 >> p2 >> p3;
-		Point* pp1 = nullptr, * pp2 = nullptr, * pp3 = nullptr;
+		CommandLine* pp1 = nullptr, * pp2 = nullptr, * pp3 = nullptr;
 		for (size_t i = 0; i < commands.size(); i++) {
-			if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = (Point*)commands[i].obj;
-			if (commands[i].symbol == p2 && commands[i].type == "point") pp2 = (Point*)commands[i].obj;
-			if (commands[i].symbol == p3 && commands[i].type == "point") pp3 = (Point*)commands[i].obj;
+			if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
+			if (commands[i].symbol == p2 && commands[i].type == "point") pp2 = &(commands[i]);
+			if (commands[i].symbol == p3 && commands[i].type == "point") pp3 = &(commands[i]);
 		}
 		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
 			goto error;
 		}
-		obj = new Triangle(*pp1, *pp2, *pp3);
+		obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+		pp1->dependent_from_this.push_back(index);
+		pp2->dependent_from_this.push_back(index);
+		pp3->dependent_from_this.push_back(index);
+		dependencies.push_back(pp1->index);
+		dependencies.push_back(pp2->index);
+		dependencies.push_back(pp3->index);
+
 		type = "triangle";
 	}
 	else if (keyword == "intersection") {
@@ -97,6 +128,13 @@ success:
 	return;
 
 }
+
+void CommandLine::CompileDependencies() {
+	for (size_t i = 0; i < dependent_from_this.size(); i++) {
+		commands[dependent_from_this[i]].Compile();
+	}
+};
+
 
 void CommandLine::Draw() {
 	glBegin(GL_POLYGON);

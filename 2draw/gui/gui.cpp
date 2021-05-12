@@ -32,6 +32,15 @@ void Display(void) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
 			cout << commands[i].symbol << " is drawn" << endl;
+			cout << "\t";
+			for (size_t j = 0; j < commands[i].dependencies.size(); j++){
+				cout << commands[i].dependencies[j] << " ";
+			}
+			cout << endl;
+			cout << "\t";
+			for (size_t j = 0; j < commands[i].dependencies.size(); j++) {
+				cout << commands[i].dependencies[j] << " ";
+			}
 		};
 	}
 
@@ -105,8 +114,6 @@ void MouseFunc(int button, int state, int x, int y) {
 				}
 			}
 
-			
-
 			break_all:
 			glutPostRedisplay();
 		}
@@ -123,6 +130,11 @@ void Loop(int) {
 
 void MotionFunc(int x, int y) {
 	//cout << "Motion " << x << " " << y << endl;
+
+	/*my_point->command = my_point->symbol + "point " + x + " " + y;
+	my_point->Compile();
+	*/
+
 	glutPostRedisplay();
 }
 

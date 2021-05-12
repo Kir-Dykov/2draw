@@ -29,14 +29,20 @@ public:
 	// for type checks
 	string type = "";
 
-
 	// pointer to the object
 	Object* obj = nullptr;
 
-	//lists the symbols of objects that has to be updated
-	//after this object changes
-	vector<string> dependency;
 
+	//index int in vector<CommandLine> commands, usefull for dependencies management
+	size_t index = -1; 
+
+	//lists the indexes (in vector<CommandLine> commands)
+	//of objects that has to be updated
+	//after this object changes
+	vector<size_t> dependent_from_this;
+	//lists the indexes of objects in which dependent_on field
+	//chould be cleared after deletion of this object
+	vector<size_t> dependencies;
 	bool filled = 1;
 
 	//colors for background of command line
@@ -46,10 +52,7 @@ public:
 	double x, y, width=300, height=22, margin = 3;
 
 	//constructor
-	CommandLine(double _x, double _y) {
-		x = _x;
-		y = _y;
-	}
+	CommandLine(double _x, double _y);
 	//setter
 	void set_location(double _x, double _y) {
 		x = _x;
@@ -62,10 +65,16 @@ public:
 		return (_x > x && _x < x + width && _y > y && _y < y + height);
 	}
 
+
+	void DeleteObject();
+
 	/* after this.command was edited, this function parses it,
 	* recreating object the command defines. In case of error
 	* command line bocomes red and nothing is being created	*/
 	void Compile();
+
+	void CompileDependencies();
+
 
 	//Draws the command line on the screen;
 	void Draw();
