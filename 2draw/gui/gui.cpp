@@ -21,7 +21,9 @@ GLint Width = 1080, Height = 720;
 
 extern vector<CommandLine> commands;
 bool editing_a_command;
+bool moving_a_point;
 CommandLine* command_to_edit;
+CommandLine* point_to_move;
 
 void Display(void) {
 	//glBegin(GL_TRIANGLE_FAN);
@@ -90,14 +92,15 @@ void Keyboard(unsigned char key, int, int)
 
 void MouseFunc(int button, int state, int x, int y)
 {
+	y = Height - y;
 	cout << button << " " << state << " " << x << " " << y << endl;
-	if (state == GLUT_DOWN)
+	if (button == GLUT_LEFT_BUTTON)
 	{
-		if (button == GLUT_LEFT_BUTTON) {
+		if (state == GLUT_DOWN) {
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].is_in(x, Height - y)) {
+				if (commands[i].is_in(x, y)) {
 					editing_a_command = true;
-					if (command_to_edit != nullptr){
+					if (command_to_edit != nullptr) {
 						command_to_edit->Compile();
 					}
 
@@ -107,10 +110,21 @@ void MouseFunc(int button, int state, int x, int y)
 					goto break_all;
 				}
 			}
+			for (size_t i = 0; i < commands.size(); i++) {
+				if (commands[i].type == "point") cout << distance((*(Point*)commands[i].obj), Point(x, y)) << " ";
+				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
+				{
+					moving_a_point = true;
+					point_to_move = &(commands[i]);
+					cout << "yes";
+				}
+			}
 			break_all:
 			glutPostRedisplay();
 		}
 	}
+
+	
 }
 
 
@@ -123,8 +137,13 @@ void Loop(int) {
 
 
 void MotionFunc(int x, int y) {
+	y = Height - y;
 	//cout << "Motion " << x << " " << y << endl;
-	glutPostRedisplay();
+	if (moving_a_point) {
+		point_to_move->command = point_to_move->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+		point_to_move->Compile();
+		glutPostRedisplay();
+	}
 }
 
 
