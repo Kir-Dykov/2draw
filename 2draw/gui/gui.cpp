@@ -11,13 +11,14 @@
 #include "../point.h"
 #include "../circle.h"
 #include "../triangle.h"
+#include "../polygon.h"
 #include "command_line.h"
 
 using namespace std;
 
 //const int DELAY = 20;
 
-GLint Width = 1080, Height = 720;
+GLint Width = 720, Height = 720;
 
 extern vector<CommandLine> commands;
 bool editing_a_command;
@@ -33,8 +34,12 @@ void Display(void) {
 	for (size_t i = 0; i < commands.size(); i++) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
-			cout << commands[i].symbol << " is drawn" << endl;
-			cout << "\t";
+
+
+			cout << commands[i].symbol << " (" << commands[i].index << ") is drawn" << endl;
+
+
+			/*cout << "\t";
 			for (size_t j = 0; j < commands[i].dependencies.size(); j++){
 				cout << commands[i].dependencies[j] << " ";
 			}
@@ -42,7 +47,7 @@ void Display(void) {
 			cout << "\t";
 			for (size_t j = 0; j < commands[i].dependencies.size(); j++) {
 				cout << commands[i].dependencies[j] << " ";
-			}
+			}*/
 		};
 	}
 
@@ -93,25 +98,16 @@ void Keyboard(unsigned char key, int, int) {
 	}
 }
 
-<<<<<<< HEAD
 void MouseFunc(int button, int state, int x, int y)
 {
 	y = Height - y;
-	cout << button << " " << state << " " << x << " " << y << endl;
+	//cout << button << " " << state << " " << x << " " << y << endl;
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		if (state == GLUT_DOWN) {
-=======
-void MouseFunc(int button, int state, int x, int y) {
-	cout << button << " " << state << " " << x << " " << y << endl;
-
-	if (state == GLUT_DOWN)
-	{
-		if (button == GLUT_LEFT_BUTTON) {
 
 			//checks if clicked on some command line
 			//makes it editable by typing on keyboard
->>>>>>> 3c4ae08412eb9b223bca9abd9c0f80ee7bb152ec
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].is_in(x, y)) {
 					editing_a_command = true;
@@ -125,26 +121,46 @@ void MouseFunc(int button, int state, int x, int y) {
 					goto break_all; //no need to check wether user clicked on some object before exiting
 				}
 			}
-<<<<<<< HEAD
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].type == "point") cout << distance((*(Point*)commands[i].obj), Point(x, y)) << " ";
 				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
 				{
 					moving_a_point = true;
 					point_to_move = &(commands[i]);
 					cout << "yes";
+					goto break_all;
 				}
 			}
-=======
 
-<<<<<<< HEAD
-=======
-			
-
->>>>>>> 3c4ae08412eb9b223bca9abd9c0f80ee7bb152ec
->>>>>>> e53b469f7ba146a3beb274d0efe6a076ca8d58ca
 			break_all:
 			glutPostRedisplay();
+		}
+		else {
+			if (moving_a_point) {
+				moving_a_point = false;
+				point_to_move = nullptr;
+			}
+		}
+	}
+	else if (button == GLUT_MIDDLE_BUTTON) {
+		
+		if (state == GLUT_DOWN) {
+			
+			for (size_t i = 0; i < commands.size(); i++) {
+				bool in_ = 0;
+				if (commands[i].type == "triangle")
+					in_ = ((Triangle*)(commands[i].obj))->is_in(Point(x, y));
+				else if (commands[i].type == "circle")
+					in_ = ((Circle*)(commands[i].obj))->is_in(Point(x, y));
+				else if (commands[i].type == "polygon")
+					in_ = ((Polygon*)(commands[i].obj))->is_in(Point(x, y));
+
+				if (in_) {
+					commands[i].filled = !(commands[i].filled);
+					commands[i].obj->filled = commands[i].filled;
+					glutPostRedisplay();
+				}
+
+			}
 		}
 	}
 
@@ -161,21 +177,15 @@ void Loop(int) {
 
 void MotionFunc(int x, int y) {
 	y = Height - y;
-	//cout << "Motion " << x << " " << y << endl;
-<<<<<<< HEAD
-
-	/*my_point->command = my_point->symbol + "point " + x + " " + y;
-	my_point->Compile();
-	*/
-
-	glutPostRedisplay();
-=======
 	if (moving_a_point) {
-		point_to_move->command = point_to_move->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+		if (point_to_move->symbol != "")
+			point_to_move->command = point_to_move->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+		else
+			point_to_move->command = static_cast<string>("point ") + to_string(x) + " " + to_string(y);
+		
 		point_to_move->Compile();
 		glutPostRedisplay();
 	}
->>>>>>> e53b469f7ba146a3beb274d0efe6a076ca8d58ca
 }
 
 

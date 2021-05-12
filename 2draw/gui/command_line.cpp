@@ -6,27 +6,34 @@ vector<CommandLine> commands;
 CommandLine::CommandLine(double _x, double _y) {
 	x = _x;
 	y = _y;
-	index = commands.size()-1;
+	index = commands.size();
 }
 
 void CommandLine::DeleteObject() {
-	for (size_t i = 0; i < dependencies.size(); i++) {
-		for (size_t j = 0; j < commands[i].dependent_from_this.size(); j++) {
-			if (commands[i].dependent_from_this[j] == index) {
-				commands[i].dependent_from_this.erase(commands[i].dependent_from_this.begin() + j);
-				break;
+	if (obj != nullptr){
+		type = "";
+		symbol = "";
+		for (size_t i = 0; i < dependencies.size(); i++) {
+			
+			for (size_t j = 0; j < commands[dependencies[i]].dependent_from_this.size(); j++) {
+				if (commands[dependencies[i]].dependent_from_this[j] == index) {
+					commands[dependencies[i]].dependent_from_this.erase(commands[dependencies[i]].dependent_from_this.begin() + j);
+					break;
+				}
 			}
 		}
+		delete obj;
+		obj = nullptr;
+
+
 	}
-	delete obj;
-	obj = nullptr;
+	
 }
 
 void CommandLine::Compile() {
 
-	type = "";
-	symbol = "";
-	
+	bool symbol_is_there = 0;
+
 	std::istringstream iss(command);
 	string keyword;
 
@@ -35,15 +42,21 @@ void CommandLine::Compile() {
 		goto success;
 	}
 
+	
 parse_start:
 	cout << "Compiling a command!" << endl;
 	iss >> keyword;
 	if (keyword == "point") {
-		double x, y;
+		int x, y;
 		iss >> x >> y;
 		if (iss.fail()) {
 			iss.clear();
-			goto error;
+			x = rand() % 100 + 100;
+			y = rand() % 100 + 100;
+			if (symbol != "")
+				command = symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+			else
+				command = static_cast<string>("point ") + to_string(x) + " " + to_string(y);
 		}
 		if (type != "point") {
 			DeleteObject();
@@ -52,7 +65,8 @@ parse_start:
 		}
 		else {
 			((Point*)obj)->set(x, y);
-		}		
+			CompileDependencies();
+		}
 	}
 	else if (keyword == "circle") {
 		double x, y, r;
@@ -64,9 +78,11 @@ parse_start:
 		obj = new Circle(x, y, r);
 		type = "circle";
 	}
-	else if (keyword == "triangle") {
+	else if (keyword == "triangle") {		
+		DeleteObject();
 		string p1, p2, p3;
 		iss >> p1 >> p2 >> p3;
+		cout << p1 << p2 << p3;
 		CommandLine* pp1 = nullptr, * pp2 = nullptr, * pp3 = nullptr;
 		for (size_t i = 0; i < commands.size(); i++) {
 			if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
@@ -76,6 +92,7 @@ parse_start:
 		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
 			goto error;
 		}
+		cout << "im here" << endl;
 		obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
 		pp1->dependent_from_this.push_back(index);
 		pp2->dependent_from_this.push_back(index);
@@ -106,7 +123,8 @@ parse_start:
 		obj = new Line(pp[0], pp[1]);
 		type = "line";
 	}
-	else if (symbol != keyword) {
+	else if (!symbol_is_there) {
+		symbol_is_there = true;
 		symbol = keyword;
 		goto parse_start;
 	}
@@ -114,16 +132,13 @@ parse_start:
 		goto error;
 	}
 
-	obj->filled = filled;
 	goto success;
 
 error:
 	r = 192; g = 32; b = 0;
 	return;
 success:
-	if (symbol == "") {
-		symbol = command;
-	}
+	obj->filled = filled;
 	r = 128; g = 128; b = 128;
 	return;
 
