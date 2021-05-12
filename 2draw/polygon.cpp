@@ -239,6 +239,63 @@ double Polygon::perimeter() const {
 	return res;
 }
 
-void Polygon::Draw() const {
+void CALLBACK tessBeginCB(GLenum which)
+{
+	glBegin(which);
+}
 
+void CALLBACK tessEndCB()
+{
+	glEnd();
+}
+
+void CALLBACK tessVertexCB(const GLvoid* data)
+{
+	// cast back to double type
+	const GLdouble* ptr = (const GLdouble*)data;
+
+	glVertex2dv(ptr);
+}
+
+void Polygon::Draw() const {
+	if (filled) {
+
+		GLdouble** ver = new GLdouble * [vertexes.size()];
+		for (int i = 0; i < vertexes.size(); i++)
+		{
+			ver[i] = new GLdouble[3];
+			for (int j = 0; j < 3; j++)
+			{
+				if (j == 0) ver[i][j] = vertexes[i].x;
+				else if (j == 1) ver[i][j] = vertexes[i].y;
+				else if (j == 2) ver[i][j] == 0;
+			}
+		}
+
+		GLUtesselator* pTess;
+		glColor3ub(red, green, blue);
+		pTess = gluNewTess();
+		gluTessCallback(pTess, GLU_TESS_BEGIN, (void (CALLBACK*)())tessBeginCB);
+		gluTessCallback(pTess, GLU_TESS_END, (void (CALLBACK*)())tessEndCB);
+		gluTessCallback(pTess, GLU_TESS_VERTEX, (void (CALLBACK*)())tessVertexCB);
+		gluTessBeginPolygon(pTess, NULL);
+		gluTessBeginContour(pTess);
+		for (int i = 0; i < vertexes.size(); i++)
+		{
+			gluTessVertex(pTess, ver[i], ver[i]);
+		}
+		gluTessEndContour(pTess);
+		gluTessEndPolygon(pTess);
+		gluDeleteTess(pTess);
+		for (int i = 0; i < vertexes.size(); i++) delete[] ver[i];
+		delete[] ver;
+	}
+	else {
+		glBegin(GL_LINE_LOOP);
+		glColor3ub(red, green, blue);/*rand() % 128 + 128*/
+		for (int i = 0; i < vertexes.size(); i++) {
+			glVertex2d(vertexes[i].x, vertexes[i].y);
+		}
+		glEnd();
+	}
 }

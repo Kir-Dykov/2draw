@@ -9,6 +9,7 @@
 
 #include "point.h"
 #include "circle.h"
+#include "polygon.h"
 
 using namespace std;
 GLint Width = 1600, Height = 900;
@@ -84,6 +85,10 @@ Circle circle_filled(Width * 1 / 10, Height * 9 / 10, 50);
 Circle circle_not_filled(Width * 2 / 10, Height * 9 / 10, 50);
 Point p(Width * 3 / 10, Height * 9 / 10);
 
+Polygon polygon_not_filled = { Point(50,100), Point(50,500),Point(450,500), Point(250,400) };
+Polygon polygon_filled = { Point(500,100), Point(500,500), Point(600,700), Point(750,450), Point(900,500), Point(650,400) };
+
+
 void PassiveMotionFunc(int x, int y) {
 	//cout << "Passive motion " << x << " " << y << endl;
 	circle_filled.set_radius(x);
@@ -105,6 +110,12 @@ int opengl_main()
 
 	p.set_look(128, 192, 255);
 	objects.append(p);
+
+	polygon_not_filled.set_look(255, 192, 128, false);
+	objects.append(polygon_not_filled);
+
+	polygon_filled.set_look(255, 192, 128, true);
+	objects.append(polygon_filled);
 	
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
