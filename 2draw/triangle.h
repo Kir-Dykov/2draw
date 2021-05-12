@@ -68,6 +68,7 @@ public:
 	// returns 1 if point belongs to triangle and 0 otherwise
 	bool is_in(const Point&) const;
 
+	// draws the triangle
 	void Draw() const;
 };
 
