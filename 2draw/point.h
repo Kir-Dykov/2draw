@@ -43,6 +43,18 @@ public:
 	friend std::ostream& operator<<(std::ostream&, const Point&);
 };
 
+class PointSet : public Object {
+	vector<Point> v;
+
+	void push_back(const Point& p) { v.push_back(p); }
+
+	void Draw() const {
+		for (size_t i = 0; i < v.size(); i++) {
+			v[i].Draw();
+		}
+	}
+};
+
 inline double distance(const Point& p, const Point& q) {
 	return sqrt((q.x - p.x) * (q.x - p.x) + (q.y - p.y) * (q.y - p.y));
 };

@@ -1,4 +1,18 @@
 #include "command_line.h"
+/*
+Actual avaliable commands that you can just type in right now
+
+a point 400 400
+b point
+c point
+t triangle a b c
+c1 circle 300 400 50
+c2 circle a 60
+c3 circle a b
+c4 incircle t
+c5 circumcircle t
+l1 line a b
+*/
 
 //NEVER erase from that vector.
 vector<CommandLine> commands;
@@ -12,22 +26,41 @@ CommandLine::CommandLine(double _x, double _y) {
 void CommandLine::DeleteObject() {
 	if (obj != nullptr){
 		type = "";
-		symbol = "";
-		for (size_t i = 0; i < dependencies.size(); i++) {
-			
-			for (size_t j = 0; j < commands[dependencies[i]].dependent_from_this.size(); j++) {
-				if (commands[dependencies[i]].dependent_from_this[j] == index) {
-					commands[dependencies[i]].dependent_from_this.erase(commands[dependencies[i]].dependent_from_this.begin() + j);
-					break;
-				}
-			}
-		}
+		CompileDependencies(); //to cause there errors as it should
+		ClearDependencies();
 		delete obj;
 		obj = nullptr;
-
-
 	}
-	
+}
+
+void CommandLine::AddDependancy(CommandLine& other) {
+	other.dependent_from_this.push_back(index);
+	dependencies.push_back(other.index);
+}
+
+void CommandLine::AddDependancy(CommandLine* other) {
+	other->dependent_from_this.push_back(index);
+	dependencies.push_back(other->index);
+}
+
+void CommandLine::ClearDependencies() {
+	for (size_t i = 0; i < dependencies.size(); i++) {
+		for (size_t j = 0; j < commands[dependencies[i]].dependent_from_this.size(); j++) {
+			if (commands[dependencies[i]].dependent_from_this[j] == index) {
+				commands[dependencies[i]].dependent_from_this.erase(commands[dependencies[i]].dependent_from_this.begin() + j);
+				break;
+			}
+		}
+	}
+	dependencies.resize(0);
+}
+
+CommandLine* find_by_symbol(const string& symb, const string& type = "point") {
+	for (size_t i = 0; i < commands.size(); i++)
+		if (commands[i].symbol == symb && commands[i].type == type) 
+			return &(commands[i]);
+
+	return nullptr;
 }
 
 void CommandLine::Compile() {
@@ -43,7 +76,7 @@ void CommandLine::Compile() {
 	}
 
 	
-parse_start:
+	parse_start:
 	cout << "Compiling a command!" << endl;
 	iss >> keyword;
 	if (keyword == "point") {
@@ -65,7 +98,6 @@ parse_start:
 		}
 		else {
 			((Point*)obj)->set(x, y);
-			CompileDependencies();
 		}
 	}
 	else if (keyword == "circle") {
@@ -91,16 +123,13 @@ parse_start:
 			try {
 				r = stoi(p2);
 				CommandLine* pp1 = nullptr;
-				for (size_t i = 0; i < commands.size(); i++) {
-					if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
-				}
+				pp1 = find_by_symbol(p1);
 				if (pp1 == nullptr)
 					goto error;
 
 				obj = new Circle(*(Point*)(pp1->obj), r);
 
-				pp1->dependent_from_this.push_back(index);
-				dependencies.push_back(pp1->index);
+				AddDependancy(pp1);
 
 			}
 			// if there are center point and other point on circumference
@@ -108,70 +137,112 @@ parse_start:
 			{
 				CommandLine* pp1 = nullptr;
 				CommandLine* pp2 = nullptr;
-				for (size_t i = 0; i < commands.size(); i++) {
-					if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
-					if (commands[i].symbol == p2 && commands[i].type == "point") pp2 = &(commands[i]);
-				}
+
+				pp1 = find_by_symbol(p1);
+				pp2 = find_by_symbol(p2);
+
 				if (pp1 == nullptr || pp2 == nullptr) {
 					goto error;
 				}
 				obj = new Circle(*(Point*)(pp1->obj), distance(*(Point*)(pp1->obj), *(Point*)(pp2->obj)));
-				pp1->dependent_from_this.push_back(index);
-				pp2->dependent_from_this.push_back(index);
-				dependencies.push_back(pp1->index);
-				dependencies.push_back(pp2->index);
+				AddDependancy(pp1);
+				AddDependancy(pp2);
 			}
 		}
 		
 		obj->filled = filled;
 		type = "circle";
 	}
-	else if (keyword == "triangle") {		
-		DeleteObject();
+	else if (keyword == "triangle") {
+		
 		string p1, p2, p3;
 		iss >> p1 >> p2 >> p3;
-		cout << p1 << p2 << p3;
-		CommandLine* pp1 = nullptr, * pp2 = nullptr, * pp3 = nullptr;
-		for (size_t i = 0; i < commands.size(); i++) {
-			if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
-			if (commands[i].symbol == p2 && commands[i].type == "point") pp2 = &(commands[i]);
-			if (commands[i].symbol == p3 && commands[i].type == "point") pp3 = &(commands[i]);
-		}
-		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
-			goto error;
-		}
-		cout << "im here" << endl;
-		obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
-		obj->filled = filled;
 
-		pp1->dependent_from_this.push_back(index);
-		pp2->dependent_from_this.push_back(index);
-		pp3->dependent_from_this.push_back(index);
-		dependencies.push_back(pp1->index);
-		dependencies.push_back(pp2->index);
-		dependencies.push_back(pp3->index);
+		CommandLine*pp1,*pp2,*pp3 ;
+		pp1 = find_by_symbol(p1);
+		pp2 = find_by_symbol(p2);
+		pp3 = find_by_symbol(p3);
+
+		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) goto error;
+		
+		if (type == "triangle"){
+			ClearDependencies();
+			((Triangle*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+		}
+		else {
+			DeleteObject();
+			obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+			obj->filled = filled;
+		}
+
+		AddDependancy(pp1);
+		AddDependancy(pp2);
+		AddDependancy(pp3);
 
 		type = "triangle";
 	}
-	else if (keyword == "intersection") {
-		string circle1, circle2;
-		iss >> circle1 >> circle2;
-		if (circle1 == circle2) {
-			goto error;
-		}
-		Circle* c1 = nullptr;
-		Circle* c2 = nullptr;
-		for (size_t i = 0; i < commands.size(); i++) {
-			if (commands[i].symbol == circle1 && commands[i].type == "circle") c1 = (Circle*)commands[i].obj;
-			if (commands[i].symbol == circle2 && commands[i].type == "circle") c2 = (Circle*)commands[i].obj;
-		}
-		if (c1 == nullptr || c2 == nullptr) {
-			goto error;
-		}
-		vector<Point> pp = c1->intersections(*c2);
-		cout << pp.size();
-		obj = new Line(pp[0], pp[1]);
+	else if (keyword == "line") {
+		string p1, p2;
+		iss >> p1 >> p2;
+
+		CommandLine*pp1,*pp2;
+		pp1 = find_by_symbol(p1);
+		pp2 = find_by_symbol(p2);
+
+		if (pp1 == nullptr || pp2 == nullptr) goto error;
+
+		DeleteObject();
+		obj = new Line(*(Point*)(pp1->obj), *(Point*)(pp2->obj));
+		obj->filled = filled;
+
+		AddDependancy(pp1);
+		AddDependancy(pp2);
+
 		type = "line";
+	}
+	else if (keyword == "incircle") {
+		
+		string tr;
+		iss >> tr;
+		CommandLine* trp;
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) goto error;
+
+		if (type != "circle") {
+			DeleteObject();
+			obj = new Circle(((Triangle*)(trp->obj))->get_inscribed_circle());
+			obj->filled = filled;
+		}
+		else {
+			ClearDependencies();
+			*((Circle*)(obj))=(((Triangle*)(trp->obj))->get_inscribed_circle());
+		}
+
+		AddDependancy(trp);
+
+		type = "circle";
+	}
+	else if (keyword == "circumcircle") {
+
+		string tr;
+		iss >> tr;
+		CommandLine* trp;
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) goto error;
+
+		if (type != "circle") {
+			DeleteObject();
+			obj = new Circle(((Triangle*)(trp->obj))->get_circumcircle());
+			obj->filled = filled;
+		}
+		else {
+			ClearDependencies();
+			*((Circle*)(obj)) = (((Triangle*)(trp->obj))->get_circumcircle());
+		}
+
+		AddDependancy(trp);
+
+		type = "circle";
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
@@ -188,6 +259,7 @@ error:
 	r = 192; g = 32; b = 0;
 	return;
 success:
+	CompileDependencies();
 	r = 128; g = 128; b = 128;
 	return;
 

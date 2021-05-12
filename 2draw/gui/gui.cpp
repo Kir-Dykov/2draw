@@ -35,19 +35,21 @@ void Display(void) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
 
-
+			cout << endl << endl;
 			cout << commands[i].symbol << " (" << commands[i].index << ") is drawn" << endl;
 
-
-			/*cout << "\t";
+			cout << "dependencies:" << endl;
+			cout << "\t";
 			for (size_t j = 0; j < commands[i].dependencies.size(); j++){
 				cout << commands[i].dependencies[j] << " ";
 			}
 			cout << endl;
+			cout << "dependent_from_this:" << endl;
 			cout << "\t";
-			for (size_t j = 0; j < commands[i].dependencies.size(); j++) {
-				cout << commands[i].dependencies[j] << " ";
-			}*/
+			for (size_t j = 0; j < commands[i].dependent_from_this.size(); j++) {
+				cout << commands[i].dependent_from_this[j] << " ";
+			}
+			cout << endl;
 		};
 	}
 
@@ -86,9 +88,9 @@ void Keyboard(unsigned char key, int, int) {
 		}
 		//enter key
 		else if (key == 13) { 
-			editing_a_command = false;
 			command_to_edit->Compile();
-			command_to_edit = nullptr;
+			command_to_edit = &commands[((command_to_edit->index)+1)%commands.size()];
+			command_to_edit->b = 192;
 		}
 		//typing in symbols
 		else {
@@ -102,6 +104,7 @@ void MouseFunc(int button, int state, int x, int y)
 {
 	y = Height - y;
 	//cout << button << " " << state << " " << x << " " << y << endl;
+
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		if (state == GLUT_DOWN) {
@@ -121,12 +124,14 @@ void MouseFunc(int button, int state, int x, int y)
 					goto break_all; //no need to check wether user clicked on some object before exiting
 				}
 			}
+			editing_a_command = true;
+			command_to_edit->Compile();
+
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
 				{
 					moving_a_point = true;
 					point_to_move = &(commands[i]);
-					cout << "yes";
 					goto break_all;
 				}
 			}

@@ -40,10 +40,11 @@ public:
 	//of objects that has to be updated
 	//after this object changes
 	vector<size_t> dependent_from_this;
+
 	//lists the indexes of objects in which dependent_on field
 	//chould be cleared after deletion of this object
 	vector<size_t> dependencies;
-	bool filled = 1;
+	bool filled = 0;
 
 	//colors for background of command line
 	int r = 128, g = 128, b = 128;
@@ -53,6 +54,7 @@ public:
 
 	//constructor
 	CommandLine(double _x, double _y);
+
 	//setter
 	void set_location(double _x, double _y) {
 		x = _x;
@@ -65,8 +67,12 @@ public:
 		return (_x > x && _x < x + width && _y > y && _y < y + height);
 	}
 
-
 	void DeleteObject();
+
+
+	void AddDependancy(CommandLine& other);
+	void AddDependancy(CommandLine* other);
+	void ClearDependencies();
 
 	/* after this.command was edited, this function parses it,
 	* recreating object the command defines. In case of error
@@ -74,7 +80,6 @@ public:
 	void Compile();
 
 	void CompileDependencies();
-
 
 	//Draws the command line on the screen;
 	void Draw();
