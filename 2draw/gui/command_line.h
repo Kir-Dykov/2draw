@@ -18,7 +18,11 @@ using namespace std;
 
 extern GLint Width, Height;
 
-// this class 
+// this class manages command lines, that define all 
+// geometrical objects in programm,
+//
+// it primitively parses commands, creates objects,
+// keeps track of dependencies, 
 class CommandLine {
 public:
 	string command = "";
@@ -34,7 +38,7 @@ public:
 
 
 	//index int in vector<CommandLine> commands, usefull for dependencies management
-	size_t index = -1; 
+	size_t index = 0; 
 
 	//lists the indexes (in vector<CommandLine> commands)
 	//of objects that has to be updated
@@ -68,19 +72,18 @@ public:
 	}
 
 	void DeleteObject();
-
-
 	void AddDependancy(CommandLine& other);
 	void AddDependancy(CommandLine* other);
 	void ClearDependencies();
 
-	/* after this.command was edited, this function parses it,
+	/* after this.command was edited, this function can read it,
 	* recreating object the command defines. In case of error
 	* command line bocomes red and nothing is being created	*/
 	void Compile();
 
+	// this calls Compile() on everything from dependant_from_this
 	void CompileDependencies();
 
-	//Draws the command line on the screen;
+	//Draws the command line box on the screen;
 	void Draw();
 };

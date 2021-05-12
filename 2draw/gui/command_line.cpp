@@ -71,6 +71,7 @@ void CommandLine::Compile() {
 	string keyword;
 
 	if (command == "") {
+		symbol = "";
 		DeleteObject();
 		goto success;
 	}
@@ -84,7 +85,7 @@ void CommandLine::Compile() {
 		iss >> x >> y;
 		if (iss.fail()) {
 			iss.clear();
-			x = rand() % 100 + 100;
+			x = rand() % 100 + Width/2;
 			y = rand() % 100 + 100;
 			if (symbol != "")
 				command = symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
@@ -270,7 +271,6 @@ void CommandLine::CompileDependencies() {
 		commands[dependent_from_this[i]].Compile();
 	}
 };
-
 
 void CommandLine::Draw() {
 	glBegin(GL_POLYGON);

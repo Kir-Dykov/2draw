@@ -203,12 +203,11 @@ void PassiveMotionFunc(int x, int y) {
 /* the main */
 int gui_main() {
 	
-	//creating 11 command lines to work with
-	commands.push_back(CommandLine(0, 10));
-	for (size_t i = 0; i < 10; i++) {
-		commands.push_back(CommandLine(0, commands[i].y + 30));
+	//creating 20 command lines to work with
+	commands.push_back(CommandLine(10, 10));
+	for (size_t i = 0; i < 19; i++) {
+		commands.push_back(CommandLine(10, commands[i].y + 30));
 	}
-
 
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
