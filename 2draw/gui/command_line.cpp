@@ -9,11 +9,13 @@ void CommandLine::Compile() {
 	symbol = "";
 	delete obj;
 	obj = nullptr;
-
 	std::istringstream iss(command);
-
 	string keyword;
 
+	if (command == ""){
+		goto success;
+	}
+	
 parse_start:
 
 	iss >> keyword;
@@ -58,6 +60,7 @@ parse_start:
 			goto error;
 		}
 		vector<Point> pp = c1->intersections(*c2);
+		cout << pp.size();
 		obj = new Line(pp[0], pp[1]);
 		type = "line";
 	}
@@ -68,14 +71,13 @@ parse_start:
 	else {
 		goto error;
 	}
-
+	obj->filled = filled;
 	goto success;
 
 error:
 	r = 192; g = 32; b = 0;
 	return;
 success:
-	obj->filled = filled;
 	if (symbol == "") {
 		symbol = command;
 	}
