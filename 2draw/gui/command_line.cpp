@@ -69,13 +69,61 @@ parse_start:
 		}
 	}
 	else if (keyword == "circle") {
-		double x, y, r;
-		iss >> x >> y >> r;
-		if (iss.fail()) {
-			iss.clear();
-			goto error;
+
+		DeleteObject();
+		int x, y, r;
+		string p1, p2;
+		iss >> p1;
+
+		// if there are two coordinated and radius
+		try {
+			x = stoi(p1);
+			iss >> y >> r;
+			if (iss.fail()) {
+				iss.clear();
+				goto error;
+			}
+			obj = new Circle(x, y, r);
 		}
-		obj = new Circle(x, y, r);
+		// if there are center point and radius
+		catch(std::invalid_argument) {
+			iss >> p2;
+			try {
+				r = stoi(p2);
+				CommandLine* pp1 = nullptr;
+				for (size_t i = 0; i < commands.size(); i++) {
+					if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
+				}
+				if (pp1 == nullptr)
+					goto error;
+
+				obj = new Circle(*(Point*)(pp1->obj), r);
+
+				pp1->dependent_from_this.push_back(index);
+				dependencies.push_back(pp1->index);
+
+			}
+			// if there are center point and other point on circumference
+			catch (const std::exception&)
+			{
+				CommandLine* pp1 = nullptr;
+				CommandLine* pp2 = nullptr;
+				for (size_t i = 0; i < commands.size(); i++) {
+					if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = &(commands[i]);
+					if (commands[i].symbol == p2 && commands[i].type == "point") pp2 = &(commands[i]);
+				}
+				if (pp1 == nullptr || pp2 == nullptr) {
+					goto error;
+				}
+				obj = new Circle(*(Point*)(pp1->obj), distance(*(Point*)(pp1->obj), *(Point*)(pp2->obj)));
+				pp1->dependent_from_this.push_back(index);
+				pp2->dependent_from_this.push_back(index);
+				dependencies.push_back(pp1->index);
+				dependencies.push_back(pp2->index);
+			}
+		}
+		
+		obj->filled = filled;
 		type = "circle";
 	}
 	else if (keyword == "triangle") {		
@@ -94,6 +142,8 @@ parse_start:
 		}
 		cout << "im here" << endl;
 		obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+		obj->filled = filled;
+
 		pp1->dependent_from_this.push_back(index);
 		pp2->dependent_from_this.push_back(index);
 		pp3->dependent_from_this.push_back(index);
@@ -138,7 +188,6 @@ error:
 	r = 192; g = 32; b = 0;
 	return;
 success:
-	obj->filled = filled;
 	r = 128; g = 128; b = 128;
 	return;
 

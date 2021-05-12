@@ -15,6 +15,7 @@ public:
 	const double& radius = r;
 
 	Circle(double _x, double _y, double _r);
+	Circle(const Point& _c, double _r);
 	Circle();
 	Circle(const Circle& other) {
 		c = other.center;

@@ -6,6 +6,11 @@ Circle::Circle(double _x = 0, double _y = 0, double _r = 1) {
 	r = _r;
 }
 
+Circle::Circle(const Point& _c, double _r) {
+	c = _c;
+	r = _r;
+}
+
 Circle::Circle() {
 	c.x = 0;
 	c.y = 0;
