@@ -44,25 +44,16 @@ parse_start:
 		string p1, p2, p3;
 		iss >> p1 >> p2 >> p3;
 		Point* pp1 = nullptr, * pp2 = nullptr, * pp3 = nullptr;
-		cout << "Im here 1" << endl;
 		for (size_t i = 0; i < commands.size(); i++) {
-			if (commands[i].symbol == p1 && commands[i].type == "point") {
-				pp1 = (Point*)commands[i].obj;
-			}
-			if (commands[i].symbol == p2 && commands[i].type == "point") {
-				pp2 = (Point*)commands[i].obj;
-			}
-			if (commands[i].symbol == p3 && commands[i].type == "point") {
-				pp3 = (Point*)commands[i].obj;
-			}
+			if (commands[i].symbol == p1 && commands[i].type == "point") pp1 = (Point*)commands[i].obj;
+			if (commands[i].symbol == p2 && commands[i].type == "point") pp2 = (Point*)commands[i].obj;
+			if (commands[i].symbol == p3 && commands[i].type == "point") pp3 = (Point*)commands[i].obj;
 		}
-		cout << "Im here 2" << endl;
-		if ((pp1 == nullptr) || (pp2 == nullptr) || (pp3 == nullptr)) {
+		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
 			goto error;
 		}
 		obj = new Triangle(*pp1, *pp2, *pp3);
 		type = "triangle";
-		cout << "Im here 3" << endl;
 	}
 	else if (keyword == "intersection") {
 		string circle1, circle2;
@@ -73,12 +64,8 @@ parse_start:
 		Circle* c1 = nullptr;
 		Circle* c2 = nullptr;
 		for (size_t i = 0; i < commands.size(); i++) {
-			if (commands[i].symbol == circle1 && commands[i].type == "circle") {
-				c1 = (Circle*)commands[i].obj;
-			}
-			if (commands[i].symbol == circle2 && commands[i].type == "circle") {
-				c2 = (Circle*)commands[i].obj;
-			}
+			if (commands[i].symbol == circle1 && commands[i].type == "circle") c1 = (Circle*)commands[i].obj;
+			if (commands[i].symbol == circle2 && commands[i].type == "circle") c2 = (Circle*)commands[i].obj;
 		}
 		if (c1 == nullptr || c2 == nullptr) {
 			goto error;

@@ -15,7 +15,7 @@
 
 using namespace std;
 
-const int DELAY = 20;
+//const int DELAY = 20;
 
 GLint Width = 1080, Height = 720;
 
@@ -26,14 +26,10 @@ CommandLine* command_to_edit;
 CommandLine* point_to_move;
 
 void Display(void) {
-	//glBegin(GL_TRIANGLE_FAN);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
-	/*calls of drawing functions*/
-
-	
-
+	//drawing objects
 	for (size_t i = 0; i < commands.size(); i++) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
@@ -41,22 +37,20 @@ void Display(void) {
 		};
 	}
 
+	//drawing command lines
 	for (size_t i = 0; i < commands.size(); i++) {
 		commands[i].Draw();
 	}
 
 	glFinish();
-	
 }
 
 /* Функция вызывается при изменении размеров окна */
-void Reshape(GLint w, GLint h)
-{
+void Reshape(GLint w, GLint h) {
 	Width = w;
 	Height = h;
 	/* устанавливаем размеры области отображения */
 	glViewport(0, 0, w, h);
-
 	/* ортографическая проекция */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -67,9 +61,9 @@ void Reshape(GLint w, GLint h)
 }
 
 /* Функция обрабатывает сообщения от клавиатуры */
-void Keyboard(unsigned char key, int, int)
-{
+void Keyboard(unsigned char key, int, int) {
 	cout << (int)key;
+
 	if (editing_a_command) {
 		
 		//backspace key
@@ -82,14 +76,15 @@ void Keyboard(unsigned char key, int, int)
 			command_to_edit->Compile();
 			command_to_edit = nullptr;
 		}
+		//typing in symbols
 		else {
 			command_to_edit->command.append(1, key);
 		}
-		
 		glutPostRedisplay();
 	}
 }
 
+<<<<<<< HEAD
 void MouseFunc(int button, int state, int x, int y)
 {
 	y = Height - y;
@@ -97,6 +92,17 @@ void MouseFunc(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		if (state == GLUT_DOWN) {
+=======
+void MouseFunc(int button, int state, int x, int y) {
+	cout << button << " " << state << " " << x << " " << y << endl;
+
+	if (state == GLUT_DOWN)
+	{
+		if (button == GLUT_LEFT_BUTTON) {
+
+			//checks if clicked on some command line
+			//makes it editable by typing on keyboard
+>>>>>>> 3c4ae08412eb9b223bca9abd9c0f80ee7bb152ec
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].is_in(x, y)) {
 					editing_a_command = true;
@@ -107,9 +113,10 @@ void MouseFunc(int button, int state, int x, int y)
 					command_to_edit = &(commands[i]);
 					command_to_edit->b = 192;
 					cout << "editing a command!" << endl;
-					goto break_all;
+					goto break_all; //no need to check wether user clicked on some object before exiting
 				}
 			}
+<<<<<<< HEAD
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].type == "point") cout << distance((*(Point*)commands[i].obj), Point(x, y)) << " ";
 				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
@@ -119,6 +126,11 @@ void MouseFunc(int button, int state, int x, int y)
 					cout << "yes";
 				}
 			}
+=======
+
+			
+
+>>>>>>> 3c4ae08412eb9b223bca9abd9c0f80ee7bb152ec
 			break_all:
 			glutPostRedisplay();
 		}
@@ -128,13 +140,12 @@ void MouseFunc(int button, int state, int x, int y)
 }
 
 
-
+/*
 void Loop(int) {
-	/*dynamic actions go there*/
 	glutPostRedisplay();
 	glutTimerFunc(DELAY, Loop, 1);
 }
-
+*/
 
 void MotionFunc(int x, int y) {
 	y = Height - y;
@@ -149,19 +160,20 @@ void MotionFunc(int x, int y) {
 
 void PassiveMotionFunc(int x, int y) {
 	//cout << "Passive motion " << x << " " << y << endl;
-
 	//glutPostRedisplay();
 }
 
 
-/* Главный цикл приложения */
+/* the main */
 int gui_main() {
 	
-	
+	//creating 11 command lines to work with
 	commands.push_back(CommandLine(0, 10));
 	for (size_t i = 0; i < 10; i++) {
 		commands.push_back(CommandLine(0, commands[i].y + 30));
 	}
+
+
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
 	glutCreateWindow("2draw");
@@ -174,7 +186,6 @@ int gui_main() {
 
 	glutMotionFunc(MotionFunc);
 	glutPassiveMotionFunc(PassiveMotionFunc);
-
 
 	glutMainLoop();
 

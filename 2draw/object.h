@@ -14,19 +14,3 @@ public:
 	virtual void Draw() const{}
 	void set_look(int r, int g, int b, bool fill = 1) { red = r; green = g; blue = b; filled = fill; }
 };
-
-class ObjectList : public vector<Object> {
-	void Draw() {
-		for (size_t i = 0; i < this->size(); i++) {
-			(*this)[i].Draw();
-		}
-	}
-	/*explicit operator vector<Object>;
-	ObjectList(const vector<Object>& v) {
-		this->resize(v.size());
-		for (size_t i = 0; i < v.size(); i++)
-		{
-			(*this)[i] = v[i];
-		}
-	}*/
-};
