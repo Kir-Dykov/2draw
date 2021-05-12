@@ -10,6 +10,7 @@
 #include "gui.h"
 #include "../point.h"
 #include "../circle.h"
+#include "../triangle.h"
 #include "command_line.h"
 
 using namespace std;
@@ -23,22 +24,27 @@ bool editing_a_command;
 CommandLine* command_to_edit;
 
 void Display(void) {
+	//glBegin(GL_TRIANGLE_FAN);
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	
 	/*calls of drawing functions*/
+
+	
+
+	for (size_t i = 0; i < commands.size(); i++) {
+		if (commands[i].obj != nullptr) {
+			commands[i].obj->Draw();
+			cout << commands[i].symbol << " is drawn" << endl;
+		};
+	}
 
 	for (size_t i = 0; i < commands.size(); i++) {
 		commands[i].Draw();
 	}
 
-	for (size_t i = 0; i < commands.size(); i++) {
-		if (commands[i].obj != nullptr) {
-			commands[i].obj->Draw();
-		};
-	}
-
 	glFinish();
+	
 }
 
 /* Функция вызывается при изменении размеров окна */
@@ -64,10 +70,12 @@ void Keyboard(unsigned char key, int, int)
 	cout << (int)key;
 	if (editing_a_command) {
 		
+		//backspace key
 		if (key == 8 && command_to_edit->command.length() > 0) {
 			command_to_edit->command.resize(command_to_edit->command.length() - 1);
 		}
-		else if (key == 13) {
+		//enter key
+		else if (key == 13) { 
 			editing_a_command = false;
 			command_to_edit->Compile();
 			command_to_edit = nullptr;
@@ -86,7 +94,6 @@ void MouseFunc(int button, int state, int x, int y)
 	if (state == GLUT_DOWN)
 	{
 		if (button == GLUT_LEFT_BUTTON) {
-
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].is_in(x, Height - y)) {
 					editing_a_command = true;
@@ -100,7 +107,6 @@ void MouseFunc(int button, int state, int x, int y)
 					goto break_all;
 				}
 			}
-			
 			break_all:
 			glutPostRedisplay();
 		}
@@ -125,7 +131,7 @@ void MotionFunc(int x, int y) {
 void PassiveMotionFunc(int x, int y) {
 	//cout << "Passive motion " << x << " " << y << endl;
 
-	glutPostRedisplay();
+	//glutPostRedisplay();
 }
 
 

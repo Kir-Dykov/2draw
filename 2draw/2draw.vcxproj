@@ -168,6 +168,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="circle.cpp" />
+    <ClCompile Include="gui\command_line.cpp" />
+    <ClCompile Include="gui\gui.cpp" />
     <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -175,6 +177,8 @@
     <ClCompile Include="point.cpp" />
     <ClInclude Include="consts.h" />
     <ClInclude Include="graphics\opengl_tests.h" />
+    <ClInclude Include="gui\command_line.h" />
+    <ClInclude Include="gui\gui.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="tests\circle_tests.h" />

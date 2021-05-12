@@ -270,9 +270,8 @@ void Triangle::Draw() const {
 		glVertex2f(p2.x, p2.y);
 		glVertex2f(p3.x, p3.y);
 
-		glEnd;
-	}
-	else {
+		glEnd();
+	} else {
 		glBegin(GL_LINE_STRIP);
 
 		glColor3ub(red, green, blue);
@@ -281,6 +280,6 @@ void Triangle::Draw() const {
 		glVertex2f(p3.x, p3.y);
 		glVertex2f(p1.x, p1.y);
 
-		glEnd;
+		glEnd();
 	}
 }

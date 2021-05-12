@@ -12,6 +12,7 @@
 #include "../object.h"
 #include "../point.h"
 #include "../circle.h"
+#include "../triangle.h"
 
 using namespace std;
 

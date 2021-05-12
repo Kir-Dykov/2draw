@@ -3,7 +3,7 @@
 vector<CommandLine> commands;
 
 void CommandLine::Compile() {
-	cout << "Compiling a command!" << endl;
+
 
 	type = "";
 	symbol = "";
@@ -12,12 +12,12 @@ void CommandLine::Compile() {
 	std::istringstream iss(command);
 	string keyword;
 
-	if (command == ""){
+	if (command == "") {
 		goto success;
 	}
-	
-parse_start:
 
+parse_start:
+	cout << "Compiling a command!" << endl;
 	iss >> keyword;
 	if (keyword == "point") {
 		double x, y;
@@ -39,6 +39,30 @@ parse_start:
 		}
 		obj = new Circle(x, y, r);
 		type = "circle";
+	}
+	else if (keyword == "triangle") {
+		string p1, p2, p3;
+		iss >> p1 >> p2 >> p3;
+		Point* pp1 = nullptr, * pp2 = nullptr, * pp3 = nullptr;
+		cout << "Im here 1" << endl;
+		for (size_t i = 0; i < commands.size(); i++) {
+			if (commands[i].symbol == p1 && commands[i].type == "point") {
+				pp1 = (Point*)commands[i].obj;
+			}
+			if (commands[i].symbol == p2 && commands[i].type == "point") {
+				pp2 = (Point*)commands[i].obj;
+			}
+			if (commands[i].symbol == p3 && commands[i].type == "point") {
+				pp3 = (Point*)commands[i].obj;
+			}
+		}
+		cout << "Im here 2" << endl;
+		if ((pp1 == nullptr) || (pp2 == nullptr) || (pp3 == nullptr)) {
+			goto error;
+		}
+		obj = new Triangle(*pp1, *pp2, *pp3);
+		type = "triangle";
+		cout << "Im here 3" << endl;
 	}
 	else if (keyword == "intersection") {
 		string circle1, circle2;
@@ -71,6 +95,7 @@ parse_start:
 	else {
 		goto error;
 	}
+
 	obj->filled = filled;
 	goto success;
 
@@ -88,7 +113,7 @@ success:
 
 void CommandLine::Draw() {
 	glBegin(GL_POLYGON);
-	glColor3ub(r, g, b);/*rand() % 128 + 128*/
+	glColor3ub(r, g, b);
 	glVertex2f(x - margin, Height - (y - margin));
 	glVertex2f(x + width + margin, Height - (y - margin));
 	glVertex2f(x + width + margin, Height - (y + height));

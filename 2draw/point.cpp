@@ -34,7 +34,7 @@ void Point::Draw() const {
 	glColor3ub(red, green, blue);/*rand() % 128 + 128*/
 	
 	int N = 10;
-	float radius = 5;
+	float radius = 4;
 	float d_angle = 2 * PI / (float)N;
 	float angle = 0;
 
