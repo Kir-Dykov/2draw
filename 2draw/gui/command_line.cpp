@@ -257,7 +257,7 @@ void CommandLine::Compile() {
 	goto success;
 
 error:
-	r = 192; g = 32; b = 0;
+	r = 255; g = 64; b =64;
 	return;
 success:
 	CompileDependencies();
@@ -273,10 +273,12 @@ void CommandLine::CompileDependencies() {
 };
 
 void CommandLine::Draw() {
+	glShadeModel(GL_SMOOTH);
 	glBegin(GL_POLYGON);
 	glColor3ub(r, g, b);
 	glVertex2f(x - margin, Height - (y - margin));
 	glVertex2f(x + width + margin, Height - (y - margin));
+	glColor3ub(r - 64, g - 64, b - 64);
 	glVertex2f(x + width + margin, Height - (y + height));
 	glVertex2f(x - margin, Height - (y + height));
 	glEnd();
