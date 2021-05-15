@@ -284,7 +284,7 @@ void CommandLine::Draw() {
 	glEnd();
 
 	glColor3ub(255, 255, 255);
-	glRasterPos2f(x, Height - y - 12);
+	glRasterPos2f(x, Height - y - 16);
 	for (int i = 0; i < command.length(); i++) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, command[i]);
 	}
