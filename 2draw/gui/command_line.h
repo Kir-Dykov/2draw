@@ -54,7 +54,7 @@ public:
 	int r = 128, g = 128, b = 128;
 
 	// definition of where the comand line is;
-	double x, y, width=300, height=22, margin = 3;
+	double x, y, width=300, height=26;
 
 	//constructor
 	CommandLine(double _x, double _y);

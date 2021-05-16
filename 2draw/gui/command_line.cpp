@@ -276,15 +276,15 @@ void CommandLine::Draw() {
 	glShadeModel(GL_SMOOTH);
 	glBegin(GL_POLYGON);
 	glColor3ub(r, g, b);
-	glVertex2f(x - margin, Height - (y - margin));
-	glVertex2f(x + width + margin, Height - (y - margin));
+	glVertex2f(x, Height - (y));
+	glVertex2f(x + width, Height - y);
 	glColor3ub(r - 64, g - 64, b - 64);
-	glVertex2f(x + width + margin, Height - (y + height));
-	glVertex2f(x - margin, Height - (y + height));
+	glVertex2f(x + width, Height - (y + height));
+	glVertex2f(x, Height - (y + height));
 	glEnd();
 
 	glColor3ub(255, 255, 255);
-	glRasterPos2f(x, Height - y - 16);
+	glRasterPos2f(x+3, Height - y - 20);
 	for (int i = 0; i < command.length(); i++) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, command[i]);
 	}

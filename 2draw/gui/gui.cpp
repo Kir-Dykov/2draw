@@ -15,6 +15,7 @@
 
 #include "command_line.h"
 #include "undo_stack.h"
+#include "action.h"
 
 using namespace std;
 
@@ -28,12 +29,15 @@ bool moving_a_point;
 CommandLine* command_to_edit;
 CommandLine* point_to_move;
 
-struct action {
-	size_t index;
-	string prev_command;
-	string new_command;
-};
-UndoStack<string> undo_stack;
+string prev_command = "";
+UndoStack<Action> undo_stack;
+
+void push_action() {
+	if (prev_command != command_to_edit->command) {
+		undo_stack.push_back(Action(command_to_edit->index, prev_command, command_to_edit->command));
+	}
+	
+}
 
 void Display(void) {
 	glClearColor(0, 0, 0, 1);
@@ -88,8 +92,24 @@ void Reshape(GLint w, GLint h) {
 /* Функция обрабатывает сообщения от клавиатуры */
 void Keyboard(unsigned char key, int, int) {
 	cout << (int)key;
-
-	if (editing_a_command) {
+	if (key == 26) { //ctrl+Z
+		if (editing_a_command) {
+			command_to_edit->command = prev_command;
+		}
+		else {
+			Action a = undo_stack.undo();
+			commands[a.index].command = a.prev_command;
+			commands[a.index].Compile();
+		}
+		
+		glutPostRedisplay();
+	}
+	else if (key == 25) { //ctrl+Y
+		Action a = undo_stack.redo();
+		commands[a.index].command = a.new_command;
+		commands[a.index].Compile();
+		glutPostRedisplay();
+	} else if (editing_a_command) {
 		
 		//backspace key
 		if (key == 8 && command_to_edit->command.length() > 0) {
@@ -98,8 +118,10 @@ void Keyboard(unsigned char key, int, int) {
 		//enter key
 		else if (key == 13) { 
 			command_to_edit->Compile();
+			push_action();
 			command_to_edit = &commands[((command_to_edit->index)+1)%commands.size()];
 			command_to_edit->b = 192;
+			prev_command = command_to_edit->command;
 		}
 		//typing in symbols
 		else {
@@ -125,16 +147,24 @@ void MouseFunc(int button, int state, int x, int y)
 					editing_a_command = true;
 					if (command_to_edit != nullptr) {
 						command_to_edit->Compile();
+						push_action();
 					}
 
+					
 					command_to_edit = &(commands[i]);
 					command_to_edit->b = 192;
+					prev_command = command_to_edit->command;
 					cout << "editing a command!" << endl;
 					goto break_all; //no need to check wether user clicked on some object before exiting
 				}
 			}
-			editing_a_command = false;
-			command_to_edit->Compile();
+			
+			if (editing_a_command) {
+				command_to_edit->Compile();
+				push_action();
+				editing_a_command = false;
+			}
+			
 
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
@@ -212,6 +242,8 @@ void PassiveMotionFunc(int x, int y) {
 /* the main */
 int gui_main() {
 	
+	undo_stack.push_back(Action()); //add empty action
+
 	//creating 20 command lines to work with
 	commands.push_back(CommandLine(10, 10));
 	for (size_t i = 0; i < 19; i++) {
