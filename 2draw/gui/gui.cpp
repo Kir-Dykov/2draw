@@ -27,7 +27,6 @@ extern vector<CommandLine> commands;
 bool editing_a_command;
 bool moving_a_point;
 CommandLine* command_to_edit;
-CommandLine* point_to_move;
 
 string prev_command = "";
 UndoStack<Action> undo_stack;
@@ -36,7 +35,6 @@ void push_action() {
 	if (prev_command != command_to_edit->command) {
 		undo_stack.push_back(Action(command_to_edit->index, prev_command, command_to_edit->command));
 	}
-	
 }
 
 void Display(void) {
@@ -155,7 +153,7 @@ void MouseFunc(int button, int state, int x, int y)
 					command_to_edit->b = 192;
 					prev_command = command_to_edit->command;
 					cout << "editing a command!" << endl;
-					goto break_all; //no need to check wether user clicked on some object before exiting
+					goto break_all;
 				}
 			}
 			
@@ -170,18 +168,22 @@ void MouseFunc(int button, int state, int x, int y)
 				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
 				{
 					moving_a_point = true;
-					point_to_move = &(commands[i]);
+					command_to_edit = &(commands[i]);
+					prev_command = command_to_edit->command;
 					goto break_all;
 				}
 			}
+
+			/*gluOrtho2D shenanigans*/
 
 			break_all:
 			glutPostRedisplay();
 		}
 		else {
 			if (moving_a_point) {
+				push_action();
 				moving_a_point = false;
-				point_to_move = nullptr;
+				command_to_edit = nullptr;
 			}
 		}
 	}
@@ -222,12 +224,12 @@ void Loop(int) {
 void MotionFunc(int x, int y) {
 	y = Height - y;
 	if (moving_a_point) {
-		if (point_to_move->symbol != "")
-			point_to_move->command = point_to_move->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+		if (command_to_edit->symbol != "")
+			command_to_edit->command = command_to_edit->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
 		else
-			point_to_move->command = static_cast<string>("point ") + to_string(x) + " " + to_string(y);
+			command_to_edit->command = static_cast<string>("point ") + to_string(x) + " " + to_string(y);
 		
-		point_to_move->Compile();
+		command_to_edit->Compile();
 		glutPostRedisplay();
 	}
 }
