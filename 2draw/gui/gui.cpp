@@ -120,7 +120,7 @@ void SpecialInput(int key, int, int) {
 		if (key == GLUT_KEY_UP) {
 			command_to_edit->Compile();
 			push_action();
-			command_to_edit = &commands[((command_to_edit->index) - 1) % commands.size()];
+			command_to_edit = &commands[((command_to_edit->index) - 1 + commands.size()) % commands.size()];
 			command_to_edit->b = 192;
 			prev_command = command_to_edit->command;
 		} else if (key == GLUT_KEY_DOWN) {
@@ -129,6 +129,20 @@ void SpecialInput(int key, int, int) {
 			command_to_edit = &commands[((command_to_edit->index) + 1) % commands.size()];
 			command_to_edit->b = 192;
 			prev_command = command_to_edit->command;
+		}
+	}
+	else {
+		if (key == GLUT_KEY_UP) {
+			command_to_edit = &commands[commands.size()-1];
+			command_to_edit->b = 192;
+			prev_command = command_to_edit->command;
+			editing_a_command = true;
+		}
+		else if (key == GLUT_KEY_DOWN) {
+			command_to_edit = &commands[0];
+			command_to_edit->b = 192;
+			prev_command = command_to_edit->command;
+			editing_a_command = true;
 		}
 	}
 
