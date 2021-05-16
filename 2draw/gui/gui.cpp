@@ -45,22 +45,6 @@ void Display(void) {
 	for (size_t i = 0; i < commands.size(); i++) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
-
-			cout << endl << endl;
-			cout << commands[i].symbol << " (" << commands[i].index << ") is drawn" << endl;
-
-			cout << "dependencies:" << endl;
-			cout << "\t";
-			for (size_t j = 0; j < commands[i].dependencies.size(); j++){
-				cout << commands[i].dependencies[j] << " ";
-			}
-			cout << endl;
-			cout << "dependent_from_this:" << endl;
-			cout << "\t";
-			for (size_t j = 0; j < commands[i].dependent_from_this.size(); j++) {
-				cout << commands[i].dependent_from_this[j] << " ";
-			}
-			cout << endl;
 		};
 	}
 
@@ -89,7 +73,8 @@ void Reshape(GLint w, GLint h) {
 
 /* Функция обрабатывает сообщения от клавиатуры */
 void Keyboard(unsigned char key, int, int) {
-	cout << (int)key;
+	//cout << (int)key;
+
 	if (key == 26) { //ctrl+Z
 		if (editing_a_command && command_to_edit->command != prev_command) {
 			command_to_edit->command = prev_command;
@@ -129,6 +114,27 @@ void Keyboard(unsigned char key, int, int) {
 	}
 }
 
+void SpecialInput(int key, int, int) {
+	//cout << key << endl;
+	if (editing_a_command) {
+		if (key == GLUT_KEY_UP) {
+			command_to_edit->Compile();
+			push_action();
+			command_to_edit = &commands[((command_to_edit->index) - 1) % commands.size()];
+			command_to_edit->b = 192;
+			prev_command = command_to_edit->command;
+		} else if (key == GLUT_KEY_DOWN) {
+			command_to_edit->Compile();
+			push_action();
+			command_to_edit = &commands[((command_to_edit->index) + 1) % commands.size()];
+			command_to_edit->b = 192;
+			prev_command = command_to_edit->command;
+		}
+	}
+
+	glutPostRedisplay();
+}
+
 void MouseFunc(int button, int state, int x, int y)
 {
 	y = Height - y;
@@ -152,7 +158,6 @@ void MouseFunc(int button, int state, int x, int y)
 					command_to_edit = &(commands[i]);
 					command_to_edit->b = 192;
 					prev_command = command_to_edit->command;
-					cout << "editing a command!" << endl;
 					goto break_all;
 				}
 			}
@@ -259,7 +264,7 @@ int gui_main() {
 	//glutTimerFunc(DELAY, Loop, 1);
 	glutMouseFunc(MouseFunc);
 	glutKeyboardFunc(Keyboard);
-
+	glutSpecialFunc(SpecialInput);
 	glutMotionFunc(MotionFunc);
 	glutPassiveMotionFunc(PassiveMotionFunc);
 

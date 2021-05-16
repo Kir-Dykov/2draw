@@ -78,7 +78,7 @@ void CommandLine::Compile() {
 
 	
 	parse_start:
-	cout << "Compiling a command!" << endl;
+
 	iss >> keyword;
 	if (keyword == "point") {
 		int x, y;
