@@ -93,7 +93,7 @@ void Reshape(GLint w, GLint h) {
 void Keyboard(unsigned char key, int, int) {
 	cout << (int)key;
 	if (key == 26) { //ctrl+Z
-		if (editing_a_command) {
+		if (editing_a_command && command_to_edit->command != prev_command) {
 			command_to_edit->command = prev_command;
 		}
 		else {
@@ -241,8 +241,6 @@ void PassiveMotionFunc(int x, int y) {
 
 /* the main */
 int gui_main() {
-	
-	undo_stack.push_back(Action()); //add empty action
 
 	//creating 20 command lines to work with
 	commands.push_back(CommandLine(10, 10));

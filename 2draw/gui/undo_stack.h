@@ -27,6 +27,7 @@ public:
 	~UndoStack();
 
 	void push_back(T);
+
 	T undo();
 	T redo();
 	//удаление с текущего элемента и до конца
@@ -38,6 +39,7 @@ UndoStack<T>::UndoStack()
 {
 	head = nullptr;
 	top = nullptr;
+	push_back(T());
 }
 
 template<typename T>
@@ -94,26 +96,18 @@ void UndoStack<T>::push_back(T elem)
 template<typename T>
 T UndoStack<T>::undo()
 {
-	if (top != nullptr)
-	{
-		T tmp = top->data;
-		if (top->pPrev != nullptr)
-			top = top->pPrev;
-		return tmp;
-	}
-	else throw "Empty";
+	T tmp = top->data;
+	if (top->pPrev != nullptr)
+		top = top->pPrev;
+	return tmp;
 }
 
 template<typename T>
 T UndoStack<T>::redo()
 {
-	if (top != nullptr)
+	if (top->pNext != nullptr)
 	{
-		if (top->pNext != nullptr)
-		{
-			top = top->pNext;
-		}
-		return top->data;
+		top = top->pNext;
 	}
-	else throw "Empty";
+	return top->data;
 }
