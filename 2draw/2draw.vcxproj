@@ -188,6 +188,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="undo_stack.cpp" />
     <ClCompile Include="utilities.cpp" />
     <ClCompile Include="vector.cpp" />
     <ClInclude Include="tests\line_tests.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="tests\triangle_tests.h" />
     <ClInclude Include="tests\utilities_tests.h" />
     <ClInclude Include="triangle.h" />
+    <ClInclude Include="undo_stack.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>

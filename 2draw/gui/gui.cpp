@@ -12,7 +12,9 @@
 #include "../circle.h"
 #include "../triangle.h"
 #include "../polygon.h"
+
 #include "command_line.h"
+#include "undo_stack.h"
 
 using namespace std;
 
@@ -25,6 +27,13 @@ bool editing_a_command;
 bool moving_a_point;
 CommandLine* command_to_edit;
 CommandLine* point_to_move;
+
+struct action {
+	size_t index;
+	string prev_command;
+	string new_command;
+};
+UndoStack<string> undo_stack;
 
 void Display(void) {
 	glClearColor(0, 0, 0, 1);
@@ -124,7 +133,7 @@ void MouseFunc(int button, int state, int x, int y)
 					goto break_all; //no need to check wether user clicked on some object before exiting
 				}
 			}
-			editing_a_command = true;
+			editing_a_command = false;
 			command_to_edit->Compile();
 
 			for (size_t i = 0; i < commands.size(); i++) {
