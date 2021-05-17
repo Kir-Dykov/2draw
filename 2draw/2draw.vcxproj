@@ -93,7 +93,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\bin\glut-3.7.6-bin;$(SolutionDir)dependencies\bin\freeglut-bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Денис\2draw\dependencies\freeglut\lib;$(SolutionDir)dependencies\bin\glut-3.7.6-bin;$(SolutionDir)dependencies\bin\freeglut-bin</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
