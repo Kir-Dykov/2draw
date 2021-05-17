@@ -99,7 +99,7 @@ Circle Triangle::get_inscribed_circle() const{
 	// Method: we get the center of inscribed circle by solving the system of
 	// linear equations (two bisectrixes intersection) and r = S/p
 	Circle ic;		// answer - inscribed circle
-	Line B1, B2;	// bisectors of a vertices
+	Line B1, B2, B3;	// bisectors of a vertices
 	// finding the bisector of a vertex
 	B1 = get_bisectrix(p1);
 	B2 = get_bisectrix(p2);
@@ -142,8 +142,14 @@ Line Triangle::get_bisectrix(const Point& vertex) const {
 	m = a * c / (a + b);
 	Vector v;
 	if (L.a != 0 && L.b != 0) v.set(L.b / sqrt(L.a * L.a + L.b * L.b), -L.a / sqrt(L.a * L.a + L.b * L.b));
-	if (L.a == 0) v.set(1, 0);
-	if (L.b == 0) v.set(0, 1);
+	if (L.a == 0) {
+		if (a1.x < a2.x) v.set(1, 0);
+		else v.set(-1, 0);
+	}
+	if (L.b == 0) {
+		if (a1.y < a2.y) v.set(0, 1);
+		else v.set(0, -1);
+	}
 	v = v * m;
 
 	bis.x = a1.x + v.x;
