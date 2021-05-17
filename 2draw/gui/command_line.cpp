@@ -15,6 +15,7 @@ l1 line a b
 l2 bisectix t a
 pg1 polygon a b c ... n
 pg2 convex a b c ... n
+p intersection_line l1 l2
 
 */
 
@@ -335,6 +336,41 @@ void CommandLine::Compile() {
 		AddDependancy(trp);
 
 		type = "line";
+	}
+	else if (keyword == "intersection_line") {
+
+		string line1; string line2;
+		iss >> line1; iss >> line2;
+
+		CommandLine* cline1; CommandLine* cline2;
+		
+
+		cline1 = find_by_symbol(line1, "line");
+		if (cline1 == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		cline2 = find_by_symbol(line2, "line");
+		if (cline2 == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		if (type != "point") {
+			DeleteObject();
+			obj = new  Point(((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj)));
+			type = "point";
+		}
+		else {
+			ClearDependencies();
+			*((Point*)(obj)) = ((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj));
+		}
+
+		AddDependancy(cline1);
+		AddDependancy(cline2);
+
+		type = "point";
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
