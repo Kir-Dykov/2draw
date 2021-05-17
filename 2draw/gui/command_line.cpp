@@ -99,8 +99,8 @@ void CommandLine::Compile() {
 		iss >> x >> y;
 		if (iss.fail()) {
 			iss.clear();
-			x = rand() % 100 + Width/2;
-			y = rand() % 100 + 100;
+			x = rand() % 100 - 50;
+			y = rand() % 100 - 50;
 			if (symbol != "")
 				command = symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
 			else

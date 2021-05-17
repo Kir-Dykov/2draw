@@ -21,9 +21,10 @@ using namespace std;
 
 //const int DELAY = 20;
 
-int Width = 720, Height = 720;
+int Width = 1080, Height = 720;
 
-int x_start = Width / 2, y_start = Height / 2, x_shifted = 0, y_shifted = 0;
+int x_start = Width / 2, y_start = Height / 2, x_shifted = -Width / 2, y_shifted = -Height / 2;
+double scale_factor = 1;
 
 extern vector<CommandLine> commands;
 bool editing_a_command;
@@ -34,6 +35,9 @@ bool zooming_screen;
 
 string prev_command = "";
 UndoStack<Action> undo_stack;
+
+Line x_axis(Point(0, 0), Point(1000, 0));
+Line y_axis(Point(0, 0), Point(0, 1000));
 
 void glNormalView() {
 	glMatrixMode(GL_PROJECTION);
@@ -46,7 +50,7 @@ void glNormalView() {
 void glDisplacedView() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(x_shifted, Width + x_shifted, y_shifted, Height + y_shifted, -1.0, 1.0);
+	glOrtho(x_shifted*scale_factor, (Width + x_shifted)* scale_factor, y_shifted * scale_factor, (Height + y_shifted) * scale_factor, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -65,11 +69,14 @@ void Display(void) {
 	glDisplacedView();
 
 	//drawing objects
+	x_axis.Draw();
+	y_axis.Draw();
 	for (size_t i = commands.size()-1; i < commands.size(); i--) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
 		};
 	}
+	
 
 	glNormalView();
 
@@ -210,8 +217,7 @@ void MouseFunc(int button, int state, int x, int y)
 
 
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x + x_shifted, y + y_shifted)) < 4)
-				{
+				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point((x + x_shifted)*scale_factor, (y + y_shifted) * scale_factor)) < 4) {
 					moving_a_point = true;
 					command_to_edit = &(commands[i]);
 					prev_command = command_to_edit->command;
@@ -245,11 +251,11 @@ void MouseFunc(int button, int state, int x, int y)
 			for (size_t i = 0; i < commands.size(); i++) {
 				bool in_ = 0;
 				if (commands[i].type == "triangle")
-					in_ = ((Triangle*)(commands[i].obj))->is_in(Point(x + x_shifted, y + y_shifted));
+					in_ = ((Triangle*)(commands[i].obj))->is_in(Point((x + x_shifted) * scale_factor, (y + y_shifted) * scale_factor));
 				else if (commands[i].type == "circle")
-					in_ = ((Circle*)(commands[i].obj))->is_in(Point(x + x_shifted, y + y_shifted));
+					in_ = ((Circle*)(commands[i].obj))->is_in(Point((x + x_shifted) * scale_factor, (y + y_shifted) * scale_factor));
 				else if (commands[i].type == "polygon")
-					in_ = ((Polygon*)(commands[i].obj))->is_in(Point(x + x_shifted, y + y_shifted));
+					in_ = ((Polygon*)(commands[i].obj))->is_in(Point((x + x_shifted) * scale_factor, (y + y_shifted) * scale_factor));
 
 				if (in_) {
 					commands[i].filled = !(commands[i].filled);
@@ -262,13 +268,11 @@ void MouseFunc(int button, int state, int x, int y)
 	}
 	if (button == 3) {
 		cout << "YEAS" << endl;
-		x_shifted /= 1.1; y_shifted /= 1.1;
-		Width /= 1.1; Height /= 1.1;
+		scale_factor /= 1.1;
 		glutPostRedisplay();
 	}
 	if (button == 4) {
-		x_shifted *= 1.1; y_shifted *= 1.1;
-		Width *= 1.1; Height *= 1.1;
+		scale_factor *= 1.1;
 		glutPostRedisplay();
 	}
 }
@@ -285,9 +289,11 @@ void MotionFunc(int x, int y) {
 	y = Height - y;
 	if (moving_a_point) {
 		if (command_to_edit->symbol != "")
-			command_to_edit->command = command_to_edit->symbol + " " + "point" + " " + to_string(x + x_shifted) + " " + to_string(y + y_shifted);
+			command_to_edit->command = command_to_edit->symbol + " " + "point" + " " + \
+			to_string((int)((x + x_shifted) * scale_factor)) + " " + to_string((int)((y + y_shifted) * scale_factor));
 		else
-			command_to_edit->command = static_cast<string>("point ") + to_string(x + x_shifted) + " " + to_string(y + y_shifted);
+			command_to_edit->command = static_cast<string>("point ") + \
+			to_string((int)((x + x_shifted) * scale_factor)) + " " + to_string((int)((y + y_shifted) * scale_factor));
 		
 		command_to_edit->Compile();
 		glutPostRedisplay();
@@ -315,6 +321,7 @@ void PassiveMotionFunc(int x, int y) {
 /* the main */
 int gui_main() {
 
+	
 	//creating 20 command lines to work with
 	commands.push_back(CommandLine(10, 10));
 	for (size_t i = 0; i < 19; i++) {
