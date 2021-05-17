@@ -259,6 +259,10 @@ void MouseFunc(int button, int state, int x, int y)
 			}
 		}
 	}
+
+	if (button == 3) {
+		cout << 11111111;
+	}
 }
 
 
