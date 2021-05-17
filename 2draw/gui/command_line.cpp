@@ -245,6 +245,32 @@ void CommandLine::Compile() {
 
 		type = "circle";
 	}
+	else if (keyword == "bisectrix") {
+
+		string tr; string ver;
+		iss >> tr; iss >> ver;
+
+		CommandLine* trp; CommandLine* vertex;
+		vertex = find_by_symbol(ver);
+		if (vertex == nullptr) goto error;
+
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) goto error;
+
+		if (type != "line") {
+			DeleteObject();
+			obj = new Line(((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj)));
+			obj->filled = filled;
+		}
+		else {
+			ClearDependencies();
+			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj));
+		}
+
+		AddDependancy(trp);
+
+		type = "line";
+	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
 		symbol = keyword;

@@ -10,15 +10,19 @@ int triangle_main()
 	Circle cir;
 
 	Point p1, p2, p3;
-	p1.set(-2, -10);
-	p2.set(-3, -1);
-	p3.set(-2, 0);
+	p1.set(3, 3);
+	p2.set(4, 3);
+	p3.set(3, 2);
 	t.set(p1, p2, p3);
 
 	cout << "Triangle area: " << t.area() << endl;
 
 	cout << "Triangle bisectrix: ";
+	bis = t.get_bisectrix(t.point1);
+	cout << bis << endl;
 	bis = t.get_bisectrix(t.point2);
+	cout << bis << endl;
+	bis = t.get_bisectrix(t.point3);
 	cout << bis;
 	cout << endl;
 
