@@ -30,6 +30,7 @@ bool editing_a_command;
 bool moving_a_point;
 CommandLine* command_to_edit;
 bool moving_screen;
+bool zooming_screen;
 
 string prev_command = "";
 UndoStack<Action> undo_stack;
@@ -259,10 +260,10 @@ void MouseFunc(int button, int state, int x, int y)
 			}
 		}
 	}
-
-	if (button == 3) {
-		cout << 11111111;
+	else if (button == 3 && state == GLUT_DOWN) {
+		zooming_screen = true;
 	}
+	else (zooming_screen = false);
 }
 
 
@@ -294,6 +295,9 @@ void MotionFunc(int x, int y) {
 		//cout << endl << x_shifted << "   " << y_shifted;
 		glutPostRedisplay();
 		
+	}
+	if (zooming_screen) {
+
 	}
 }
 

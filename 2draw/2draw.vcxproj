@@ -98,8 +98,8 @@
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY $(SolutionDir)dependencies\bin\glut-3.7.6-bin\glut32.dll $(SolutionDir)Debug\ /s /y;
-XCOPY $(SolutionDir)dependencies\bin\freeglut-bin\freeglut.dll $(SolutionDir)Debug\ /s /y  </Command>
+      <Command>XCOPY $(SolutionDir)dependencies\bin\glut-3.7.6-bin\glut32.dll $(SolutionDir)Debug\ /s /y
+XCOPY $(SolutionDir)dependencies\bin\freeglut-bin\freeglut.dll $(SolutionDir)Debug\ /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
