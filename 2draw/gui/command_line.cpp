@@ -12,6 +12,7 @@ c3 circle a b
 c4 incircle t
 c5 circumcircle t
 l1 line a b
+l2 bisectix t a
 pg1 polygon a b c ... n
 pg2 convex a b c ... n
 
@@ -63,6 +64,14 @@ CommandLine* find_by_symbol(const string& symb, const string& type = "point") {
 	for (size_t i = 0; i < commands.size(); i++)
 		if (commands[i].symbol == symb && commands[i].type == type) 
 			return &(commands[i]);
+
+	return nullptr;
+}
+
+CommandLine* find_by_symbol_among(const string& symb, const vector<size_t>& v, const string& type = "point") {
+	for (size_t i = 0; i < v.size(); i++)
+		if (commands[v[i]].symbol == symb && commands[v[i]].type == type)
+			return &(commands[v[i]]);
 
 	return nullptr;
 }
@@ -249,7 +258,6 @@ void CommandLine::Compile() {
 
 		type = "circle";
 	}
-<<<<<<< HEAD
 	else if (keyword == "polygon") {
 		string p1;
 		DeleteObject();
@@ -293,18 +301,26 @@ void CommandLine::Compile() {
 
 		obj->filled = filled;
 		type = "polygon";
-=======
+	}
 	else if (keyword == "bisectrix") {
 
 		string tr; string ver;
 		iss >> tr; iss >> ver;
 
 		CommandLine* trp; CommandLine* vertex;
-		vertex = find_by_symbol(ver);
-		if (vertex == nullptr) goto error;
+		
 
 		trp = find_by_symbol(tr, "triangle");
-		if (trp == nullptr) goto error;
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		vertex = find_by_symbol_among(ver, trp->dependencies);
+		if (vertex == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
 		if (type != "line") {
 			DeleteObject();
@@ -319,7 +335,6 @@ void CommandLine::Compile() {
 		AddDependancy(trp);
 
 		type = "line";
->>>>>>> 05358691e68a12e69656f49071b11a1b7e37e963
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
