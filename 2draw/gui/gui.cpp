@@ -21,7 +21,7 @@ using namespace std;
 
 //const int DELAY = 20;
 
-GLint Width = 720, Height = 720;
+int Width = 720, Height = 720;
 
 int x_start = Width / 2, y_start = Height / 2, x_shifted = 0, y_shifted = 0;
 
@@ -34,6 +34,22 @@ bool moving_screen;
 string prev_command = "";
 UndoStack<Action> undo_stack;
 
+void glNormalView() {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, Width, 0, Height, -1.0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void glDisplacedView() {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(x_shifted, Width + x_shifted, y_shifted, Height + y_shifted, -1.0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
 void push_action() {
 	if (prev_command != command_to_edit->command) {
 		undo_stack.push_back(Action(command_to_edit->index, prev_command, command_to_edit->command));
@@ -44,12 +60,17 @@ void Display(void) {
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+
+	glDisplacedView();
+
 	//drawing objects
-	for (size_t i = 0; i < commands.size(); i++) {
+	for (size_t i = commands.size()-1; i < commands.size(); i--) {
 		if (commands[i].obj != nullptr) {
 			commands[i].obj->Draw();
 		};
 	}
+
+	glNormalView();
 
 	//drawing command lines
 	for (size_t i = 0; i < commands.size(); i++) {
@@ -155,7 +176,7 @@ void SpecialInput(int key, int, int) {
 void MouseFunc(int button, int state, int x, int y)
 {
 	y = Height - y;
-	//cout << button << " " << state << " " << x << " " << y << endl;
+	cout << button << " " << state << " " << x << " " << y << endl;
 
 	if (button == GLUT_LEFT_BUTTON)
 	{
@@ -164,7 +185,7 @@ void MouseFunc(int button, int state, int x, int y)
 			//checks if clicked on some command line
 			//makes it editable by typing on keyboard
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].is_in(x + x_shifted, y + y_shifted)) {
+				if (commands[i].is_in(x, y)) {
 					editing_a_command = true;
 					if (command_to_edit != nullptr) {
 						command_to_edit->Compile();
@@ -175,6 +196,7 @@ void MouseFunc(int button, int state, int x, int y)
 					command_to_edit = &(commands[i]);
 					command_to_edit->b = 192;
 					prev_command = command_to_edit->command;
+
 					goto break_all;
 				}
 			}
@@ -184,7 +206,7 @@ void MouseFunc(int button, int state, int x, int y)
 				push_action();
 				editing_a_command = false;
 			}
-			
+
 
 			for (size_t i = 0; i < commands.size(); i++) {
 				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x + x_shifted, y + y_shifted)) < 4)
@@ -222,11 +244,11 @@ void MouseFunc(int button, int state, int x, int y)
 			for (size_t i = 0; i < commands.size(); i++) {
 				bool in_ = 0;
 				if (commands[i].type == "triangle")
-					in_ = ((Triangle*)(commands[i].obj))->is_in(Point(x, y));
+					in_ = ((Triangle*)(commands[i].obj))->is_in(Point(x + x_shifted, y + y_shifted));
 				else if (commands[i].type == "circle")
-					in_ = ((Circle*)(commands[i].obj))->is_in(Point(x, y));
+					in_ = ((Circle*)(commands[i].obj))->is_in(Point(x + x_shifted, y + y_shifted));
 				else if (commands[i].type == "polygon")
-					in_ = ((Polygon*)(commands[i].obj))->is_in(Point(x, y));
+					in_ = ((Polygon*)(commands[i].obj))->is_in(Point(x + x_shifted, y + y_shifted));
 
 				if (in_) {
 					commands[i].filled = !(commands[i].filled);
@@ -259,16 +281,15 @@ void MotionFunc(int x, int y) {
 		glutPostRedisplay();
 	}
 	if (moving_screen) {
-		//glViewport(0, 0, Width, Height);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(x_start - x, Width + x_start - x, y_start - y, Height + y_start - y, -1.0, 1.0);
 
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		cout << endl << x - x_start << "   " << y - y_start;
-		glutPostRedisplay();
 		x_shifted = x_start - x; y_shifted = y_start - y;
+
+		//glViewport(0, 0, Width, Height);
+		
+
+		//cout << endl << x_shifted << "   " << y_shifted;
+		glutPostRedisplay();
+		
 	}
 }
 

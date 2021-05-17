@@ -165,7 +165,6 @@ void CommandLine::Compile() {
 			}
 		}
 		
-		obj->filled = filled;
 		type = "circle";
 	}
 	else if (keyword == "triangle") {
@@ -187,7 +186,6 @@ void CommandLine::Compile() {
 		else {
 			DeleteObject();
 			obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
-			obj->filled = filled;
 		}
 
 		AddDependancy(pp1);
@@ -208,7 +206,6 @@ void CommandLine::Compile() {
 
 		DeleteObject();
 		obj = new Line(*(Point*)(pp1->obj), *(Point*)(pp2->obj));
-		obj->filled = filled;
 
 		AddDependancy(pp1);
 		AddDependancy(pp2);
@@ -226,7 +223,6 @@ void CommandLine::Compile() {
 		if (type != "circle") {
 			DeleteObject();
 			obj = new Circle(((Triangle*)(trp->obj))->get_inscribed_circle());
-			obj->filled = filled;
 		}
 		else {
 			ClearDependencies();
@@ -248,7 +244,6 @@ void CommandLine::Compile() {
 		if (type != "circle") {
 			DeleteObject();
 			obj = new Circle(((Triangle*)(trp->obj))->get_circumcircle());
-			obj->filled = filled;
 		}
 		else {
 			ClearDependencies();
@@ -279,7 +274,6 @@ void CommandLine::Compile() {
 			DeleteObject();
 			goto error;
 		}*/
-		obj->filled = filled;
 		//cout << ((Polygon*)(obj))->area() << endl;
 		type = "polygon";
 	}
@@ -300,7 +294,6 @@ void CommandLine::Compile() {
 		}
 		*(Polygon*)(obj) = convex_hull(v);
 
-		obj->filled = filled;
 		type = "polygon";
 	}
 	else if (keyword == "bisectrix") {
@@ -359,7 +352,7 @@ void CommandLine::Compile() {
 
 		if (type != "point") {
 			DeleteObject();
-			obj = new  Point(((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj)));
+			obj = new Point(((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj)));
 			type = "point";
 		}
 		else {
@@ -387,6 +380,14 @@ error:
 	r = 255; g = 64; b =64;
 	return;
 success:
+	if (obj != nullptr) {
+		obj->filled = filled;
+		obj->red = rand() % 192 + 64;
+		obj->green = rand() % 192 + 64;
+		obj->blue = rand() % 192 + 64;
+	}
+	
+
 	CompileDependencies();
 	r = 128; g = 128; b = 128;
 	return;
