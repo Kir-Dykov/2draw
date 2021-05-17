@@ -12,9 +12,13 @@ c3 circle a b
 c4 incircle t
 c5 circumcircle t
 l1 line a b
+pg1 polygon a b c ... n
+pg2 convex a b c ... n
+
 */
 
 //NEVER erase from that vector.
+//it will break indexes in CommandLine's
 vector<CommandLine> commands;
 
 CommandLine::CommandLine(double _x, double _y) {
@@ -80,7 +84,7 @@ void CommandLine::Compile() {
 	parse_start:
 
 	iss >> keyword;
-	if (keyword == "point") {
+	if (keyword == "point" || (symbol!="" && keyword == "p")) {
 		int x, y;
 		iss >> x >> y;
 		if (iss.fail()) {
@@ -244,6 +248,50 @@ void CommandLine::Compile() {
 		AddDependancy(trp);
 
 		type = "circle";
+	}
+	else if (keyword == "polygon") {
+		string p1;
+		DeleteObject();
+		obj = new Polygon();
+		while (!iss.eof()) {
+			iss >> p1;
+			CommandLine* pp1;
+			pp1 = find_by_symbol(p1);
+			if (pp1 == nullptr) {
+				DeleteObject();
+				goto error;
+			}
+			((Polygon*)(obj))->append(*(Point*)(pp1->obj));
+			AddDependancy(pp1);
+		}
+		/*
+		if (((Polygon*)(obj))->is_selfintersecting();) {
+			DeleteObject();
+			goto error;
+		}*/
+		obj->filled = filled;
+		//cout << ((Polygon*)(obj))->area() << endl;
+		type = "polygon";
+	}
+	else if (keyword == "convex_hull" || keyword == "convex") {
+		string p1;
+		DeleteObject();
+		obj = new Polygon();
+		vector<Point> v;
+		while (!iss.eof()) {
+			iss >> p1;
+			CommandLine* pp1;
+			pp1 = find_by_symbol(p1);
+			if (pp1 == nullptr) {
+				goto error;
+			}
+			v.push_back(*(Point*)(pp1->obj));
+			AddDependancy(pp1);
+		}
+		*(Polygon*)(obj) = convex_hull(v);
+
+		obj->filled = filled;
+		type = "polygon";
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;

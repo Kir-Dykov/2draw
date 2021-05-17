@@ -13,6 +13,7 @@
 #include "../point.h"
 #include "../circle.h"
 #include "../triangle.h"
+#include "../polygon.h"
 
 using namespace std;
 

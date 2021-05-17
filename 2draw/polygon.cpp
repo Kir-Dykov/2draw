@@ -14,16 +14,17 @@ bool Polygon::is_convex() const{
 	// the idea is the folowing:
 	// polygon is convex iff all it's consecutive edges
 	// are rotated in the same direction
+	// so there are no inner angles greater than 180 degrees
 
-	// or, more precisely, determinants of pairs of vectors representing adjacent
-	// edges all have the same sign.
+	// more precisely, determinants of pairs of vectors representing adjacent
+	// edges must all have the same sign.
 
-	Vector first = vertexes[0] - vertexes.back();
-	Vector second = vertexes[1] - vertexes[0];
+	Vector first = vertexes.back() - vertexes[vertexes.size()-2];
+	Vector second = vertexes[0] - vertexes.back();
 	double det_0 = determinant(first, second);
 	for (unsigned int i = 2; i < vertexes.size(); i += 1) {
-		second = first;
-		first = vertexes[i] - vertexes[i - 1];
+		first = second;
+		second = vertexes[i] - vertexes[i - 1];
 		double det = determinant(first, second);
 		if (det * det_0 < 0)
 			return 0;
@@ -144,27 +145,27 @@ bool Polygon::is_in(const Point& p) const {
 		return 1;
 	}
 	else {
-		//let's find sum of areas formed by each edge and point p
+		// the idea of the algorithm: https://en.wikipedia.org/wiki/Point_in_polygon#Winding_number_algorithm
 
-		//double the area of triangle, formed by vertexes[0], vertexes.back() and p
-		double aux_area = determinant(vertexes[0] - vertexes.back(), p - vertexes.back()); 
-		for (size_t i = 0; i < vertexes.size() - 1; i += 1) {
-			//adding double the area of triangle, formed by vertexes[i+1], vertexes[i] and p
-			aux_area += determinant(vertexes[i + 1Ui64] - vertexes[i], p - vertexes[i]);
-		}
-		aux_area *= 0.5;
-
+		int winding_number = 0;
+		int turn_sign;
 		
-		//the point lies inside polygon iff aux_area is exactly equal to area of polygon
-		//but due to the rounding issues it's safer to check if they are close enough
-		//and by close enough I mean that distance between them is no bigger than in 2 last binary digits:
-		if (abs(aux_area - area()) < 2*epsilon(aux_area))
-			return 1;
-		else
-			return 0;
+		for (size_t i = 0; i < vertexes.size() - 1; i += 1)	{
+			// if edge crosses vertical line
+			if ((vertexes[i].x - p.x) * (vertexes[i+1].x - p.x) <= 0) {
+				// then we add a sign of a rotation (it's positive 
+				// iff vector from vertexes[i] to vertexes[i + 1]
+				// goes around p counter-clockwise
+				winding_number += 2 * (determinant(vertexes[i] - p, vertexes[i + 1] - p) > 0) - 1;
+			}
+		}
+		//repeat for the unaccounted edge
+		if ((vertexes.back().x - p.x) * (vertexes[0].x - p.x) <= 0) {
+			winding_number += 2 * (determinant(vertexes.back() - p, vertexes[0] - p) > 0) - 1;
+		}
+		
+		return (winding_number!=0);
 	}
-	
-	return 1;
 }
 
 //Graham scan algorithm
@@ -240,7 +241,7 @@ double Polygon::perimeter() const {
 }
 
 void CALLBACK tessBeginCB(GLenum which)
-{
+{ 
 	glBegin(which);
 }
 
@@ -268,7 +269,7 @@ void Polygon::Draw() const {
 			{
 				if (j == 0) ver[i][j] = vertexes[i].x;
 				else if (j == 1) ver[i][j] = vertexes[i].y;
-				else if (j == 2) ver[i][j] == 0;
+				else if (j == 2) ver[i][j] = 0;
 			}
 		}
 
