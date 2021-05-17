@@ -136,7 +136,7 @@ Line Line::parallel(const Point& P) const {
 void Line::Draw() const {
 	Vector ab; Point _a, _b;
 	ab = p2 - p1;
-	ab.x *= 100; ab.y *= 100;
+	ab.x *= 10000; ab.y *= 10000;
 	_a = p1 + ab;
 	ab.x = -ab.x; ab.y = -ab.y;
 	_b = p2 + ab;

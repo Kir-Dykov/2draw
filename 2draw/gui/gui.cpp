@@ -23,10 +23,13 @@ using namespace std;
 
 GLint Width = 720, Height = 720;
 
+int x_start = Width / 2, y_start = Height / 2, x_shifted = 0, y_shifted = 0;
+
 extern vector<CommandLine> commands;
 bool editing_a_command;
 bool moving_a_point;
 CommandLine* command_to_edit;
+bool moving_screen;
 
 string prev_command = "";
 UndoStack<Action> undo_stack;
@@ -161,7 +164,7 @@ void MouseFunc(int button, int state, int x, int y)
 			//checks if clicked on some command line
 			//makes it editable by typing on keyboard
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].is_in(x, y)) {
+				if (commands[i].is_in(x + x_shifted, y + y_shifted)) {
 					editing_a_command = true;
 					if (command_to_edit != nullptr) {
 						command_to_edit->Compile();
@@ -184,7 +187,7 @@ void MouseFunc(int button, int state, int x, int y)
 			
 
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x, y)) < 4)
+				if (commands[i].type == "point" && distance((*(Point*)commands[i].obj), Point(x + x_shifted, y + y_shifted)) < 4)
 				{
 					moving_a_point = true;
 					command_to_edit = &(commands[i]);
@@ -194,6 +197,11 @@ void MouseFunc(int button, int state, int x, int y)
 			}
 
 			/*gluOrtho2D shenanigans*/
+			if (!editing_a_command && !moving_a_point && !moving_screen) {
+				moving_screen = true;
+				x_start = x + x_shifted;
+				y_start = y + y_shifted;
+			}
 
 			break_all:
 			glutPostRedisplay();
@@ -204,6 +212,7 @@ void MouseFunc(int button, int state, int x, int y)
 				moving_a_point = false;
 				command_to_edit = nullptr;
 			}
+			if (moving_screen) moving_screen = false;
 		}
 	}
 	else if (button == GLUT_MIDDLE_BUTTON) {
@@ -228,8 +237,6 @@ void MouseFunc(int button, int state, int x, int y)
 			}
 		}
 	}
-
-	
 }
 
 
@@ -244,12 +251,24 @@ void MotionFunc(int x, int y) {
 	y = Height - y;
 	if (moving_a_point) {
 		if (command_to_edit->symbol != "")
-			command_to_edit->command = command_to_edit->symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+			command_to_edit->command = command_to_edit->symbol + " " + "point" + " " + to_string(x + x_shifted) + " " + to_string(y + y_shifted);
 		else
-			command_to_edit->command = static_cast<string>("point ") + to_string(x) + " " + to_string(y);
+			command_to_edit->command = static_cast<string>("point ") + to_string(x + x_shifted) + " " + to_string(y + y_shifted);
 		
 		command_to_edit->Compile();
 		glutPostRedisplay();
+	}
+	if (moving_screen) {
+		//glViewport(0, 0, Width, Height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(x_start - x, Width + x_start - x, y_start - y, Height + y_start - y, -1.0, 1.0);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		cout << endl << x - x_start << "   " << y - y_start;
+		glutPostRedisplay();
+		x_shifted = x_start - x; y_shifted = y_start - y;
 	}
 }
 
