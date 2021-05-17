@@ -260,10 +260,17 @@ void MouseFunc(int button, int state, int x, int y)
 			}
 		}
 	}
-	else if (button == 3 && state == GLUT_DOWN) {
-		zooming_screen = true;
+	if (button == 3) {
+		cout << "YEAS" << endl;
+		x_shifted /= 1.1; y_shifted /= 1.1;
+		Width /= 1.1; Height /= 1.1;
+		glutPostRedisplay();
 	}
-	else (zooming_screen = false);
+	if (button == 4) {
+		x_shifted *= 1.1; y_shifted *= 1.1;
+		Width *= 1.1; Height *= 1.1;
+		glutPostRedisplay();
+	}
 }
 
 
@@ -295,9 +302,6 @@ void MotionFunc(int x, int y) {
 		//cout << endl << x_shifted << "   " << y_shifted;
 		glutPostRedisplay();
 		
-	}
-	if (zooming_screen) {
-
 	}
 }
 
