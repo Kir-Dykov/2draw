@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdlib.h> //resolves some stupid redefinition problem
-#include "glut.h"
+#include "GL/glut.h"
 #include <vector>
 
 using namespace std;

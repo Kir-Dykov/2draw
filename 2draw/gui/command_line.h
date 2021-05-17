@@ -6,7 +6,7 @@
 #include <random>
 #include <vector>
 #include <string>
-#include "glut.h"
+#include "GL/glut.h"
 
 #include "gui.h"
 #include "../object.h"
