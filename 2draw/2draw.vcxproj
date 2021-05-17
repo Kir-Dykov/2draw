@@ -86,19 +86,20 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32; NOGDI; _DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\bin\glut-3.7.6-bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\bin\glut-3.7.6-bin;$(SolutionDir)dependencies\bin\freeglut-bin</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY $(SolutionDir)dependencies\bin\glut-3.7.6-bin\glut32.dll $(SolutionDir)Debug\ /s /y </Command>
+      <Command>XCOPY $(SolutionDir)dependencies\bin\glut-3.7.6-bin\glut32.dll $(SolutionDir)Debug\ /s /y
+XCOPY $(SolutionDir)dependencies\bin\freeglut-bin\freeglut.dll $(SolutionDir)Debug\ /s /y  </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -107,7 +108,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32; NOGDI; NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)dependencies\include</AdditionalIncludeDirectories>
     </ClCompile>
@@ -116,12 +117,13 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\bin\glut-3.7.6-bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\bin\glut-3.7.6-bin;$(SolutionDir)dependencies\bin\freeglut-bin</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY $(SolutionDir)dependencies\bin\glut-3.7.6-bin\glut32.dll $(SolutionDir)Debug\ /s /y </Command>
+      <Command>XCOPY $(SolutionDir)dependencies\bin\glut-3.7.6-bin\glut32.dll $(SolutionDir)Debug\ /s /y
+XCOPY $(SolutionDir)dependencies\bin\freeglut-bin\freeglut.dll $(SolutionDir)Debug\ /s /y  </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -173,10 +175,8 @@
     <ClCompile Include="line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
-    <ClCompile Include="object.cpp" />
     <ClCompile Include="point.cpp" />
     <ClInclude Include="consts.h" />
-    <ClInclude Include="graphics\opengl_tests.h" />
     <ClInclude Include="gui\action.h" />
     <ClInclude Include="gui\command_line.h" />
     <ClInclude Include="gui\gui.h" />

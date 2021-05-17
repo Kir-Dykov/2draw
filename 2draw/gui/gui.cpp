@@ -5,7 +5,7 @@
 #include <random>
 #include <vector>
 #include <string>
-#include "glut.h"
+#include "GL/glut.h"
 
 #include "gui.h"
 #include "../point.h"
@@ -309,6 +309,11 @@ int gui_main() {
 		commands.push_back(CommandLine(10, commands[i].y + 30));
 	}
 
+	int argc;
+	char* c = new char;
+	*c = '\0';
+
+	glutInit(&argc, &c);
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
 	glutCreateWindow("2draw");
