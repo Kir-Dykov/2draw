@@ -21,6 +21,7 @@ tr incenter triangle1
 tr centroid triangle1
 tr orthocenter triangle1
 cr excircle tr p
+l altitude tr p
 
 */
 
@@ -557,6 +558,40 @@ void CommandLine::Compile() {
 	AddDependancy(trp);
 
 	type = "circle";
+	}
+	else if (keyword == "altitude") {
+
+	string tr; string ver;
+	iss >> tr; iss >> ver;
+
+	CommandLine* trp; CommandLine* vertex;
+
+
+	trp = find_by_symbol(tr, "triangle");
+	if (trp == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	vertex = find_by_symbol_among(ver, trp->dependencies);
+	if (vertex == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	if (type != "line") {
+		DeleteObject();
+		obj = new Line(((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj)));
+		
+	}
+	else {
+		ClearDependencies();
+		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj));
+	}
+
+	AddDependancy(trp);
+
+	type = "line";
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
