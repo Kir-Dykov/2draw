@@ -271,6 +271,12 @@ Circle Triangle::get_excircle(const Point& vertex) const {
 	return res;
 }
 
+Point Triangle::get_intersec_bis() const{
+	Line first_bis = get_bisectrix(p1);
+	Line second_bis = get_bisectrix(p2);
+	return first_bis.intersection(second_bis);
+}
+
 void Triangle::Draw() const {
 	if (filled) {
 		glBegin(GL_TRIANGLES);

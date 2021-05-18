@@ -57,6 +57,8 @@ public:
 	Line get_midline(const Point&) const;
 	// finds the equation for the perpendicular bisector taken for the side laying opposite the chosen Triangle vertex
 	Line get_perp_bis(const Point&) const;
+	// finds the intersection point of bisectors
+	Point get_intersec_bis() const;
 
 	// Subsidary functions
 	// converts 1 to p1, 2 to p2, 3 to p3
