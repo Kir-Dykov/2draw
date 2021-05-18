@@ -23,6 +23,7 @@ tr orthocenter triangle1
 cr excircle tr p
 l altitude tr p
 l midline tr p
+l perpbis tr p
 
 */
 
@@ -622,6 +623,40 @@ void CommandLine::Compile() {
 	else {
 		ClearDependencies();
 		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj));
+	}
+
+	AddDependancy(trp);
+
+	type = "line";
+	}
+	else if (keyword == "perpbis") {
+
+	string tr; string ver;
+	iss >> tr; iss >> ver;
+
+	CommandLine* trp; CommandLine* vertex;
+
+
+	trp = find_by_symbol(tr, "triangle");
+	if (trp == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	vertex = find_by_symbol_among(ver, trp->dependencies);
+	if (vertex == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	if (type != "line") {
+		DeleteObject();
+		obj = new Line(((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj)));
+
+	}
+	else {
+		ClearDependencies();
+		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj));
 	}
 
 	AddDependancy(trp);
