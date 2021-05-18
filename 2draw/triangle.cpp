@@ -283,6 +283,12 @@ Point Triangle::get_intersec_med() const {
 	return first_med.intersection(second_med);
 }
 
+Point Triangle::get_intersec_alt() const {
+	Line first_alt = get_altitude(p1);
+	Line second_alt = get_altitude(p2);
+	return first_alt.intersection(second_alt);
+}
+
 void Triangle::Draw() const {
 	if (filled) {
 		glBegin(GL_TRIANGLES);

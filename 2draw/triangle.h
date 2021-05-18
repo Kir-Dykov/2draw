@@ -61,6 +61,8 @@ public:
 	Point get_intersec_bis() const;
 	// finds the intersection point of medians
 	Point get_intersec_med() const;
+	// finds the intersection point of altitudes
+	Point get_intersec_alt() const;
 
 	// Subsidary functions
 	// converts 1 to p1, 2 to p2, 3 to p3
