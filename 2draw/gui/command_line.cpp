@@ -15,7 +15,8 @@ l1 line a b
 l2 bisectix t a
 pg1 polygon a b c ... n
 pg2 convex a b c ... n
-p intersection_line l1 l2
+p intersection l1 l2
+l3 perp l1 p
 
 */
 
@@ -330,7 +331,7 @@ void CommandLine::Compile() {
 
 		type = "line";
 	}
-	else if (keyword == "intersection_line") {
+	else if (keyword == "intersection") {
 
 		string line1; string line2;
 		iss >> line1; iss >> line2;
@@ -364,6 +365,41 @@ void CommandLine::Compile() {
 		AddDependancy(cline2);
 
 		type = "point";
+	}
+	else if (keyword == "perp") {
+
+	string line; string point;
+	iss >> line; iss >> point;
+
+	CommandLine* cline; CommandLine* cpoint;
+
+
+	cline = find_by_symbol(line, "line");
+	if (cline == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	cpoint = find_by_symbol(point, "point");
+	if (cpoint == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	if (type != "line") {
+		DeleteObject();
+		obj = new Line(((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj)));
+		type = "line";
+	}
+	else {
+		ClearDependencies();
+		*((Line*)(obj)) = ((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj));
+	}
+
+	AddDependancy(cline);
+	AddDependancy(cpoint);
+
+	type = "line";
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
