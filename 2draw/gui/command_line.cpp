@@ -20,6 +20,7 @@ l perpendicular l1 p
 tr incenter triangle1
 tr centroid triangle1
 tr orthocenter triangle1
+cr excircle tr p
 
 */
 
@@ -522,6 +523,40 @@ void CommandLine::Compile() {
 	AddDependancy(ctriangle);
 
 	type = "point";
+	}
+	else if (keyword == "excircle") {
+
+	string tr; string ver;
+	iss >> tr; iss >> ver;
+
+	CommandLine* trp; CommandLine* vertex;
+
+
+	trp = find_by_symbol(tr, "triangle");
+	if (trp == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	vertex = find_by_symbol_among(ver, trp->dependencies);
+	if (vertex == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	if (type != "circle") {
+		DeleteObject();
+		obj = new Circle(((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj)));
+		obj->filled = filled;
+	}
+	else {
+		ClearDependencies();
+		*((Circle*)(obj)) = ((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj));
+	}
+
+	AddDependancy(trp);
+
+	type = "circle";
 	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
