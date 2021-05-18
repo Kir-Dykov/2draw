@@ -18,6 +18,7 @@ pg2 convex a b c ... n
 p intersection l1 l2
 l perpendicular l1 p
 tr incenter triangle1
+tr centroid triangle1
 
 */
 
@@ -459,6 +460,34 @@ void CommandLine::Compile() {
 	else {
 		ClearDependencies();
 		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_bis();
+	}
+
+	AddDependancy(ctriangle);
+
+	type = "point";
+	}
+	else if (keyword == "centroid") {
+
+	string triangle;
+	iss >> triangle;
+
+	CommandLine* ctriangle;
+
+
+	ctriangle = find_by_symbol(triangle, "triangle");
+	if (ctriangle == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	if (type != "point") {
+		DeleteObject();
+		obj = new Point(((Triangle*)(ctriangle->obj))->get_intersec_med());
+		type = "point";
+	}
+	else {
+		ClearDependencies();
+		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_med();
 	}
 
 	AddDependancy(ctriangle);
