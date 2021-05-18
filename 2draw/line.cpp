@@ -135,11 +135,33 @@ Line Line::parallel(const Point& P) const {
 
 void Line::Draw() const {
 	Vector ab; Point _a, _b;
-	ab = p2 - p1;
+	_a = p1; _b = p2;
+	// means that the function get a line without certain dots (in construct base coords is (0, 0) and (1, 1))
+	if (p1 == Point(0, 0) && p2 == Point(1, 1) || p2 == Point(0, 0) && p1 == Point(1, 1)) {
+		if (a == 0) {
+			_a = Point(0, -c / b);
+			_b = Point(1, -c / b);
+		}
+		else if (b == 0) {
+			_a = Point(-c / a, 0);
+			_b = Point(-c / a, 1);
+		}
+		else {
+			if (c != 0) {
+				_a = Point(-c / a, 0);
+				_b = Point(0, -c / b);
+			}
+			else {
+				_a = Point(0, 0);
+				_b = Point(1, -a / b);
+			}
+		}
+	}
+	ab = _a - _b;
 	ab.x *= 10000; ab.y *= 10000;
-	_a = p1 + ab;
+	_a = _a + ab;
 	ab.x = -ab.x; ab.y = -ab.y;
-	_b = p2 + ab;
+	_b = _b + ab;
 
 	glBegin(GL_LINES);
 	glVertex2f(_a.x, _a.y);
