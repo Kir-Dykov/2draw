@@ -40,7 +40,7 @@ template<typename T>
 T UndoStack_V<T>::undo()
 {
 	if (stack.size != 0) {
-		if (stack.size != 1)
+		if (top != 0)
 			top--;
 		return stack[top];
 	}
