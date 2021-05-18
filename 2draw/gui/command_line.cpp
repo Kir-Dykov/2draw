@@ -16,7 +16,7 @@ l2 bisectix t a
 pg1 polygon a b c ... n
 pg2 convex a b c ... n
 p intersection l1 l2
-l3 perp l1 p
+l perpendicular l1 p
 
 */
 
@@ -366,7 +366,7 @@ void CommandLine::Compile() {
 
 		type = "point";
 	}
-	else if (keyword == "perp") {
+	else if (keyword == "perpendicular") {
 
 	string line; string point;
 	iss >> line; iss >> point;
@@ -394,6 +394,41 @@ void CommandLine::Compile() {
 	else {
 		ClearDependencies();
 		*((Line*)(obj)) = ((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj));
+	}
+
+	AddDependancy(cline);
+	AddDependancy(cpoint);
+
+	type = "line";
+	}
+	else if (keyword == "parallel") {
+
+	string line; string point;
+	iss >> line; iss >> point;
+
+	CommandLine* cline; CommandLine* cpoint;
+
+
+	cline = find_by_symbol(line, "line");
+	if (cline == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	cpoint = find_by_symbol(point, "point");
+	if (cpoint == nullptr) {
+		DeleteObject();
+		goto error;
+	}
+
+	if (type != "line") {
+		DeleteObject();
+		obj = new Line(((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj)));
+		type = "line";
+	}
+	else {
+		ClearDependencies();
+		*((Line*)(obj)) = ((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj));
 	}
 
 	AddDependancy(cline);
