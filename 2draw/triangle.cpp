@@ -277,6 +277,12 @@ Point Triangle::get_intersec_bis() const{
 	return first_bis.intersection(second_bis);
 }
 
+Point Triangle::get_intersec_med() const {
+	Line first_med = get_median(p1);
+	Line second_med = get_median(p2);
+	return first_med.intersection(second_med);
+}
+
 void Triangle::Draw() const {
 	if (filled) {
 		glBegin(GL_TRIANGLES);
