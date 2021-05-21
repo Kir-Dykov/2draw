@@ -73,8 +73,8 @@ public:
 	}
 
 	void DeleteObject();
-	void AddDependancy(CommandLine& other);
-	void AddDependancy(CommandLine* other);
+	void AddDependency(CommandLine& other);
+	void AddDependency(CommandLine* other);
 	void ClearDependencies();
 
 	/* after this.command was edited, this function can read it,

@@ -47,12 +47,12 @@ void CommandLine::DeleteObject() {
 	}
 }
 
-void CommandLine::AddDependancy(CommandLine& other) {
+void CommandLine::AddDependency(CommandLine& other) {
 	other.dependent_from_this.push_back(index);
 	dependencies.push_back(other.index);
 }
 
-void CommandLine::AddDependancy(CommandLine* other) {
+void CommandLine::AddDependency(CommandLine* other) {
 	other->dependent_from_this.push_back(index);
 	dependencies.push_back(other->index);
 }
@@ -102,6 +102,9 @@ void CommandLine::Compile() {
 	parse_start:
 
 	iss >> keyword;
+
+
+
 	if (keyword == "point" || (symbol!="" && keyword == "p")) {
 		int x, y;
 		iss >> x >> y;
@@ -123,6 +126,9 @@ void CommandLine::Compile() {
 			((Point*)obj)->set(x, y);
 		}
 	}
+
+
+
 	else if (keyword == "circle") {
 
 		DeleteObject();
@@ -152,7 +158,7 @@ void CommandLine::Compile() {
 
 				obj = new Circle(*(Point*)(pp1->obj), r);
 
-				AddDependancy(pp1);
+				AddDependency(pp1);
 
 			}
 			// if there are center point and other point on circumference
@@ -168,13 +174,16 @@ void CommandLine::Compile() {
 					goto error;
 				}
 				obj = new Circle(*(Point*)(pp1->obj), distance(*(Point*)(pp1->obj), *(Point*)(pp2->obj)));
-				AddDependancy(pp1);
-				AddDependancy(pp2);
+				AddDependency(pp1);
+				AddDependency(pp2);
 			}
 		}
 		
 		type = "circle";
 	}
+
+
+
 	else if (keyword == "triangle") {
 		
 		string p1, p2, p3;
@@ -196,9 +205,9 @@ void CommandLine::Compile() {
 			obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
 		}
 
-		AddDependancy(pp1);
-		AddDependancy(pp2);
-		AddDependancy(pp3);
+		AddDependency(pp1);
+		AddDependency(pp2);
+		AddDependency(pp3);
 
 		type = "triangle";
 	}
@@ -215,8 +224,8 @@ void CommandLine::Compile() {
 		DeleteObject();
 		obj = new Line(*(Point*)(pp1->obj), *(Point*)(pp2->obj));
 
-		AddDependancy(pp1);
-		AddDependancy(pp2);
+		AddDependency(pp1);
+		AddDependency(pp2);
 
 		type = "line";
 	}
@@ -237,10 +246,13 @@ void CommandLine::Compile() {
 			*((Circle*)(obj))=(((Triangle*)(trp->obj))->get_inscribed_circle());
 		}
 
-		AddDependancy(trp);
+		AddDependency(trp);
 
 		type = "circle";
 	}
+
+
+
 	else if (keyword == "circumcircle") {
 
 		string tr;
@@ -258,7 +270,7 @@ void CommandLine::Compile() {
 			*((Circle*)(obj)) = (((Triangle*)(trp->obj))->get_circumcircle());
 		}
 
-		AddDependancy(trp);
+		AddDependency(trp);
 
 		type = "circle";
 	}
@@ -275,7 +287,7 @@ void CommandLine::Compile() {
 				goto error;
 			}
 			((Polygon*)(obj))->append(*(Point*)(pp1->obj));
-			AddDependancy(pp1);
+			AddDependency(pp1);
 		}
 		/*
 		if (((Polygon*)(obj))->is_selfintersecting();) {
@@ -285,6 +297,9 @@ void CommandLine::Compile() {
 		//cout << ((Polygon*)(obj))->area() << endl;
 		type = "polygon";
 	}
+
+
+
 	else if (keyword == "convex_hull" || keyword == "convex") {
 		string p1;
 		DeleteObject();
@@ -298,12 +313,15 @@ void CommandLine::Compile() {
 				goto error;
 			}
 			v.push_back(*(Point*)(pp1->obj));
-			AddDependancy(pp1);
+			AddDependency(pp1);
 		}
 		*(Polygon*)(obj) = convex_hull(v);
 
 		type = "polygon";
 	}
+
+
+
 	else if (keyword == "bisectrix") {
 
 		string tr; string ver;
@@ -334,10 +352,13 @@ void CommandLine::Compile() {
 			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj));
 		}
 
-		AddDependancy(trp);
+		AddDependency(trp);
 
 		type = "line";
 	}
+
+
+
 	else if (keyword == "intersection") {
 
 		string line1; string line2;
@@ -368,11 +389,14 @@ void CommandLine::Compile() {
 			*((Point*)(obj)) = ((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj));
 		}
 
-		AddDependancy(cline1);
-		AddDependancy(cline2);
+		AddDependency(cline1);
+		AddDependency(cline2);
 
 		type = "point";
 	}
+
+
+
 	else if (keyword == "perpendicular") {
 
 	string line; string point;
@@ -403,11 +427,14 @@ void CommandLine::Compile() {
 		*((Line*)(obj)) = ((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj));
 	}
 
-	AddDependancy(cline);
-	AddDependancy(cpoint);
+	AddDependency(cline);
+	AddDependency(cpoint);
 
 	type = "line";
 	}
+
+
+
 	else if (keyword == "parallel") {
 
 	string line; string point;
@@ -438,11 +465,14 @@ void CommandLine::Compile() {
 		*((Line*)(obj)) = ((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj));
 	}
 
-	AddDependancy(cline);
-	AddDependancy(cpoint);
+	AddDependency(cline);
+	AddDependency(cpoint);
 
 	type = "line";
 	}
+
+
+
 	else if (keyword == "incenter") {
 
 	string triangle;
@@ -467,10 +497,13 @@ void CommandLine::Compile() {
 		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_bis();
 	}
 
-	AddDependancy(ctriangle);
+	AddDependency(ctriangle);
 
 	type = "point";
 	}
+
+
+
 	else if (keyword == "centroid") {
 
 	string triangle;
@@ -495,7 +528,7 @@ void CommandLine::Compile() {
 		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_med();
 	}
 
-	AddDependancy(ctriangle);
+	AddDependency(ctriangle);
 
 	type = "point";
 	}
@@ -523,10 +556,13 @@ void CommandLine::Compile() {
 		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_alt();
 	}
 
-	AddDependancy(ctriangle);
+	AddDependency(ctriangle);
 
 	type = "point";
 	}
+
+
+
 	else if (keyword == "excircle") {
 
 	string tr; string ver;
@@ -557,10 +593,13 @@ void CommandLine::Compile() {
 		*((Circle*)(obj)) = ((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj));
 	}
 
-	AddDependancy(trp);
+	AddDependency(trp);
 
 	type = "circle";
 	}
+
+
+
 	else if (keyword == "altitude") {
 
 	string tr; string ver;
@@ -591,10 +630,13 @@ void CommandLine::Compile() {
 		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj));
 	}
 
-	AddDependancy(trp);
+	AddDependency(trp);
 
 	type = "line";
 	}
+
+
+
 	else if (keyword == "midline") {
 
 	string tr; string ver;
@@ -625,10 +667,13 @@ void CommandLine::Compile() {
 		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj));
 	}
 
-	AddDependancy(trp);
+	AddDependency(trp);
 
 	type = "line";
 	}
+
+
+
 	else if (keyword == "perpbis") {
 
 	string tr; string ver;
@@ -659,7 +704,7 @@ void CommandLine::Compile() {
 		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj));
 	}
 
-	AddDependancy(trp);
+	AddDependency(trp);
 
 	type = "line";
 	}
@@ -680,9 +725,9 @@ error:
 success:
 	if (obj != nullptr) {
 		obj->filled = filled;
-		obj->red = rand() % 192 + 64;
-		obj->green = rand() % 192 + 64;
-		obj->blue = rand() % 192 + 64;
+		obj->red = 64 + rand()%192;
+		obj->green = 64 + rand() % 192;
+		obj->blue = 64 + rand() % 192;
 	}
 	
 
