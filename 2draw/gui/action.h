@@ -1,5 +1,6 @@
 #pragma once
-#include <string>;
+#include <string>
+
 struct Action {
 	size_t index = 0;
 	std::string prev_command = "";

@@ -8,7 +8,7 @@ void Triangle::set(const Point& _p1, const Point& _p2, const Point& _p3) {
 
 void Triangle::set_if_exists(const Point& _p1, const Point& _p2, const Point& _p3) {
 	try {
-		if (!exists(_p1, _p2, _p3)) throw "Triangle doesn't exist";
+		if (!::exists(_p1, _p2, _p3)) throw "Triangle doesn't exist";
 		else { p1 = _p1; p2 = _p2; p3 = _p3; }
 	}
 	catch (const char* exception) {
@@ -17,7 +17,15 @@ void Triangle::set_if_exists(const Point& _p1, const Point& _p2, const Point& _p
 	}
 }
 
-bool Triangle::exists(const Point& _p1, const Point& _p2, const Point& _p3) const {
+bool Triangle::exists() const {
+	Line L;
+	L.set(p1, p2);
+	if (L.point_on_Line(p3)) return 0;
+	if (p1 == p2 || p2 == p3 || p1 == p3) return 0; 
+	return 1;
+}
+
+bool exists(const Point& _p1, const Point& _p2, const Point& _p3) {
 	Line L;
 	L.set(_p1, _p2);
 	if (L.point_on_Line(_p3)) return 0;
@@ -267,7 +275,7 @@ Circle Triangle::get_excircle(const Point& vertex) const {
 	double radius = (*this).area() / ((*this).perimeter()/2 - distance(second_vertex, third_vertex));
 	Circle res;
 	res.set(intersection, radius);
-	cout << intersection << ' ' << radius << '\n';
+	//cout << intersection << ' ' << radius << '\n';
 	return res;
 }
 

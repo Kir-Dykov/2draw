@@ -16,7 +16,7 @@ public:
 	Triangle(const Point& _p1, const Point& _p2, const Point& _p3) { p1 = _p1; p2 = _p2; p3 = _p3; };
 	Triangle(const Triangle& other) { p1 = other.p1; p2 = other.p2; p3 = other.p3; };
 	// Triangle existence function
-	bool exists(const Point&, const Point&, const Point&) const;
+	bool exists() const;
 	// sets the Triangle using 3 points
 	void set(const Point&, const Point&, const Point&);
 	void set_if_exists(const Point&, const Point&, const Point&);
@@ -77,5 +77,7 @@ public:
 	// draws the triangle
 	void Draw() const;
 };
+
+bool exists(const Point& _p1, const Point& _p2, const Point& _p3);
 
 std::ostream& operator<<(std::ostream&, Triangle&);

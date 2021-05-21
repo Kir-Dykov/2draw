@@ -22,7 +22,7 @@ public:
 template<typename T>
 void UndoStack_V<T>::truncate(int pos)
 {
-	vector <T>::iterator it = stack.begin() + pos;
+	vector<T>::iterator it = stack.begin() + pos;
 	stack.erase(it);
 }
 

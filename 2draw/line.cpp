@@ -49,7 +49,7 @@ Line Line::perp2point_on_line(const Point& pnt) const {
 }
 
 bool Line::is_parallel_to(const Line& L) const{
-	return a / L.a == b / L.b;
+	return a * L.b == b * L.a;
 }
 
 bool Line::point_on_Line(const Point& p) const {
@@ -117,6 +117,10 @@ Point Line::intersection(const Line& second) const {
 	// Cramer's method
 	// find the determinant of the matrix of the system
 	double general_det = determinant(Vector(a, second.a), Vector(b, second.b));
+	if (general_det == 0) {
+		cerr << "Intersection of two parallel lines does not exist";
+		throw "Intersection of two parallel lines does not exist";
+	}
 	// finding determinant for x-coordinate
 	double x_det = determinant(Vector(-c, -second.c), Vector(b, second.b));
 	// finding determinant for y-coordinate

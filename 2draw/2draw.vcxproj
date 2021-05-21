@@ -184,6 +184,7 @@ XCOPY $(SolutionDir)dependencies\bin\freeglut-bin\freeglut.dll $(SolutionDir)Deb
     <ClInclude Include="gui\action.h" />
     <ClInclude Include="gui\command_line.h" />
     <ClInclude Include="gui\gui.h" />
+    <ClInclude Include="gui\undo_stack_v.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="tests\circle_tests.h" />

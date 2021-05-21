@@ -219,7 +219,7 @@ Polygon convex_hull(const vector<Point>& _f) {
 		}
 		else {
 			//delete last added vertexes until shape is convex again
-			while (determinant(hull[head-1] - hull[head - 2], f[i] - hull[head-1]) <= 0) {
+			while (head >= 2 && determinant(hull[head-1] - hull[head - 2], f[i] - hull[head-1]) <= 0) {
 				head--;
 			}
 			hull.vertexes[head] = f[i];

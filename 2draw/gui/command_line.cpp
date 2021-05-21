@@ -5,30 +5,32 @@ Actual avaliable commands that you can just type in right now
 a point 400 400
 b point
 c point
-t triangle a b c
+tr triangle a b c
 c1 circle 300 400 50
 c2 circle a 60
 c3 circle a b
 c4 incircle t
 c5 circumcircle t
 l1 line a b
-l2 bisectix t a
+l2 bisectrix t a
 pg1 polygon a b c ... n
 pg2 convex a b c ... n
 p intersection l1 l2
 l perpendicular l1 p
-tr incenter triangle1
-tr centroid triangle1
-tr orthocenter triangle1
-cr excircle tr p
-l altitude tr p
-l midline tr p
-l perpbis tr p
-
+p incenter triangle1
+p centroid triangle1
+p orthocenter triangle1
+c6 excircle triangle1 p
+l altitude triangle1 p
+l midline triangle1 p
+l perpbis triangle1 p
+p center circle1
+l parallel l1 p1
+l perpendicular l1 p1
 */
 
 //NEVER erase from that vector.
-//it will break indexes in CommandLine's
+//it will break indexes inside CommandLine's
 vector<CommandLine> commands;
 
 CommandLine::CommandLine(double _x, double _y) {
@@ -69,6 +71,14 @@ void CommandLine::ClearDependencies() {
 	dependencies.resize(0);
 }
 
+bool is_the_symbol_defined(const string& symb) {
+	for (size_t i = 0; i < commands.size(); i++)
+		if (commands[i].symbol == symb)
+			return true;
+
+	return false;
+}
+
 CommandLine* find_by_symbol(const string& symb, const string& type = "point") {
 	for (size_t i = 0; i < commands.size(); i++)
 		if (commands[i].symbol == symb && commands[i].type == type) 
@@ -98,20 +108,20 @@ void CommandLine::Compile() {
 		goto success;
 	}
 
-	
 	parse_start:
 
 	iss >> keyword;
-
-
+	if (iss.fail()) {
+		goto error;
+	}
 
 	if (keyword == "point" || (symbol!="" && keyword == "p")) {
 		int x, y;
 		iss >> x >> y;
 		if (iss.fail()) {
 			iss.clear();
-			x = rand() % 100 - 50;
-			y = rand() % 100 - 50;
+			x = rand() % 500 - 250;
+			y = rand() % 500 - 250;
 			if (symbol != "")
 				command = symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
 			else
@@ -123,6 +133,7 @@ void CommandLine::Compile() {
 			type = "point";
 		}
 		else {
+			ClearDependencies();
 			((Point*)obj)->set(x, y);
 		}
 	}
@@ -184,6 +195,30 @@ void CommandLine::Compile() {
 
 
 
+	else if (keyword == "center") {
+		string p;
+		iss >> p;
+		CommandLine* pp = nullptr;
+		pp = find_by_symbol(p, "circle");
+		if (pp == nullptr) {
+			goto error;
+		}
+
+		if (type != "point") {
+			DeleteObject();
+			obj = new Point(((Circle*)(pp->obj))->center.x, ((Circle*)(pp->obj))->center.y);
+			type = "point";
+		}
+		else {
+			ClearDependencies();
+			((Point*)obj)->set(((Circle*)(pp->obj))->center.x, ((Circle*)(pp->obj))->center.y);
+		}
+
+		AddDependency(pp);
+	}
+
+
+
 	else if (keyword == "triangle") {
 		
 		string p1, p2, p3;
@@ -211,6 +246,9 @@ void CommandLine::Compile() {
 
 		type = "triangle";
 	}
+
+
+
 	else if (keyword == "line") {
 		string p1, p2;
 		iss >> p1 >> p2;
@@ -221,14 +259,24 @@ void CommandLine::Compile() {
 
 		if (pp1 == nullptr || pp2 == nullptr) goto error;
 
-		DeleteObject();
-		obj = new Line(*(Point*)(pp1->obj), *(Point*)(pp2->obj));
+
+		if (type == "line") {
+			ClearDependencies();
+			((Line*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj));
+		}
+		else {
+			DeleteObject();
+			obj = new Line(*(Point*)(pp1->obj), *(Point*)(pp2->obj));
+			type = "line";
+		}
 
 		AddDependency(pp1);
 		AddDependency(pp2);
-
-		type = "line";
+		
 	}
+
+
+
 	else if (keyword == "incircle") {
 		
 		string tr;
@@ -274,6 +322,9 @@ void CommandLine::Compile() {
 
 		type = "circle";
 	}
+
+
+
 	else if (keyword == "polygon") {
 		string p1;
 		DeleteObject();
@@ -336,6 +387,10 @@ void CommandLine::Compile() {
 			goto error;
 		}
 
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
+
 		vertex = find_by_symbol_among(ver, trp->dependencies);
 		if (vertex == nullptr) {
 			DeleteObject();
@@ -379,6 +434,11 @@ void CommandLine::Compile() {
 			goto error;
 		}
 
+		if (((Line*)(cline1->obj))->is_parallel_to(*(Line*)(cline2->obj))) {
+			//DeleteObject()
+			goto error;
+		}
+
 		if (type != "point") {
 			DeleteObject();
 			obj = new Point(((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj)));
@@ -399,341 +459,381 @@ void CommandLine::Compile() {
 
 	else if (keyword == "perpendicular") {
 
-	string line; string point;
-	iss >> line; iss >> point;
+		string line; string point;
+		iss >> line; iss >> point;
 
-	CommandLine* cline; CommandLine* cpoint;
+		CommandLine* cline; CommandLine* cpoint;
 
 
-	cline = find_by_symbol(line, "line");
-	if (cline == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		cline = find_by_symbol(line, "line");
+		if (cline == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	cpoint = find_by_symbol(point, "point");
-	if (cpoint == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		cpoint = find_by_symbol(point, "point");
+		if (cpoint == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	if (type != "line") {
-		DeleteObject();
-		obj = new Line(((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj)));
+		if (type != "line") {
+			DeleteObject();
+			obj = new Line(((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj)));
+			type = "line";
+		}
+		else {
+			ClearDependencies();
+			*((Line*)(obj)) = ((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj));
+		}
+
+		AddDependency(cline);
+		AddDependency(cpoint);
+
 		type = "line";
-	}
-	else {
-		ClearDependencies();
-		*((Line*)(obj)) = ((Line*)(cline->obj))->perp2point_on_line(*(Point*)(cpoint->obj));
-	}
-
-	AddDependency(cline);
-	AddDependency(cpoint);
-
-	type = "line";
 	}
 
 
 
 	else if (keyword == "parallel") {
 
-	string line; string point;
-	iss >> line; iss >> point;
+		string line; string point;
+		iss >> line; iss >> point;
 
-	CommandLine* cline; CommandLine* cpoint;
+		CommandLine* cline; CommandLine* cpoint;
 
 
-	cline = find_by_symbol(line, "line");
-	if (cline == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		cline = find_by_symbol(line, "line");
+		if (cline == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	cpoint = find_by_symbol(point, "point");
-	if (cpoint == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		cpoint = find_by_symbol(point, "point");
+		if (cpoint == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	if (type != "line") {
-		DeleteObject();
-		obj = new Line(((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj)));
+		if (type != "line") {
+			DeleteObject();
+			obj = new Line(((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj)));
+			type = "line";
+		}
+		else {
+			ClearDependencies();
+			*((Line*)(obj)) = ((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj));
+		}
+
+		AddDependency(cline);
+		AddDependency(cpoint);
+
 		type = "line";
-	}
-	else {
-		ClearDependencies();
-		*((Line*)(obj)) = ((Line*)(cline->obj))->parallel(*(Point*)(cpoint->obj));
-	}
-
-	AddDependency(cline);
-	AddDependency(cpoint);
-
-	type = "line";
 	}
 
 
 
 	else if (keyword == "incenter") {
 
-	string triangle;
-	iss >> triangle;
+		string tr;
+		iss >> tr;
 
-	CommandLine* ctriangle;
+		CommandLine* trp;
 
 
-	ctriangle = find_by_symbol(triangle, "triangle");
-	if (ctriangle == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	if (type != "point") {
-		DeleteObject();
-		obj = new Point(((Triangle*)(ctriangle->obj))->get_intersec_bis());
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
+
+		if (type != "point") {
+			DeleteObject();
+			obj = new Point(((Triangle*)(trp->obj))->get_intersec_bis());
+			type = "point";
+		}
+		else {
+			ClearDependencies();
+			*((Point*)(obj)) = ((Triangle*)(trp->obj))->get_intersec_bis();
+		}
+
+		AddDependency(trp);
+
 		type = "point";
-	}
-	else {
-		ClearDependencies();
-		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_bis();
-	}
-
-	AddDependency(ctriangle);
-
-	type = "point";
 	}
 
 
 
 	else if (keyword == "centroid") {
 
-	string triangle;
-	iss >> triangle;
+		string tr;
+		iss >> tr;
 
-	CommandLine* ctriangle;
+		CommandLine* trp;
 
 
-	ctriangle = find_by_symbol(triangle, "triangle");
-	if (ctriangle == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	if (type != "point") {
-		DeleteObject();
-		obj = new Point(((Triangle*)(ctriangle->obj))->get_intersec_med());
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
+
+		if (type != "point") {
+			DeleteObject();
+			obj = new Point(((Triangle*)(trp->obj))->get_intersec_med());
+			type = "point";
+		}
+		else {
+			ClearDependencies();
+			*((Point*)(obj)) = ((Triangle*)(trp->obj))->get_intersec_med();
+		}
+
+		AddDependency(trp);
+
 		type = "point";
 	}
-	else {
-		ClearDependencies();
-		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_med();
-	}
 
-	AddDependency(ctriangle);
 
-	type = "point";
-	}
+
 	else if (keyword == "orthocenter") {
 
-	string triangle;
-	iss >> triangle;
+		string tr;
+		iss >> tr;
 
-	CommandLine* ctriangle;
+		CommandLine* trp;
 
 
-	ctriangle = find_by_symbol(triangle, "triangle");
-	if (ctriangle == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	if (type != "point") {
-		DeleteObject();
-		obj = new Point(((Triangle*)(ctriangle->obj))->get_intersec_alt());
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
+
+		if (type != "point") {
+			DeleteObject();
+			obj = new Point(((Triangle*)(trp->obj))->get_intersec_alt());
+			type = "point";
+		}
+		else {
+			ClearDependencies();
+			*((Point*)(obj)) = ((Triangle*)(trp->obj))->get_intersec_alt();
+		}
+
+		AddDependency(trp);
+
 		type = "point";
-	}
-	else {
-		ClearDependencies();
-		*((Point*)(obj)) = ((Triangle*)(ctriangle->obj))->get_intersec_alt();
-	}
-
-	AddDependency(ctriangle);
-
-	type = "point";
 	}
 
 
 
 	else if (keyword == "excircle") {
 
-	string tr; string ver;
-	iss >> tr; iss >> ver;
+		string tr; string ver;
+		iss >> tr; iss >> ver;
 
-	CommandLine* trp; CommandLine* vertex;
+		CommandLine* trp; CommandLine* vertex;
 
 
-	trp = find_by_symbol(tr, "triangle");
-	if (trp == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	vertex = find_by_symbol_among(ver, trp->dependencies);
-	if (vertex == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
 
-	if (type != "circle") {
-		DeleteObject();
-		obj = new Circle(((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj)));
-		obj->filled = filled;
-	}
-	else {
-		ClearDependencies();
-		*((Circle*)(obj)) = ((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj));
-	}
+		vertex = find_by_symbol_among(ver, trp->dependencies);
+		if (vertex == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	AddDependency(trp);
+		if (type != "circle") {
+			DeleteObject();
+			obj = new Circle(((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj)));
+			obj->filled = filled;
+		}
+		else {
+			ClearDependencies();
+			*((Circle*)(obj)) = ((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj));
+		}
 
-	type = "circle";
+		AddDependency(trp);
+
+		type = "circle";
 	}
 
 
 
 	else if (keyword == "altitude") {
 
-	string tr; string ver;
-	iss >> tr; iss >> ver;
+		string tr; string ver;
+		iss >> tr; iss >> ver;
 
-	CommandLine* trp; CommandLine* vertex;
+		CommandLine* trp; CommandLine* vertex;
 
 
-	trp = find_by_symbol(tr, "triangle");
-	if (trp == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	vertex = find_by_symbol_among(ver, trp->dependencies);
-	if (vertex == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
 
-	if (type != "line") {
-		DeleteObject();
-		obj = new Line(((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj)));
+		vertex = find_by_symbol_among(ver, trp->dependencies);
+		if (vertex == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		if (type != "line") {
+			DeleteObject();
+			obj = new Line(((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj)));
 		
-	}
-	else {
-		ClearDependencies();
-		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj));
-	}
+		}
+		else {
+			ClearDependencies();
+			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj));
+		}
 
-	AddDependency(trp);
+		AddDependency(trp);
 
-	type = "line";
+		type = "line";
 	}
 
 
 
 	else if (keyword == "midline") {
 
-	string tr; string ver;
-	iss >> tr; iss >> ver;
+		string tr; string ver;
+		iss >> tr; iss >> ver;
 
-	CommandLine* trp; CommandLine* vertex;
+		CommandLine* trp; CommandLine* vertex;
 
 
-	trp = find_by_symbol(tr, "triangle");
-	if (trp == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	vertex = find_by_symbol_among(ver, trp->dependencies);
-	if (vertex == nullptr) {
-		DeleteObject();
-		goto error;
-	}
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
 
-	if (type != "line") {
-		DeleteObject();
-		obj = new Line(((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj)));
+		vertex = find_by_symbol_among(ver, trp->dependencies);
+		if (vertex == nullptr) {
+			DeleteObject();
+			goto error;
+		}
 
-	}
-	else {
-		ClearDependencies();
-		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj));
-	}
+		if (type != "line") {
+			DeleteObject();
+			obj = new Line(((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj)));
 
-	AddDependency(trp);
+		}
+		else {
+			ClearDependencies();
+			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj));
+		}
 
-	type = "line";
+		AddDependency(trp);
+
+		type = "line";
 	}
 
 
 
 	else if (keyword == "perpbis") {
 
-	string tr; string ver;
-	iss >> tr; iss >> ver;
+		string tr; string ver;
+		iss >> tr; iss >> ver;
 
-	CommandLine* trp; CommandLine* vertex;
+		CommandLine* trp; CommandLine* vertex;
 
 
-	trp = find_by_symbol(tr, "triangle");
-	if (trp == nullptr) {
-		DeleteObject();
-		goto error;
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
+
+		vertex = find_by_symbol_among(ver, trp->dependencies);
+		if (vertex == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		if (type != "line") {
+			DeleteObject();
+			obj = new Line(((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj)));
+
+		}
+		else {
+			ClearDependencies();
+			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj));
+		}
+
+		AddDependency(trp);
+
+		type = "line";
 	}
 
-	vertex = find_by_symbol_among(ver, trp->dependencies);
-	if (vertex == nullptr) {
-		DeleteObject();
-		goto error;
-	}
 
-	if (type != "line") {
-		DeleteObject();
-		obj = new Line(((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj)));
 
-	}
-	else {
-		ClearDependencies();
-		*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj));
-	}
-
-	AddDependency(trp);
-
-	type = "line";
-	}
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
+		if (symbol != keyword && is_the_symbol_defined(keyword)) {
+			goto error;
+		}
 		symbol = keyword;
 		goto parse_start;
-	}
-	else {
-		goto error;
-	}
-
-	goto success;
-
-error:
-	r = 255; g = 64; b =64;
-	return;
-success:
-	if (obj != nullptr) {
-		obj->filled = filled;
-		obj->red = 64 + rand()%192;
-		obj->green = 64 + rand() % 192;
-		obj->blue = 64 + rand() % 192;
-	}
+	} 
 	
 
-	CompileDependencies();
-	r = 128; g = 128; b = 128;
-	return;
+
+	else 
+		goto error;
+
+
+
+	success:
+		if (obj != nullptr) {
+			obj->filled = filled;
+			obj->red = 64 + rand() % 192;
+			obj->green = 64 + rand() % 192;
+			obj->blue = 64 + rand() % 192;
+		}
+		CompileDependencies();
+		r = 128; g = 128; b = 128;
+		return;
+
+
+
+	error:
+		r = 255; g = 64; b =64;
+		return;
 
 }
 
