@@ -115,6 +115,8 @@ void CommandLine::Compile() {
 		goto error;
 	}
 
+
+
 	if (keyword == "point" || (symbol!="" && keyword == "p")) {
 		int x, y;
 		iss >> x >> y;
@@ -832,7 +834,7 @@ void CommandLine::Compile() {
 
 
 	error:
-		r = 255; g = 64; b =64;
+		r = 255; g = 64; b = 64;
 		return;
 
 }

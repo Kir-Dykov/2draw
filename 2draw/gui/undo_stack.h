@@ -19,6 +19,7 @@ private:
 			this->pPrev = pPrev;
 		}
 	};
+	void truncate(Node*);
 public:
 	Node* head;
 	Node* top;
@@ -31,7 +32,7 @@ public:
 	T undo();
 	T redo();
 	//удаление с текущего элемента и до конца
-	void truncate(Node*);
+	
 };
 
 template<typename T>

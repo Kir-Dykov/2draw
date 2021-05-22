@@ -49,6 +49,8 @@ public:
 	//lists the indexes of objects in which dependent_on field
 	//chould be cleared after deletion of this object
 	vector<size_t> dependencies;
+
+
 	bool filled = 0;
 
 	//colors for background of command line
