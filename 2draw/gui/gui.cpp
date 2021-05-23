@@ -164,6 +164,11 @@ void SpecialInput(int key, int, int) {
 	if (key == 1) { //F1
 		for (size_t i = 0; i < commands.size(); i++) {
 			commands[i].command = "";
+			commands[i].Compile(); 
+		}
+		//compile to avoid name clashes during next compile
+		for (size_t i = 0; i < commands.size(); i++) {
+			commands[i].Compile();
 		}
 		commands[0].command = "p1 point";
 		commands[1].command = "p2 point";
@@ -186,6 +191,10 @@ void SpecialInput(int key, int, int) {
 	else if (key == 2) { //F2
 		for (size_t i = 0; i < commands.size(); i++) {
 			commands[i].command = "";
+		}
+		//compile to avoid name clashes during next compile
+		for (size_t i = 0; i < commands.size(); i++) {
+			commands[i].Compile();
 		}
 		commands[0].command = "p1 point";
 		commands[1].command = "p2 point";

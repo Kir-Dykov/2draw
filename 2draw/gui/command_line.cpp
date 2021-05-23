@@ -42,6 +42,7 @@ CommandLine::CommandLine(double _x, double _y) {
 void CommandLine::DeleteObject() {
 	if (obj != nullptr){
 		type = "";
+		filled = 0;
 		CompileDependencies(); //to cause there errors as it should
 		ClearDependencies();
 		delete obj;
@@ -97,59 +98,88 @@ CommandLine* find_by_symbol_among(const string& symb, const vector<size_t>& v, c
 
 void CommandLine::Compile() {
 
-	bool symbol_is_there = 0;
+	// empty command case
+	if (command == "") {
+		symbol = "";
+		DeleteObject();
+		r = 128; g = 128; b = 128; // make command line gray
+		return;
+	}
 
 	std::istringstream iss(command);
 	string keyword;
 
-	if (command == "") {
-		symbol = "";
-		DeleteObject();
-		goto success;
-	}
+	bool symbol_is_there = 0; // have we already read the symbol
 
 	parse_start:
 
+	/*
+	The scheme of command compiling is
+	explained in details in the "triangle" block
+
+	this scheme more or less applies to every object with their specifics
+	*/
+
 	iss >> keyword;
-	if (iss.fail()) {
-		goto error;
-	}
 
-
-
+	/*POINT*/
 	if (keyword == "point" || (symbol!="" && keyword == "p")) {
+		cout << "wtf";
+		//expected syntax:
+		//point_name point x_coordinate y_coordinate
+		//or
+		//point_name point
+		//or
+		//point_name p
+		//
+		//in last two cases x_coordinate and y_coordinate is
+		//choosen randomly from -250 to 250
+
 		int x, y;
 		iss >> x >> y;
+
+		// case when x and y were not specified or the typo occurred
 		if (iss.fail()) {
 			iss.clear();
+			//randomize coordinates
 			x = rand() % 500 - 250;
 			y = rand() % 500 - 250;
+			//then rewrite command for it to it's not shortened form 
 			if (symbol != "")
-				command = symbol + " " + "point" + " " + to_string(x) + " " + to_string(y);
+				command = symbol + " ";
 			else
-				command = static_cast<string>("point ") + to_string(x) + " " + to_string(y);
+				command = "";
+			command = command + "point " + to_string(x) + " " + to_string(y);
 		}
+
 		if (type != "point") {
 			DeleteObject();
 			obj = new Point(x, y);
 			type = "point";
-		}
-		else {
+		} else {
 			ClearDependencies();
 			((Point*)obj)->set(x, y);
 		}
 	}
 
 
-
+/*CIRCLE STUFF*/
 	else if (keyword == "circle") {
+
+		//expected syntax:
+		//
+		//circle_name circle x_coordinate y_coordinate radius
+		//or
+		//circle_name circle point_name radius
+		//or
+		//circle_name circle point_name_in_center point_name_on_circumference
 
 		DeleteObject();
 		int x, y, r;
 		string p1, p2;
 		iss >> p1;
 
-		// if there are two coordinated and radius
+		// if there are two coordinates and radius
 		try {
 			x = stoi(p1);
 			iss >> y >> r;
@@ -196,8 +226,11 @@ void CommandLine::Compile() {
 	}
 
 
-
 	else if (keyword == "center") {
+
+		//expected syntax:
+		//point_name center circle_name
+
 		string p;
 		iss >> p;
 		CommandLine* pp = nullptr;
@@ -220,38 +253,12 @@ void CommandLine::Compile() {
 	}
 
 
-
-	else if (keyword == "triangle") {
-		
-		string p1, p2, p3;
-		iss >> p1 >> p2 >> p3;
-
-		CommandLine*pp1,*pp2,*pp3 ;
-		pp1 = find_by_symbol(p1);
-		pp2 = find_by_symbol(p2);
-		pp3 = find_by_symbol(p3);
-
-		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) goto error;
-		
-		if (type == "triangle"){
-			ClearDependencies();
-			((Triangle*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
-		}
-		else {
-			DeleteObject();
-			obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
-		}
-
-		AddDependency(pp1);
-		AddDependency(pp2);
-		AddDependency(pp3);
-
-		type = "triangle";
-	}
-
-
-
+/*LINE STUFF*/
 	else if (keyword == "line") {
+
+		//expected syntax:
+		//line_name line point_name1 point_name2
+
 		string p1, p2;
 		iss >> p1 >> p2;
 
@@ -278,145 +285,10 @@ void CommandLine::Compile() {
 	}
 
 
-
-	else if (keyword == "incircle") {
-		
-		string tr;
-		iss >> tr;
-		CommandLine* trp;
-		trp = find_by_symbol(tr, "triangle");
-		if (trp == nullptr) goto error;
-
-		if (type != "circle") {
-			DeleteObject();
-			obj = new Circle(((Triangle*)(trp->obj))->get_inscribed_circle());
-		}
-		else {
-			ClearDependencies();
-			*((Circle*)(obj))=(((Triangle*)(trp->obj))->get_inscribed_circle());
-		}
-
-		AddDependency(trp);
-
-		type = "circle";
-	}
-
-
-
-	else if (keyword == "circumcircle") {
-
-		string tr;
-		iss >> tr;
-		CommandLine* trp;
-		trp = find_by_symbol(tr, "triangle");
-		if (trp == nullptr) goto error;
-
-		if (type != "circle") {
-			DeleteObject();
-			obj = new Circle(((Triangle*)(trp->obj))->get_circumcircle());
-		}
-		else {
-			ClearDependencies();
-			*((Circle*)(obj)) = (((Triangle*)(trp->obj))->get_circumcircle());
-		}
-
-		AddDependency(trp);
-
-		type = "circle";
-	}
-
-
-
-	else if (keyword == "polygon") {
-		string p1;
-		DeleteObject();
-		obj = new Polygon();
-		while (!iss.eof()) {
-			iss >> p1;
-			CommandLine* pp1;
-			pp1 = find_by_symbol(p1);
-			if (pp1 == nullptr) {
-				DeleteObject();
-				goto error;
-			}
-			((Polygon*)(obj))->append(*(Point*)(pp1->obj));
-			AddDependency(pp1);
-		}
-		/*
-		if (((Polygon*)(obj))->is_selfintersecting();) {
-			DeleteObject();
-			goto error;
-		}*/
-		//cout << ((Polygon*)(obj))->area() << endl;
-		type = "polygon";
-	}
-
-
-
-	else if (keyword == "convex_hull" || keyword == "convex") {
-		string p1;
-		DeleteObject();
-		obj = new Polygon();
-		vector<Point> v;
-		while (!iss.eof()) {
-			iss >> p1;
-			CommandLine* pp1;
-			pp1 = find_by_symbol(p1);
-			if (pp1 == nullptr) {
-				goto error;
-			}
-			v.push_back(*(Point*)(pp1->obj));
-			AddDependency(pp1);
-		}
-		*(Polygon*)(obj) = convex_hull(v);
-
-		type = "polygon";
-	}
-
-
-
-	else if (keyword == "bisectrix") {
-
-		string tr; string ver;
-		iss >> tr; iss >> ver;
-
-		CommandLine* trp; CommandLine* vertex;
-		
-
-		trp = find_by_symbol(tr, "triangle");
-		if (trp == nullptr) {
-			DeleteObject();
-			goto error;
-		}
-
-		if (!((Triangle*)(trp->obj))->exists()) {
-			goto error;
-		}
-
-		vertex = find_by_symbol_among(ver, trp->dependencies);
-		if (vertex == nullptr) {
-			DeleteObject();
-			goto error;
-		}
-
-		if (type != "line") {
-			DeleteObject();
-			obj = new Line(((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj)));
-			obj->filled = filled;
-		}
-		else {
-			ClearDependencies();
-			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj));
-		}
-
-		AddDependency(trp);
-
-		type = "line";
-	}
-
-
-
 	else if (keyword == "intersection") {
+
+		//expected syntax:
+		//point_name intersection line_name1 line_name2
 
 		string line1; string line2;
 		iss >> line1; iss >> line2;
@@ -437,7 +309,6 @@ void CommandLine::Compile() {
 		}
 
 		if (((Line*)(cline1->obj))->is_parallel_to(*(Line*)(cline2->obj))) {
-			//DeleteObject()
 			goto error;
 		}
 
@@ -458,14 +329,18 @@ void CommandLine::Compile() {
 	}
 
 
-
 	else if (keyword == "perpendicular") {
 
-		string line; string point;
-		iss >> line; iss >> point;
+		//expected syntax:
+		//line_name1 perpendicular line_name2 point_name
+
+		string line; 
+		string point;
+
+		iss >> line; 
+		iss >> point;
 
 		CommandLine* cline; CommandLine* cpoint;
-
 
 		cline = find_by_symbol(line, "line");
 		if (cline == nullptr) {
@@ -492,12 +367,13 @@ void CommandLine::Compile() {
 		AddDependency(cline);
 		AddDependency(cpoint);
 
-		type = "line";
 	}
 
 
-
 	else if (keyword == "parallel") {
+
+		//expected syntax:
+		//line_name1 parallel line_name2 point_name
 
 		string line; string point;
 		iss >> line; iss >> point;
@@ -534,7 +410,57 @@ void CommandLine::Compile() {
 	}
 
 
+/*TRIANGLE STUFF*/
+	else if (keyword == "triangle") {
 
+		//expected syntax:
+		//triangle_name triangle point_name1 point_name2 point_name3
+		
+		// command requires three symbols to a points
+		string p1, p2, p3;
+		iss >> p1 >> p2 >> p3;
+
+		// if symbols reading fails, we delete object completely
+		if (iss.fail()) {
+			iss.clear();
+			DeleteObject();
+			goto error;
+		}
+
+		//then we get pointers to command lines that has type we need (here it is point)
+		CommandLine*pp1,*pp2,*pp3 ;
+		pp1 = find_by_symbol(p1);
+		pp2 = find_by_symbol(p2);
+		pp3 = find_by_symbol(p3);
+
+		//case where we didn't find all we need
+		if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) { 
+			DeleteObject();
+			goto error; 
+		}
+		
+		//if all is good, then if it's initialy was a triangle
+		//we just update it without any deletions, because that would
+		//mess up all every object that were dependent from this triangle
+		if (type == "triangle"){
+			ClearDependencies();
+			((Triangle*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+		}
+		else {
+			DeleteObject();
+			obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+			type = "triangle";
+		}
+
+		//it's nessesary to add all dependencies so when we move a point
+		//our triangle will be updated
+		AddDependency(pp1);
+		AddDependency(pp2);
+		AddDependency(pp3);
+		
+	}
+
+	/*POINTS IN TRIANGLE*/
 	else if (keyword == "incenter") {
 
 		string tr;
@@ -567,7 +493,6 @@ void CommandLine::Compile() {
 
 		type = "point";
 	}
-
 
 
 	else if (keyword == "centroid") {
@@ -604,7 +529,6 @@ void CommandLine::Compile() {
 	}
 
 
-
 	else if (keyword == "orthocenter") {
 
 		string tr;
@@ -639,15 +563,17 @@ void CommandLine::Compile() {
 	}
 
 
+	/*LINES IN TRIANGLE*/
+	else if (keyword == "bisectrix") {
 
-	else if (keyword == "excircle") {
+		//expected syntax:
+		//line_name bisectrix triangle_name point_name_of_vertex
 
 		string tr; string ver;
 		iss >> tr; iss >> ver;
 
 		CommandLine* trp; CommandLine* vertex;
-
-
+		
 		trp = find_by_symbol(tr, "triangle");
 		if (trp == nullptr) {
 			DeleteObject();
@@ -658,30 +584,36 @@ void CommandLine::Compile() {
 			goto error;
 		}
 
+		// we look for a point only in triangles vertexes
 		vertex = find_by_symbol_among(ver, trp->dependencies);
 		if (vertex == nullptr) {
 			DeleteObject();
 			goto error;
 		}
 
-		if (type != "circle") {
+		if (type != "line") {
 			DeleteObject();
-			obj = new Circle(((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj)));
-			obj->filled = filled;
+			obj = new Line(((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj)));
 		}
 		else {
 			ClearDependencies();
-			*((Circle*)(obj)) = ((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj));
+			*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj));
 		}
 
 		AddDependency(trp);
+		// we don't add a vertex as a dependency because
+		// triangle is aleready dependent from it
 
-		type = "circle";
+		type = "line";
 	}
 
 
-
 	else if (keyword == "altitude") {
+		
+		//expected syntax:
+		//line_name altitude triangle_name point_name_of_vertex
+
+		//for more comments look at "bisectrix" block
 
 		string tr; string ver;
 		iss >> tr; iss >> ver;
@@ -721,8 +653,12 @@ void CommandLine::Compile() {
 	}
 
 
-
 	else if (keyword == "midline") {
+
+		//expected syntax:
+		//line_name midline triangle_name point_name_of_vertex
+
+		//for more comments look at "bisectrix" block
 
 		string tr; string ver;
 		iss >> tr; iss >> ver;
@@ -762,8 +698,12 @@ void CommandLine::Compile() {
 	}
 
 
-
 	else if (keyword == "perpbis") {
+
+		//expected syntax:
+		//line_name perpbis triangle_name point_name_of_vertex
+
+		//for more comments look at "bisectrix" block
 
 		string tr; string ver;
 		iss >> tr; iss >> ver;
@@ -803,37 +743,214 @@ void CommandLine::Compile() {
 	}
 
 
+	/*CIRCLES OF TRIANGLE*/
+	else if (keyword == "incircle") {
 
+		//expected syntax:
+		//circle_name incircle triangle_name
+
+		string tr;
+		iss >> tr;
+		CommandLine* trp;
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) goto error;
+
+		if (type != "circle") {
+			DeleteObject();
+			obj = new Circle(((Triangle*)(trp->obj))->get_inscribed_circle());
+		}
+		else {
+			ClearDependencies();
+			*((Circle*)(obj))=(((Triangle*)(trp->obj))->get_inscribed_circle());
+		}
+
+		AddDependency(trp);
+
+		type = "circle";
+	}
+
+
+	else if (keyword == "circumcircle") {
+
+		//expected syntax:
+		//circle_name circumcircle triangle_name
+
+		string tr;
+		iss >> tr;
+		CommandLine* trp;
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) goto error;
+
+		if (type != "circle") {
+			DeleteObject();
+			obj = new Circle(((Triangle*)(trp->obj))->get_circumcircle());
+		}
+		else {
+			ClearDependencies();
+			*((Circle*)(obj)) = (((Triangle*)(trp->obj))->get_circumcircle());
+		}
+
+		AddDependency(trp);
+
+		type = "circle";
+	}
+
+
+	else if (keyword == "excircle") {
+
+		//expected syntax:
+		//circle_name excircle triangle_name point_name_of_vertex
+
+		string tr; string ver;
+		iss >> tr; iss >> ver;
+
+		CommandLine* trp; CommandLine* vertex;
+
+
+		trp = find_by_symbol(tr, "triangle");
+		if (trp == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		if (!((Triangle*)(trp->obj))->exists()) {
+			goto error;
+		}
+
+		// we look for a point only among triangle vertexes
+		vertex = find_by_symbol_among(ver, trp->dependencies);
+		if (vertex == nullptr) {
+			DeleteObject();
+			goto error;
+		}
+
+		if (type != "circle") {
+			DeleteObject();
+			obj = new Circle(((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj)));
+			obj->filled = filled;
+		}
+		else {
+			ClearDependencies();
+			*((Circle*)(obj)) = ((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj));
+		}
+
+		AddDependency(trp);
+		// we don't add a vertex as a dependency because
+		// triangle is aleready dependent from it
+
+		type = "circle";
+	}
+
+
+/*POLYGON STUFF*/
+	else if (keyword == "polygon") {
+
+		//expected syntax:
+		//polygon_name polygon point_name1 ... point_nameN
+		//(number of points is arbutrary)
+
+		string p1;
+
+		// currently nothing could be dependent from polygon
+		// so we always delete it instead of erasing all it's vertexes
+
+		DeleteObject();
+		obj = new Polygon();
+
+		while (!iss.eof()) {
+
+			iss >> p1;
+
+			CommandLine* pp1;
+			pp1 = find_by_symbol(p1);
+
+			if (pp1 == nullptr) {
+				DeleteObject();
+				goto error;
+			}
+
+			((Polygon*)(obj))->append(*(Point*)(pp1->obj));
+			AddDependency(pp1);
+		}
+
+		type = "polygon";
+	}
+
+
+	else if (keyword == "convex_hull" || keyword == "convex") {
+
+
+		//expected syntax:
+		//polygon_name convex_hull point_name1 ... point_nameN
+		// or
+		//polygon_name convex point_name1 ... point_nameN
+		//
+		//(number of points is arbutrary)
+
+		string p1;
+
+		// currently nothing could be dependent from polygon
+		// so we always delete it instead of erasing all it's vertexes
+		DeleteObject();
+		obj = new Polygon();
+
+		vector<Point> v;
+		while (!iss.eof()) {
+			iss >> p1;
+			CommandLine* pp1;
+			pp1 = find_by_symbol(p1);
+			if (pp1 == nullptr) {
+				goto error;
+			}
+			v.push_back(*(Point*)(pp1->obj));
+			AddDependency(pp1);
+		}
+		*(Polygon*)(obj) = convex_hull(v);
+
+		type = "polygon";
+	}
+
+/*ELSE*/
+	//that's the case when we didn't recognize any command
+	//and if we didn't already defined a symbol
+	//we say that what we have read is our symbol
 	else if (!symbol_is_there) {
 		symbol_is_there = true;
 		if (symbol != keyword && is_the_symbol_defined(keyword)) {
 			goto error;
 		}
 		symbol = keyword;
-		goto parse_start;
+		goto parse_start; //try everything again
 	} 
 	
 
-
-	else 
+	//first word is read as symbol, but next word is still not recognized
+	else {
+		DeleteObject();
 		goto error;
-
-
+	}
+		
 
 	success:
-		if (obj != nullptr) {
-			obj->filled = filled;
-			obj->red = 64 + rand() % 192;
-			obj->green = 64 + rand() % 192;
-			obj->blue = 64 + rand() % 192;
-		}
+		
+		obj->filled = filled;
+
+		//randomize object colors
+		obj->red = 64 + rand() % 192;
+		obj->green = 64 + rand() % 192;
+		obj->blue = 64 + rand() % 192;
+
 		CompileDependencies();
-		r = 128; g = 128; b = 128;
+
+		// make command line gray
+		r = 128; g = 128; b = 128; 
+
 		return;
 
-
-
+		
 	error:
+		
+		//make the command line red to show that's an error occurred
 		r = 255; g = 64; b = 64;
 		return;
 
