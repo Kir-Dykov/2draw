@@ -1,8 +1,7 @@
-#include "menu.hpp"
-
+#include "gui/gui.h"
 int main() {
 
-	menu_main();
+	gui_main();
 
 	return 0;
 }
