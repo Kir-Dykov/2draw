@@ -57,6 +57,7 @@ void UndoStack<T>::truncate(Node* elem)
 	{
 		if (cur->pPrev == nullptr)
 		{
+			delete cur;
 			head = nullptr;
 			top = nullptr;
 		}
@@ -70,7 +71,7 @@ void UndoStack<T>::truncate(Node* elem)
 				delete tmp;
 				tmp = cur;
 			}
-			cur = nullptr;
+			delete cur;
 		}
 	}
 }
