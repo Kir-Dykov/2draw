@@ -1,5 +1,33 @@
-#include "consts.h"
 #include "line.h"
+
+Line::Line(const Point& _p1, const Point& _p2) {
+	p1 = _p1;
+	p2 = _p2;
+	a = p1.y - p2.y;
+	b = p2.x - p1.x;
+	c = p1.x * p2.y - p2.x * p1.y;
+}
+
+Line::Line(const double _a, const double _b, const double _c) {
+	a = _a; b = _b; c = _c; 
+	if (a == 0) {
+		p1 = Point(0, -c / b);
+		p2 = Point(1, -c / b);
+	}
+	else if (b == 0) {
+		p1 = Point(-c / a, 0);
+		p2 = Point(-c / a, 1);
+	}
+	else
+		if (c != 0) {
+			p1 = Point(-c / a, 0);
+			p2 = Point(0, -c / b);
+		}
+		else {
+			p1 = Point(0, 0);
+			p2 = Point(1, -a / b);
+		}
+}
 
 void Line::set(const Point& _p1, const Point& _p2) {
 	p1 = _p1;
@@ -13,47 +41,23 @@ void Line::set(double _a, double _b, double _c) {
 	a = _a;
 	b = _b;
 	c = _c;
-	p1.x = -c / a;
-	p1.y = 0;
-	p2.x = -(b + c) / a;
-	p2.y = 1;
-}
-
-double Line::get_angle_rad() const{
-	return atan(-a / b);
-}
-
-double Line::get_angle_deg() const{
-	return atan(-a / b) * 180 / PI;
-}
-
-bool Line::operator==(const Line& L) const {
-	return a / L.a == b / L.b && b / L.b == c / L.c;
-}
-
-Line Line::perpendicular() const {
-	Line res;
-	res.a = b;
-	res.b = -a;
-	res.c = c;
-	return res;
-}
-
-Line Line::perp2point_on_line(const Point& pnt) const {
-	Line res;
-	res.a = -b;
-	res.b = a;
-	res.c = -a * pnt.y + b * pnt.x;
-
-	return res;
-}
-
-bool Line::is_parallel_to(const Line& L) const{
-	return a * L.b == b * L.a;
-}
-
-bool Line::point_on_Line(const Point& p) const {
-	return p.x * a + p.y * b + c == 0;
+	if (a == 0) {
+		p1 = Point(0, -c / b);
+		p2 = Point(1, -c / b);
+	}
+	else if (b == 0) {
+		p1 = Point(-c / a, 0);
+		p2 = Point(-c / a, 1);
+	}
+	else
+		if (c != 0) {
+			p1 = Point(-c / a, 0);
+			p2 = Point(0, -c / b);
+		}
+		else {
+			p1 = Point(0, 0);
+			p2 = Point(1, -a / b);
+		}
 }
 
 double Line::get_twoLines_radangle(const Line& L) const {
@@ -63,10 +67,10 @@ double Line::get_twoLines_radangle(const Line& L) const {
 
 double Line::get_twoLines_degangle(const Line& L) const
 {
-	if ((*this).get_twoLines_radangle(L) * 180.0 / PI > 90)
-		return 180 - (*this).get_twoLines_radangle(L) * 180.0 / PI;
+	if (get_twoLines_radangle(L) * 180.0 / PI > 90)
+		return 180 - get_twoLines_radangle(L) * 180.0 / PI;
 	else
-		return (*this).get_twoLines_radangle(L) * 180.0 / PI;
+		return get_twoLines_radangle(L) * 180.0 / PI;
 }
 
 int Line::find_halfplane(const Point& p) const {
@@ -130,37 +134,9 @@ Point Line::intersection(const Line& second) const {
 	return (Point(x_det / general_det, y_det / general_det));
 }
 
-Line Line::parallel(const Point& P) const {
-	Line LP;
-	LP.a = a; LP.b = b;
-	LP.c = -a * P.x - b * P.y; // value, such that when we plug-in point P into formula a*x+b*y+c we get 0
-	return LP;
-}
-
 void Line::Draw() const {
 	Vector ab; Point _a, _b;
 	_a = p1; _b = p2;
-	// means that the function get a line without certain dots (in construct base coords is (0, 0) and (1, 1))
-	if (p1 == Point(0, 0) && p2 == Point(1, 1) || p2 == Point(0, 0) && p1 == Point(1, 1)) {
-		if (a == 0) {
-			_a = Point(0, -c / b);
-			_b = Point(1, -c / b);
-		}
-		else if (b == 0) {
-			_a = Point(-c / a, 0);
-			_b = Point(-c / a, 1);
-		}
-		else {
-			if (c != 0) {
-				_a = Point(-c / a, 0);
-				_b = Point(0, -c / b);
-			}
-			else {
-				_a = Point(0, 0);
-				_b = Point(1, -a / b);
-			}
-		}
-	}
 	ab = _a - _b;
 	ab.x *= 10000; ab.y *= 10000;
 	_a = _a + ab;
