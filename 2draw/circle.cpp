@@ -4,28 +4,33 @@ Circle::Circle(double _x = 0, double _y = 0, double _r = 1) {
 	c.x = _x;
 	c.y = _y;
 	r = _r;
+	measure = area();
 }
 
 Circle::Circle(const Point& _c, double _r) {
 	c = _c;
 	r = _r;
+	measure = area();
 }
 
 Circle::Circle() {
 	c.x = 0;
 	c.y = 0;
 	r = 1;
+	measure = area();
 }
 
 void Circle::set(const Point _center, const double _radius) {
 	c.x = _center.x;
 	c.y = _center.y;
 	r = _radius;
+	measure = area();
 }
 
 void Circle::set(const Point _center, const Point other) {
 	c = _center;
 	r = distance(c, other);
+	measure = area();
 }
 
 std::ostream& operator<<(std::ostream& os, const Circle& cir) {

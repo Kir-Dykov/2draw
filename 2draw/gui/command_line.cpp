@@ -943,6 +943,16 @@ void CommandLine::CompileDependencies() {
 
 void CommandLine::Draw() {
 	glShadeModel(GL_SMOOTH);
+
+	glColor3ub(255, 255, 255);
+	if (obj != nullptr) {
+		string measure = to_string((int)(obj->measure));
+		glRasterPos2f(x - 80, Height - y - 20);
+		for (int i = 0; i < measure.length(); i++) {
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, measure[i]);
+		}
+	}
+
 	glBegin(GL_POLYGON);
 	glColor3ub(r, g, b);
 	glVertex2f(x, Height - (y));
@@ -951,6 +961,8 @@ void CommandLine::Draw() {
 	glVertex2f(x + width, Height - (y + height));
 	glVertex2f(x, Height - (y + height));
 	glEnd();
+
+
 
 	glColor3ub(255, 255, 255);
 	glRasterPos2f(x+3, Height - y - 20);

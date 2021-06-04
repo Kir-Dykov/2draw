@@ -37,7 +37,7 @@ public:
 	// pointer to the object
 	Object* obj = nullptr;
 
-
+	
 	//index int in vector<CommandLine> commands, usefull for dependencies management
 	size_t index = 0; 
 

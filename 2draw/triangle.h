@@ -12,9 +12,9 @@ private:
 	// Friends
 	friend std::ostream& operator<<(std::ostream& os, Triangle& t);
 public:
-	Triangle() { p1.x = 0; p2.x = 1; p3.x = 0; p1.y = 0; p2.y = 0; p3.y = 1; };
-	Triangle(const Point& _p1, const Point& _p2, const Point& _p3) { p1 = _p1; p2 = _p2; p3 = _p3; };
-	Triangle(const Triangle& other) { p1 = other.p1; p2 = other.p2; p3 = other.p3; };
+	Triangle() { p1.x = 0; p2.x = 1; p3.x = 0; p1.y = 0; p2.y = 0; p3.y = 1; measure = area(); };
+	Triangle(const Point& _p1, const Point& _p2, const Point& _p3) { p1 = _p1; p2 = _p2; p3 = _p3; measure = area(); };
+	Triangle(const Triangle& other) { p1 = other.p1; p2 = other.p2; p3 = other.p3; measure = area(); };
 	// Triangle existence function
 	bool exists() const;
 	// sets the Triangle using 3 points

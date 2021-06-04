@@ -20,10 +20,12 @@ public:
 	Circle(const Circle& other) {
 		c = other.center;
 		r = other.radius;
+		measure = other.measure;
 	}
 	Circle& operator =(const Circle& other) {
 		c = other.center;
 		r = other.radius;
+		measure = other.measure;
 		return *this;
 	}
 
@@ -32,7 +34,7 @@ public:
 	void set(const Point, const double);
 	// set the circle by centerpoint and a point on a circle
 	void set(const Point, const Point);
-    void set_radius(const double _radius) { r = _radius; }
+    void set_radius(const double _radius) { r = _radius; measure = area(); }
 	void set_center(const Point _center) { c = _center; }
 	void set_centerx(const double _x) { c.x = _x; }
 	void set_centery(const double _y) { c.y = _y; }

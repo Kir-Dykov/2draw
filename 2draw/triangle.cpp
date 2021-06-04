@@ -3,13 +3,13 @@
 #include "triangle.h"
 
 void Triangle::set(const Point& _p1, const Point& _p2, const Point& _p3) {
-	p1 = _p1; p2 = _p2; p3 = _p3;
+	p1 = _p1; p2 = _p2; p3 = _p3; measure = area();
 }
 
 void Triangle::set_if_exists(const Point& _p1, const Point& _p2, const Point& _p3) {
 	try {
 		if (!::exists(_p1, _p2, _p3)) throw "Triangle doesn't exist";
-		else { p1 = _p1; p2 = _p2; p3 = _p3; }
+		else { p1 = _p1; p2 = _p2; p3 = _p3; measure = area(); }
 	}
 	catch (const char* exception) {
 		cerr << "Error: " << exception << endl;

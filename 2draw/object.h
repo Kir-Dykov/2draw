@@ -11,6 +11,7 @@ public:
 	//int red = 128, green = 128, blue = 128; 
 	int red = rand() % 192 + 64, green = rand() % 192 + 64, blue = rand() % 192 + 64;
 	bool filled = 0;
+	double measure = 0;
 	virtual void Draw() const{}
 	void set_look(int r, int g, int b, bool fill = 1) { red = r; green = g; blue = b; filled = fill; }
 };

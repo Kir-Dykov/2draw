@@ -16,16 +16,17 @@ public:
 
 	//constructors
 	Polygon() {};
-	Polygon(initializer_list<Point> l) : vertexes(l) {};
-	Polygon(const Polygon& other) { vertexes = other.vertexes; }
+	Polygon(initializer_list<Point> l) : vertexes(l) { measure = area(); }
+	Polygon(const Polygon& other) { vertexes = other.vertexes; measure = other.measure;}
 	Polygon& operator=(const Polygon& other) {
 		vertexes = other.vertexes;
+		measure = other.measure;
 		return *this;
 	}
 
 	//appends
-	void append(const Point& new_point) { vertexes.push_back(new_point); }
-	void append(initializer_list<Point> l) { vertexes.insert(vertexes.end(), l.begin(), l.end()); }
+	void append(const Point& new_point) { vertexes.push_back(new_point); measure = area(); }
+	void append(initializer_list<Point> l) { vertexes.insert(vertexes.end(), l.begin(), l.end()); measure = area(); }
 
 	//operators
 	inline Point operator [] (unsigned int idx) const { return vertexes[idx]; }
