@@ -66,37 +66,25 @@ void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 
+	//drawing objects
+
 	glDisplacedView();
 
-	//drawing objects
 	x_axis.Draw();
 	y_axis.Draw();
 
-	// the order is reversed so that objects that are written later are drawn on the top
+	// the order is reversed so that objects that are written later aren't drawn on the top
 	for (size_t i = commands.size()-1; i < commands.size(); i--) {
-		if (commands[i].obj != nullptr) {
+		if (commands[i].obj != nullptr)
 			commands[i].obj->Draw();
-			/*cout << commands[i].symbol << endl;
-			cout << "dependencies:\n";
-			for (size_t j = 0; j < commands[i].dependencies.size(); j++) {
-				cout << commands[commands[i].dependencies[j]].symbol << " ";
-			}
-			cout << endl;
-			cout << "dependent_from_this:\n";
-			for (size_t j = 0; j < commands[i].dependent_from_this.size(); j++) {
-				cout << commands[commands[i].dependent_from_this[j]].symbol << " ";
-			}
-			cout << endl << endl << endl;*/ //debug output
-		};
 	}
-	
+
+	//drawing command lines
 
 	glNormalView();
 
-	//drawing command lines
-	for (size_t i = 0; i < commands.size(); i++) {
+	for (size_t i = 0; i < commands.size(); i++)
 		commands[i].Draw();
-	}
 
 	glFinish();
 }
@@ -118,18 +106,15 @@ void Reshape(GLint w, GLint h) {
 
 /* Функция обрабатывает сообщения от клавиатуры */
 void Keyboard(unsigned char key, int, int) {
-	//cout << (int)key;
 
 	if (key == 26) { //ctrl+Z
-		if (editing_a_command && command_to_edit->command != prev_command) {
+		if (editing_a_command && command_to_edit->command != prev_command)
 			command_to_edit->command = prev_command;
-		}
 		else {
 			Action a = undo_stack.undo();
 			commands[a.index].command = a.prev_command;
 			commands[a.index].Compile();
 		}
-		
 		glutPostRedisplay();
 	}
 	else if (key == 25) { //ctrl+Y
@@ -137,12 +122,13 @@ void Keyboard(unsigned char key, int, int) {
 		commands[a.index].command = a.new_command;
 		commands[a.index].Compile();
 		glutPostRedisplay();
+
 	} else if (editing_a_command) {
 		
 		//backspace key
-		if (key == 8 && command_to_edit->command.length() > 0) {
+		if (key == 8 && command_to_edit->command.length() > 0)
 			command_to_edit->command.resize(command_to_edit->command.length() - 1);
-		}
+
 		//enter key
 		else if (key == 13) { 
 			command_to_edit->Compile();
@@ -152,9 +138,9 @@ void Keyboard(unsigned char key, int, int) {
 			prev_command = command_to_edit->command;
 		}
 		//typing in symbols
-		else {
+		else
 			command_to_edit->command.append(1, key);
-		}
+
 		glutPostRedisplay();
 	}
 }
@@ -284,8 +270,8 @@ void MouseFunc(int button, int state, int x, int y) {
 					command_to_edit = &(commands[i]);
 					command_to_edit->b = 192;
 					prev_command = command_to_edit->command;
-
-					goto break_all;
+					glutPostRedisplay();
+					return;
 				}
 			}
 			
@@ -301,7 +287,8 @@ void MouseFunc(int button, int state, int x, int y) {
 					moving_a_point = true;
 					command_to_edit = &(commands[i]);
 					prev_command = command_to_edit->command;
-					goto break_all;
+					glutPostRedisplay();
+					return;
 				}
 			}
 
@@ -312,8 +299,7 @@ void MouseFunc(int button, int state, int x, int y) {
 				y_start = y + y_shifted;
 			}
 
-			break_all:
-			glutPostRedisplay();
+
 		}
 		else {
 			if (moving_a_point) {
@@ -346,11 +332,11 @@ void MouseFunc(int button, int state, int x, int y) {
 			}
 		}
 	}
-	if (button == 3) {
+	else if (button == 3) {
 		scale_factor /= 1.1;
 		glutPostRedisplay();
 	}
-	if (button == 4) {
+	else if (button == 4) {
 		scale_factor *= 1.1;
 		glutPostRedisplay();
 	}
