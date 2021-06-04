@@ -1036,15 +1036,6 @@ void CommandLine::CompileDependencies() {
 void CommandLine::Draw() {
 	glShadeModel(GL_SMOOTH);
 
-	glColor3ub(255, 255, 255);
-	if (obj != nullptr) {
-		string measure = to_string((int)(obj->measure));
-		glRasterPos2f(x - 80, Height - y - 20);
-		for (int i = 0; i < measure.length(); i++) {
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, measure[i]);
-		}
-	}
-
 	int r, g, b;
 	if (editing) { r = 64; g = 64; b = 192; }
 	else if (err) { r = 192; g = b = 0; }

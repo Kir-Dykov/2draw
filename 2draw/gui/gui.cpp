@@ -416,9 +416,9 @@ void PassiveMotionFunc(int x, int y) {
 /* the main */
 int gui_main() {
 	//creating 24 command lines to work with
-	commands.push_back(CommandLine(100, 10));
+	commands.push_back(CommandLine(10, 10));
 	for (size_t i = 0; i < 24; i++) {
-		commands.push_back(CommandLine(100, commands[i].y + 30));
+		commands.push_back(CommandLine(10, commands[i].y + 30));
 	}
 
 	x_unit.set_look(255, 255, 255);
