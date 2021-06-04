@@ -985,10 +985,8 @@ void CommandLine::Compile() {
 			return;
 		}
 	}
-		
-	
-	obj->filled = filled;
 
+	obj->filled = filled;
 	//randomize object colors
 	obj->red = 128 + rand() % 128;
 	obj->green = 128 + rand() % 128;
@@ -996,8 +994,6 @@ void CommandLine::Compile() {
 
 	CompileDependencies();
 
-	// make command line gray
-	//r = 128; g = 128; b = 128; 
 	return;
 }
 
@@ -1019,45 +1015,29 @@ void CommandLine::Draw() {
 		}
 	}
 
-	
+	int r, g, b;
+	if (editing) { r = 64; g = 64; b = 192; }
+	else if (err) { r = 192; g = b = 0; }
+	else if (obj != nullptr) { r = obj->red; g = obj->green; b = obj->blue; }
+	else { r = g = b = 128; }
+
 	glBegin(GL_POLYGON);
 
-	int r, g, b;
-	if (editing) {
-		r = 64;
-		g = 64;
-		b = 192;
-	} else if (err) {
-		r = 192;
-		g = 0;
-		b = 0;
-	} else if (obj != nullptr) {
-		r = obj->red;
-		g = obj->green;
-		b = obj->blue;
-	} else {
-		r = g = b = 128;
-	}
+		glColor3ub(r, g, b);
 
-	glColor3ub(r, g, b);
-	glVertex2f(x, Height - (y));
-	glVertex2f(x + width, Height - y);
-	if (err) {
-		glColor3ub(r - 64, g, b);
-	} else {
-		glColor3ub(r - 64, g - 64, b - 64);
-	}
+		glVertex2f(x, Height - (y));
+		glVertex2f(x + width, Height - y);
+
+		if (err) glColor3ub(r - 64, g, b);
+		else glColor3ub(r - 64, g - 64, b - 64);
 	
-	glVertex2f(x + width, Height - (y + height));
-	glVertex2f(x, Height - (y + height));
+		glVertex2f(x + width, Height - (y + height));
+		glVertex2f(x, Height - (y + height));
+
 	glEnd();
 
-	if (editing || err) {
-		r = g = b = 255;
-	}
-	else {
-		r = g = b = 0;
-	}
+	if (editing || err) { r = g = b = 255; }
+	else { r = g = b = 0; }
 
 	glColor3ub(r, g, b);
 	glRasterPos2f(x+3, Height - y - 20);

@@ -82,10 +82,13 @@ void Display(void) {
 	}
 
 	for (size_t i = commands.size() - 1; i < commands.size(); i--) {
-		if (commands[i].obj != nullptr && !commands[i].obj->filled)
+		if (commands[i].obj != nullptr && !(commands[i].obj->filled)) {
 			commands[i].obj->Draw();
+			cout << i << endl;
+		}
+			
 	}
-
+	
 	x_unit.Draw();
 	y_unit.Draw();
 	x_axis.Draw();

@@ -144,6 +144,7 @@ void Line::Draw() const {
 	_b = _b + ab;
 
 	glBegin(GL_LINES);
+	glColor3ub(red, green, blue);
 	glVertex2f(_a.x, _a.y);
 	glVertex2f(_b.x, _b.y);
 	glEnd();
