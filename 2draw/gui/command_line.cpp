@@ -248,7 +248,7 @@ void CommandLine::Compile() {
 			ClearDependencies();
 			((Point*)obj)->set(((Circle*)(pp->obj))->center.x, ((Circle*)(pp->obj))->center.y);
 		}
-
+		command = symbol + " " + keyword + " " + p + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 		AddDependency(pp);
 	}
 
@@ -311,7 +311,6 @@ void CommandLine::Compile() {
 		if (((Line*)(cline1->obj))->is_parallel_to(*(Line*)(cline2->obj))) {
 			goto error;
 		}
-
 		if (type != "point") {
 			DeleteObject();
 			obj = new Point(((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj)));
@@ -321,11 +320,9 @@ void CommandLine::Compile() {
 			ClearDependencies();
 			*((Point*)(obj)) = ((Line*)(cline1->obj))->intersection(*(Line*)(cline2->obj));
 		}
-
+		command = symbol+ " "+ keyword + " " + line1 + " "+ line2 + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 		AddDependency(cline1);
 		AddDependency(cline2);
-
-		type = "point";
 	}
 
 
@@ -488,10 +485,8 @@ void CommandLine::Compile() {
 			ClearDependencies();
 			*((Point*)(obj)) = ((Triangle*)(trp->obj))->get_intersec_bis();
 		}
-
+		command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 		AddDependency(trp);
-
-		type = "point";
 	}
 
 
@@ -522,10 +517,8 @@ void CommandLine::Compile() {
 			ClearDependencies();
 			*((Point*)(obj)) = ((Triangle*)(trp->obj))->get_intersec_med();
 		}
-
+		command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 		AddDependency(trp);
-
-		type = "point";
 	}
 
 
@@ -556,10 +549,8 @@ void CommandLine::Compile() {
 			ClearDependencies();
 			*((Point*)(obj)) = ((Triangle*)(trp->obj))->get_intersec_alt();
 		}
-
+		command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 		AddDependency(trp);
-
-		type = "point";
 	}
 
 
@@ -594,6 +585,7 @@ void CommandLine::Compile() {
 		if (type != "line") {
 			DeleteObject();
 			obj = new Line(((Triangle*)(trp->obj))->get_bisectrix(*(Point*)(vertex->obj)));
+			type = "line";
 		}
 		else {
 			ClearDependencies();
@@ -603,8 +595,6 @@ void CommandLine::Compile() {
 		AddDependency(trp);
 		// we don't add a vertex as a dependency because
 		// triangle is aleready dependent from it
-
-		type = "line";
 	}
 
 
@@ -640,7 +630,7 @@ void CommandLine::Compile() {
 		if (type != "line") {
 			DeleteObject();
 			obj = new Line(((Triangle*)(trp->obj))->get_altitude(*(Point*)(vertex->obj)));
-		
+			type = "line";
 		}
 		else {
 			ClearDependencies();
@@ -648,8 +638,6 @@ void CommandLine::Compile() {
 		}
 
 		AddDependency(trp);
-
-		type = "line";
 	}
 
 
@@ -685,7 +673,7 @@ void CommandLine::Compile() {
 		if (type != "line") {
 			DeleteObject();
 			obj = new Line(((Triangle*)(trp->obj))->get_midline(*(Point*)(vertex->obj)));
-
+			type = "line";
 		}
 		else {
 			ClearDependencies();
@@ -693,8 +681,6 @@ void CommandLine::Compile() {
 		}
 
 		AddDependency(trp);
-
-		type = "line";
 	}
 
 
@@ -730,7 +716,7 @@ void CommandLine::Compile() {
 		if (type != "line") {
 			DeleteObject();
 			obj = new Line(((Triangle*)(trp->obj))->get_perp_bis(*(Point*)(vertex->obj)));
-
+			type = "line";
 		}
 		else {
 			ClearDependencies();
@@ -738,8 +724,6 @@ void CommandLine::Compile() {
 		}
 
 		AddDependency(trp);
-
-		type = "line";
 	}
 
 
@@ -758,6 +742,7 @@ void CommandLine::Compile() {
 		if (type != "circle") {
 			DeleteObject();
 			obj = new Circle(((Triangle*)(trp->obj))->get_inscribed_circle());
+			type = "circle";
 		}
 		else {
 			ClearDependencies();
@@ -765,8 +750,6 @@ void CommandLine::Compile() {
 		}
 
 		AddDependency(trp);
-
-		type = "circle";
 	}
 
 
@@ -784,6 +767,7 @@ void CommandLine::Compile() {
 		if (type != "circle") {
 			DeleteObject();
 			obj = new Circle(((Triangle*)(trp->obj))->get_circumcircle());
+			type = "circle";
 		}
 		else {
 			ClearDependencies();
@@ -791,8 +775,6 @@ void CommandLine::Compile() {
 		}
 
 		AddDependency(trp);
-
-		type = "circle";
 	}
 
 
@@ -828,6 +810,7 @@ void CommandLine::Compile() {
 			DeleteObject();
 			obj = new Circle(((Triangle*)(trp->obj))->get_excircle(*(Point*)(vertex->obj)));
 			obj->filled = filled;
+			type = "circle";
 		}
 		else {
 			ClearDependencies();
@@ -837,8 +820,6 @@ void CommandLine::Compile() {
 		AddDependency(trp);
 		// we don't add a vertex as a dependency because
 		// triangle is aleready dependent from it
-
-		type = "circle";
 	}
 
 
