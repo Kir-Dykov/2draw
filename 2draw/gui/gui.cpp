@@ -23,7 +23,7 @@ using namespace std;
 
 int Width = 1080, Height = 720;
 
-int x_start = Width / 2, y_start = Height / 2, x_shifted = -Width / 2, y_shifted = -Height / 2;
+double x_start = Width / 2, y_start = Height / 2, x_shifted = -Width / 2, y_shifted = -Height / 2;
 double scale_factor = 1;
 
 extern vector<CommandLine> commands;
@@ -38,6 +38,8 @@ UndoStack<Action> undo_stack;
 
 Line x_axis(Point(0, 0), Point(1000, 0));
 Line y_axis(Point(0, 0), Point(0, 1000));
+Point x_unit(100, 0);
+Point y_unit(0, 100);
 
 void glNormalView() {
 	glMatrixMode(GL_PROJECTION);
@@ -72,10 +74,18 @@ void Display(void) {
 
 	x_axis.Draw();
 	y_axis.Draw();
+	x_unit.Draw();
+	y_unit.Draw();
 
 	// the order is reversed so that objects that are written later aren't drawn on the top
+	// and filled are drawn first so they don't cover everything else
 	for (size_t i = commands.size()-1; i < commands.size(); i--) {
-		if (commands[i].obj != nullptr)
+		if (commands[i].obj != nullptr && commands[i].obj->filled)
+			commands[i].obj->Draw();
+	}
+
+	for (size_t i = commands.size() - 1; i < commands.size(); i--) {
+		if (commands[i].obj != nullptr && !commands[i].obj->filled)
 			commands[i].obj->Draw();
 	}
 
@@ -251,8 +261,10 @@ void SpecialInput(int key, int, int) {
 
 void MouseFunc(int button, int state, int x, int y) {
 	y = Height - y;
-	//cout << button << " " << state << " " << x << " " << y << endl;
-
+	double kkk = 0.1;
+	cout << button << " " << state << " " << x << " " << y << endl;
+	cout << x_shifted << " " << y_shifted << endl;
+	cout << (x+x_shifted) * scale_factor << " " << (y+y_shifted) * scale_factor << endl;
 	if (button == GLUT_LEFT_BUTTON) {
 		if (state == GLUT_DOWN) {
 
@@ -328,16 +340,26 @@ void MouseFunc(int button, int state, int x, int y) {
 					commands[i].obj->filled = commands[i].filled;
 					glutPostRedisplay();
 				}
-
+			}
+			for (size_t i = 0; i < commands.size(); i++) {
+				if (commands[i].is_in(x, y)) {
+					commands[i].filled = !(commands[i].filled);
+					commands[i].obj->filled = commands[i].filled;
+					glutPostRedisplay();
+				}
 			}
 		}
 	}
 	else if (button == 3) {
 		scale_factor /= 1.1;
+		x_shifted += (x + x_shifted) * 0.1; // the formula is found randomly by hand
+		y_shifted += (y + y_shifted) * 0.1; // I don't know how but it just works
 		glutPostRedisplay();
 	}
 	else if (button == 4) {
 		scale_factor *= 1.1;
+		x_shifted -= (x + x_shifted) * (1. - 1. / 1.1); // the formula is found randomly by hand
+		y_shifted -= (y + y_shifted) * (1. - 1. / 1.1); // I don't know how but it just works
 		glutPostRedisplay();
 	}
 }
@@ -391,11 +413,14 @@ int gui_main() {
 		commands.push_back(CommandLine(100, commands[i].y + 30));
 	}
 
+	x_unit.set_look(255, 255, 255);
+	y_unit.set_look(255, 255, 255);
+
 	int argc;
 	char* c = new char;
 	*c = '\0';
-
 	glutInit(&argc, &c);
+
 	glutInitDisplayMode(GLUT_RGB);
 	glutInitWindowSize(Width, Height);
 	glutCreateWindow("2draw");

@@ -42,7 +42,6 @@ CommandLine::CommandLine(double _x, double _y) {
 void CommandLine::DeleteObject() {
 	if (obj != nullptr) {
 		type = "";
-		filled = 0;
 		CompileDependencies(); //to cause there errors as it should
 		ClearDependencies();
 		delete obj;
@@ -191,7 +190,7 @@ void CommandLine::Compile() {
 				iss >> y >> r;
 				if (iss.fail()) {
 					iss.clear();
-					error();
+					return error();
 				}
 				obj = new Circle(x, y, r);
 			}
@@ -203,7 +202,7 @@ void CommandLine::Compile() {
 					CommandLine* pp1 = nullptr;
 					pp1 = find_by_symbol(p1);
 					if (pp1 == nullptr)
-						error();
+						return error();
 
 					obj = new Circle(*(Point*)(pp1->obj), r);
 
@@ -219,7 +218,7 @@ void CommandLine::Compile() {
 					pp2 = find_by_symbol(p2);
 
 					if (pp1 == nullptr || pp2 == nullptr) {
-						error();
+						return error();
 					}
 					obj = new Circle(*(Point*)(pp1->obj), distance(*(Point*)(pp1->obj), *(Point*)(pp2->obj)));
 					AddDependency(pp1);
@@ -242,7 +241,7 @@ void CommandLine::Compile() {
 			CommandLine* pp = nullptr;
 			pp = find_by_symbol(p, "circle");
 			if (pp == nullptr) {
-				error();
+				return error();
 			}
 
 			if (type != "point") {
@@ -273,7 +272,7 @@ void CommandLine::Compile() {
 			pp1 = find_by_symbol(p1);
 			pp2 = find_by_symbol(p2);
 
-			if (pp1 == nullptr || pp2 == nullptr) error();
+			if (pp1 == nullptr || pp2 == nullptr) return error();
 
 
 			if (type == "line") {
@@ -306,17 +305,17 @@ void CommandLine::Compile() {
 			cline1 = find_by_symbol(line1, "line");
 			if (cline1 == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			cline2 = find_by_symbol(line2, "line");
 			if (cline2 == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (((Line*)(cline1->obj))->is_parallel_to(*(Line*)(cline2->obj))) {
-				error();
+				return error();
 			}
 			if (type != "point") {
 				DeleteObject();
@@ -350,13 +349,13 @@ void CommandLine::Compile() {
 			cline = find_by_symbol(line, "line");
 			if (cline == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			cpoint = find_by_symbol(point, "point");
 			if (cpoint == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "line") {
@@ -389,13 +388,13 @@ void CommandLine::Compile() {
 			cline = find_by_symbol(line, "line");
 			if (cline == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			cpoint = find_by_symbol(point, "point");
 			if (cpoint == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "line") {
@@ -431,7 +430,7 @@ void CommandLine::Compile() {
 			if (iss.fail()) {
 				iss.clear();
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			//then we get pointers to command lines that has type we need (here it is point)
@@ -443,7 +442,7 @@ void CommandLine::Compile() {
 			//case where we didn't find all we need
 			if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			//if all is good, then if it's initialy was a triangle
@@ -479,11 +478,11 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			if (type != "point") {
@@ -512,11 +511,11 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			if (type != "point") {
@@ -545,11 +544,11 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			if (type != "point") {
@@ -581,18 +580,18 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			// we look for a point only in triangles vertexes
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "line") {
@@ -629,17 +628,17 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "line") {
@@ -673,17 +672,17 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "line") {
@@ -717,17 +716,17 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "line") {
@@ -755,7 +754,7 @@ void CommandLine::Compile() {
 			iss >> tr;
 			CommandLine* trp;
 			trp = find_by_symbol(tr, "triangle");
-			if (trp == nullptr) error();
+			if (trp == nullptr) return error();
 
 			if (type != "circle") {
 				DeleteObject();
@@ -781,7 +780,7 @@ void CommandLine::Compile() {
 			iss >> tr;
 			CommandLine* trp;
 			trp = find_by_symbol(tr, "triangle");
-			if (trp == nullptr) error();
+			if (trp == nullptr) return error();
 
 			if (type != "circle") {
 				DeleteObject();
@@ -812,18 +811,18 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				error();
+				return error();
 			}
 
 			// we look for a point only among triangle vertexes
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				error();
+				return error();
 			}
 
 			if (type != "circle") {
@@ -869,7 +868,7 @@ void CommandLine::Compile() {
 
 				if (pp1 == nullptr) {
 					DeleteObject();
-					error();
+					return error();
 				}
 
 				((Polygon*)(obj))->append(*(Point*)(pp1->obj));
@@ -904,7 +903,7 @@ void CommandLine::Compile() {
 				CommandLine* pp1;
 				pp1 = find_by_symbol(p1);
 				if (pp1 == nullptr) {
-					error();
+					return error();
 				}
 				v.push_back(*(Point*)(pp1->obj));
 				AddDependency(pp1);
@@ -922,7 +921,7 @@ void CommandLine::Compile() {
 		else if (!symbol_is_there) {
 			symbol_is_there = true;
 			if (symbol != keyword && is_the_symbol_defined(keyword)) {
-				error();
+				return error();
 			}
 			symbol = keyword; 
 			// after that, loop repeats, reads new keyword, but symbol_is_there is true
@@ -931,7 +930,7 @@ void CommandLine::Compile() {
 		//first word is read as symbol, but next word is still not recognized or something else gone wrong
 		else {
 			DeleteObject();
-			error();
+			return error();
 			return;
 		}
 	}
