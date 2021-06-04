@@ -964,6 +964,35 @@ void CommandLine::Compile() {
 			break;
 		}
 
+
+		else if (keyword == "perimeter") {
+		ClearDependencies();
+		string obj_t;
+		iss >> obj_t;
+
+		CommandLine* ctr;
+
+		ctr = find_by_symbol(obj_t, "triangle");
+		if (ctr != nullptr)
+			command = symbol + " " + keyword + " " + obj_t + " : " + to_string(((Triangle*)(ctr->obj))->perimeter());
+		if (ctr == nullptr) {
+			ctr = find_by_symbol(obj_t, "circle");
+			if (ctr != nullptr)
+				command = symbol + " " + keyword + " " + obj_t + " : " + to_string(((Circle*)(ctr->obj))->circumference());
+			if (ctr == nullptr) {
+				ctr = find_by_symbol(obj_t, "polygon");
+				if (ctr != nullptr)
+					command = symbol + " " + keyword + " " + obj_t + " : " + to_string(((Polygon*)(ctr->obj))->perimeter());
+				if (ctr == nullptr) {
+					DeleteObject();
+					err = true;
+					return;
+				}
+			}
+		}
+		AddDependency(ctr);
+		break;
+	}
 		/*ELSE*/
 			//that's the case when we didn't recognize any command
 			//and if we didn't already defined a symbol
@@ -986,12 +1015,13 @@ void CommandLine::Compile() {
 		}
 	}
 
-	obj->filled = filled;
-	//randomize object colors
-	obj->red = 128 + rand() % 128;
-	obj->green = 128 + rand() % 128;
-	obj->blue = 128 + rand() % 128;
-
+	if (obj != nullptr) {
+		obj->filled = filled;
+		//randomize object colors
+		obj->red = 128 + rand() % 128;
+		obj->green = 128 + rand() % 128;
+		obj->blue = 128 + rand() % 128;
+	}
 	CompileDependencies();
 
 	return;
