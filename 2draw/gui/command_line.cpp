@@ -974,15 +974,44 @@ void CommandLine::Compile() {
 
 		ctr = find_by_symbol(obj_t, "triangle");
 		if (ctr != nullptr)
-			command = symbol + " " + keyword + " " + obj_t + " : " + to_string(((Triangle*)(ctr->obj))->perimeter());
+			command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Triangle*)(ctr->obj))->perimeter());
 		if (ctr == nullptr) {
 			ctr = find_by_symbol(obj_t, "circle");
 			if (ctr != nullptr)
-				command = symbol + " " + keyword + " " + obj_t + " : " + to_string(((Circle*)(ctr->obj))->circumference());
+				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Circle*)(ctr->obj))->circumference());
 			if (ctr == nullptr) {
 				ctr = find_by_symbol(obj_t, "polygon");
 				if (ctr != nullptr)
-					command = symbol + " " + keyword + " " + obj_t + " : " + to_string(((Polygon*)(ctr->obj))->perimeter());
+					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Polygon*)(ctr->obj))->perimeter());
+				if (ctr == nullptr) {
+					DeleteObject();
+					err = true;
+					return;
+				}
+			}
+		}
+		AddDependency(ctr);
+		break;
+	}
+
+		else if (keyword == "area") {
+		ClearDependencies();
+		string obj_t;
+		iss >> obj_t;
+
+		CommandLine* ctr;
+
+		ctr = find_by_symbol(obj_t, "triangle");
+		if (ctr != nullptr)
+			command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
+		if (ctr == nullptr) {
+			ctr = find_by_symbol(obj_t, "circle");
+			if (ctr != nullptr)
+				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
+			if (ctr == nullptr) {
+				ctr = find_by_symbol(obj_t, "polygon");
+				if (ctr != nullptr)
+					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
 				if (ctr == nullptr) {
 					DeleteObject();
 					err = true;
