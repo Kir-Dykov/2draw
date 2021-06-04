@@ -40,7 +40,7 @@ CommandLine::CommandLine(double _x, double _y) {
 }
 
 void CommandLine::DeleteObject() {
-	if (obj != nullptr){
+	if (obj != nullptr) {
 		type = "";
 		filled = 0;
 		CompileDependencies(); //to cause there errors as it should
@@ -124,7 +124,6 @@ void CommandLine::Compile() {
 
 	/*POINT*/
 	if (keyword == "point" || (symbol!="" && keyword == "p")) {
-		cout << "wtf";
 		//expected syntax:
 		//point_name point x_coordinate y_coordinate
 		//or
@@ -205,8 +204,7 @@ void CommandLine::Compile() {
 
 			}
 			// if there are center point and other point on circumference
-			catch (const std::exception&)
-			{
+			catch (const std::exception&) {
 				CommandLine* pp1 = nullptr;
 				CommandLine* pp2 = nullptr;
 
@@ -439,7 +437,7 @@ void CommandLine::Compile() {
 		//if all is good, then if it's initialy was a triangle
 		//we just update it without any deletions, because that would
 		//mess up all every object that were dependent from this triangle
-		if (type == "triangle"){
+		if (type == "triangle") {
 			ClearDependencies();
 			((Triangle*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
 		}

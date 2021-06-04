@@ -263,13 +263,11 @@ void SpecialInput(int key, int, int) {
 	glutPostRedisplay();
 }
 
-void MouseFunc(int button, int state, int x, int y)
-{
+void MouseFunc(int button, int state, int x, int y) {
 	y = Height - y;
 	//cout << button << " " << state << " " << x << " " << y << endl;
 
-	if (button == GLUT_LEFT_BUTTON)
-	{
+	if (button == GLUT_LEFT_BUTTON) {
 		if (state == GLUT_DOWN) {
 
 			//checks if clicked on some command line

@@ -124,8 +124,7 @@ double Polygon::area() const{
 
 //prints coordinates of each vertex
 std::ostream& operator<<(std::ostream& os, const Polygon& p) {
-	for (unsigned int i = 0; i < p.vertexes.size(); i++)
-	{
+	for (unsigned int i = 0; i < p.vertexes.size(); i++) {
 		os << p.vertexes[i] << " ";
 	}
 	return os;
@@ -150,7 +149,7 @@ bool Polygon::is_in(const Point& p) const {
 		int winding_number = 0;
 		int turn_sign;
 		
-		for (size_t i = 0; i < vertexes.size() - 1; i += 1)	{
+		for (size_t i = 0; i < vertexes.size() - 1; i += 1) {
 			// if edge crosses vertical line
 			if ((vertexes[i].x - p.x) * (vertexes[i+1].x - p.x) <= 0) {
 				// then we add a sign of a rotation (it's positive 
@@ -174,8 +173,7 @@ Polygon convex_hull(const vector<Point>& _f) {
 
 	// three points always form a convex shape
 	// if they are colinear, it considered as convex shape too
-	if (f.size() == 3)
-	{
+	if (f.size() == 3) {
 		Polygon hull = { f[0], f[1], f[2] };
 		return hull;
 	}
@@ -183,11 +181,9 @@ Polygon convex_hull(const vector<Point>& _f) {
 	//according to algorythm, we find point with minimal y-coordinate
 	double min_y = f[0].y;
 	int min_idx = 0;
-	for (int i = 1; i < f.size(); i++)
-	{
+	for (int i = 1; i < f.size(); i++) {
 		if (f[i].y < min_y ||
-			f[i].y == min_y && f[i].x < f[min_idx].x)
-		{
+			f[i].y == min_y && f[i].x < f[min_idx].x) {
 			min_y = f[i].y;
 			min_idx = i;
 		}
@@ -210,8 +206,9 @@ Polygon convex_hull(const vector<Point>& _f) {
 	// index, pointing to last added vertex
 	size_t head = 2;
 	
-	for (size_t i = 3; i < f.size(); i++) //starting from index 3 (intentionaly)
-	{
+	for (size_t i = 3; i < f.size(); i++) {
+
+		//starting from index 3 (intentionaly) 
 		// adding f[i] not results in angles larger than 180 degrees
 		if (determinant(hull[head] - hull[head - 1], f[i] - hull[head]) > 0) {
 			hull.append(f[i]);
@@ -232,26 +229,22 @@ Polygon convex_hull(const vector<Point>& _f) {
 double Polygon::perimeter() const {
 	double res = sqrt((vertexes[vertexes.size() - 1].x - vertexes[0].x) * (vertexes[vertexes.size() - 1].x - vertexes[0].x) \
 		+ (vertexes[vertexes.size() - 1].y - vertexes[0].y) * (vertexes[vertexes.size() - 1].y - vertexes[0].y));
-	for (int i = 0; i < vertexes.size() - 1; i++)
-	{
+	for (int i = 0; i < vertexes.size() - 1; i++) {
 		res += sqrt((vertexes[i].x - vertexes[i + 1].x) * (vertexes[i].x - vertexes[i + 1].x) + (vertexes[i].y - vertexes[i + 1].y) \
 			* (vertexes[i].y - vertexes[i + 1].y));
 	}
 	return res;
 }
 
-void CALLBACK tessBeginCB(GLenum which)
-{ 
+void CALLBACK tessBeginCB(GLenum which) { 
 	glBegin(which);
 }
 
-void CALLBACK tessEndCB()
-{
+void CALLBACK tessEndCB() {
 	glEnd();
 }
 
-void CALLBACK tessVertexCB(const GLvoid* data)
-{
+void CALLBACK tessVertexCB(const GLvoid* data) {
 	// cast back to double type
 	const GLdouble* ptr = (const GLdouble*)data;
 
@@ -262,11 +255,9 @@ void Polygon::Draw() const {
 	if (filled) {
 
 		GLdouble** ver = new GLdouble * [vertexes.size()];
-		for (int i = 0; i < vertexes.size(); i++)
-		{
+		for (int i = 0; i < vertexes.size(); i++) {
 			ver[i] = new GLdouble[3];
-			for (int j = 0; j < 3; j++)
-			{
+			for (int j = 0; j < 3; j++) {
 				if (j == 0) ver[i][j] = vertexes[i].x;
 				else if (j == 1) ver[i][j] = vertexes[i].y;
 				else if (j == 2) ver[i][j] = 0;
@@ -281,8 +272,7 @@ void Polygon::Draw() const {
 		gluTessCallback(pTess, GLU_TESS_VERTEX, (void (CALLBACK*)())tessVertexCB);
 		gluTessBeginPolygon(pTess, NULL);
 		gluTessBeginContour(pTess);
-		for (int i = 0; i < vertexes.size(); i++)
-		{
+		for (int i = 0; i < vertexes.size(); i++) {
 			gluTessVertex(pTess, ver[i], ver[i]);
 		}
 		gluTessEndContour(pTess);

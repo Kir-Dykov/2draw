@@ -60,16 +60,14 @@ UndoStack<T>::~UndoStack() {
 template<typename T>
 void UndoStack<T>::truncate(Node* elem) {
 	Node* cur = elem;
-	if (cur != nullptr)
-	{
+	if (cur != nullptr) {
 		if (cur->pPrev != nullptr) {
 			cur->pPrev->pNext = nullptr;
 		}
 
 		//delete everything to the end
 		Node* tmp = cur;
-		while (cur->pNext != nullptr)
-		{
+		while (cur->pNext != nullptr) {
 			cur = cur->pNext;
 			delete tmp;
 			tmp = cur;
@@ -84,8 +82,7 @@ void UndoStack<T>::push_back(T elem) {
 
 	Node* tmp = new Node(elem);
 
-	if (top != nullptr)
-	{
+	if (top != nullptr) {
 		if (top->pNext != nullptr)
 			truncate(top->pNext);
 		tmp->pPrev = top;
