@@ -165,6 +165,7 @@ void CommandLine::Compile() {
 				ClearDependencies();
 				((Point*)obj)->set(x, y);
 			}
+			break;
 		}
 
 
@@ -227,6 +228,7 @@ void CommandLine::Compile() {
 			}
 
 			type = "circle";
+			break;
 		}
 
 
@@ -254,6 +256,7 @@ void CommandLine::Compile() {
 			}
 			command = symbol + " " + keyword + " " + p + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 			AddDependency(pp);
+			break;
 		}
 
 
@@ -285,7 +288,7 @@ void CommandLine::Compile() {
 
 			AddDependency(pp1);
 			AddDependency(pp2);
-
+			break;
 		}
 
 
@@ -327,6 +330,7 @@ void CommandLine::Compile() {
 			command = symbol + " " + keyword + " " + line1 + " " + line2 + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 			AddDependency(cline1);
 			AddDependency(cline2);
+			break;
 		}
 
 
@@ -367,7 +371,7 @@ void CommandLine::Compile() {
 
 			AddDependency(cline);
 			AddDependency(cpoint);
-
+			break;
 		}
 
 
@@ -408,6 +412,8 @@ void CommandLine::Compile() {
 			AddDependency(cpoint);
 
 			type = "line";
+
+			break;
 		}
 
 
@@ -458,7 +464,7 @@ void CommandLine::Compile() {
 			AddDependency(pp1);
 			AddDependency(pp2);
 			AddDependency(pp3);
-
+			break;
 		}
 
 		/*POINTS IN TRIANGLE*/
@@ -491,6 +497,7 @@ void CommandLine::Compile() {
 			}
 			command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -523,6 +530,7 @@ void CommandLine::Compile() {
 			}
 			command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -555,6 +563,7 @@ void CommandLine::Compile() {
 			}
 			command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -599,6 +608,8 @@ void CommandLine::Compile() {
 			AddDependency(trp);
 			// we don't add a vertex as a dependency because
 			// triangle is aleready dependent from it
+
+			break;
 		}
 
 
@@ -642,6 +653,7 @@ void CommandLine::Compile() {
 			}
 
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -685,6 +697,7 @@ void CommandLine::Compile() {
 			}
 
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -728,6 +741,7 @@ void CommandLine::Compile() {
 			}
 
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -754,6 +768,7 @@ void CommandLine::Compile() {
 			}
 
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -779,6 +794,7 @@ void CommandLine::Compile() {
 			}
 
 			AddDependency(trp);
+			break;
 		}
 
 
@@ -824,6 +840,8 @@ void CommandLine::Compile() {
 			AddDependency(trp);
 			// we don't add a vertex as a dependency because
 			// triangle is aleready dependent from it
+
+			break;
 		}
 
 
@@ -859,6 +877,7 @@ void CommandLine::Compile() {
 			}
 
 			type = "polygon";
+			break;
 		}
 
 
@@ -893,6 +912,7 @@ void CommandLine::Compile() {
 			*(Polygon*)(obj) = convex_hull(v);
 
 			type = "polygon";
+			break;
 		}
 
 		/*ELSE*/
@@ -907,14 +927,14 @@ void CommandLine::Compile() {
 			symbol = keyword; 
 			// after that, loop repeats, reads new keyword, but symbol_is_there is true
 		}
-		//first word is read as symbol, but next word is still not recognized
+
+		//first word is read as symbol, but next word is still not recognized or something else gone wrong
 		else {
 			DeleteObject();
 			error();
+			return;
 		}
 	}
-	
-	
 		
 		
 	obj->filled = filled;
@@ -928,14 +948,8 @@ void CommandLine::Compile() {
 
 	// make command line gray
 	r = 128; g = 128; b = 128; 
-
 	return;
-
-	
-
 }
-
-
 
 void CommandLine::CompileDependencies() {
 	for (size_t i = 0; i < dependent_from_this.size(); i++) {

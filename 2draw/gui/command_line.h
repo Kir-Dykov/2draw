@@ -79,6 +79,8 @@ public:
 	void AddDependency(CommandLine* other);
 	void ClearDependencies();
 
+	void error();
+
 	/* after this.command was edited, this function can read it,
 	* recreating object the command defines. In case of error
 	* command line bocomes red and nothing is being created	*/
