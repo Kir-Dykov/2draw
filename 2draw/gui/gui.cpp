@@ -72,10 +72,7 @@ void Display(void) {
 
 	glDisplacedView();
 
-	x_axis.Draw();
-	y_axis.Draw();
-	x_unit.Draw();
-	y_unit.Draw();
+	
 
 	// the order is reversed so that objects that are written later aren't drawn on the top
 	// and filled are drawn first so they don't cover everything else
@@ -88,6 +85,12 @@ void Display(void) {
 		if (commands[i].obj != nullptr && !commands[i].obj->filled)
 			commands[i].obj->Draw();
 	}
+
+	x_unit.Draw();
+	y_unit.Draw();
+	x_axis.Draw();
+	y_axis.Draw();
+	
 
 	//drawing command lines
 
@@ -144,7 +147,7 @@ void Keyboard(unsigned char key, int, int) {
 			command_to_edit->Compile();
 			push_action();
 			command_to_edit = &commands[((command_to_edit->index)+1)%commands.size()];
-			command_to_edit->b = 192;
+			command_to_edit->editing = true;
 			prev_command = command_to_edit->command;
 		}
 		//typing in symbols
@@ -220,7 +223,8 @@ void SpecialInput(int key, int, int) {
 		for (size_t i = 0; i < commands.size(); i++) {
 			commands[i].Compile();
 		}
-	} else if (key == 5) { //F5
+	} 
+	else if (key == 5) { //F5
 		for (size_t i = 0; i < commands.size(); i++) {
 			commands[i].command = "";
 			commands[i].Compile();
@@ -231,28 +235,28 @@ void SpecialInput(int key, int, int) {
 			command_to_edit->Compile();
 			push_action();
 			command_to_edit = &commands[((command_to_edit->index) - 1 + commands.size()) % commands.size()];
-			command_to_edit->b = 192;
+			command_to_edit->editing = true;
 			prev_command = command_to_edit->command;
 		} else if (key == GLUT_KEY_DOWN) {
 			command_to_edit->Compile();
 			push_action();
 			command_to_edit = &commands[((command_to_edit->index) + 1) % commands.size()];
-			command_to_edit->b = 192;
+			command_to_edit->editing = true;
 			prev_command = command_to_edit->command;
 		}
 	}
 	else {
 		if (key == GLUT_KEY_UP) {
 			command_to_edit = &commands[commands.size()-1];
-			command_to_edit->b = 192;
+			command_to_edit->editing = true;
 			prev_command = command_to_edit->command;
 			editing_a_command = true;
 		}
 		else if (key == GLUT_KEY_DOWN) {
 			command_to_edit = &commands[0];
-			command_to_edit->b = 192;
-			prev_command = command_to_edit->command;
 			editing_a_command = true;
+			command_to_edit->editing = true;
+			prev_command = command_to_edit->command;
 		}
 	}
 
@@ -261,10 +265,6 @@ void SpecialInput(int key, int, int) {
 
 void MouseFunc(int button, int state, int x, int y) {
 	y = Height - y;
-	double kkk = 0.1;
-	cout << button << " " << state << " " << x << " " << y << endl;
-	cout << x_shifted << " " << y_shifted << endl;
-	cout << (x+x_shifted) * scale_factor << " " << (y+y_shifted) * scale_factor << endl;
 	if (button == GLUT_LEFT_BUTTON) {
 		if (state == GLUT_DOWN) {
 
@@ -280,7 +280,7 @@ void MouseFunc(int button, int state, int x, int y) {
 
 					
 					command_to_edit = &(commands[i]);
-					command_to_edit->b = 192;
+					command_to_edit->editing = true;
 					prev_command = command_to_edit->command;
 					glutPostRedisplay();
 					return;
@@ -342,7 +342,7 @@ void MouseFunc(int button, int state, int x, int y) {
 				}
 			}
 			for (size_t i = 0; i < commands.size(); i++) {
-				if (commands[i].is_in(x, y)) {
+				if (commands[i].is_in(x, y) && commands[i].obj!=nullptr) {
 					commands[i].filled = !(commands[i].filled);
 					commands[i].obj->filled = commands[i].filled;
 					glutPostRedisplay();
@@ -351,16 +351,21 @@ void MouseFunc(int button, int state, int x, int y) {
 		}
 	}
 	else if (button == 3) {
-		scale_factor /= 1.1;
-		x_shifted += (x + x_shifted) * 0.1; // the formula is found randomly by hand
-		y_shifted += (y + y_shifted) * 0.1; // I don't know how but it just works
-		glutPostRedisplay();
+		if (scale_factor > 0.001) {
+			scale_factor /= 1.1;
+			x_shifted += (x + x_shifted) * 0.1; // the formula is found randomly by hand
+			y_shifted += (y + y_shifted) * 0.1; // I don't know how but it just works
+			glutPostRedisplay();
+		}
+		
 	}
 	else if (button == 4) {
-		scale_factor *= 1.1;
-		x_shifted -= (x + x_shifted) * (1. - 1. / 1.1); // the formula is found randomly by hand
-		y_shifted -= (y + y_shifted) * (1. - 1. / 1.1); // I don't know how but it just works
-		glutPostRedisplay();
+		if (scale_factor < 1000) {
+			scale_factor *= 1.1;
+			x_shifted -= (x + x_shifted) * (1. - 1. / 1.1); // the formula is found randomly by hand
+			y_shifted -= (y + y_shifted) * (1. - 1. / 1.1); // I don't know how but it just works
+			glutPostRedisplay();
+		}
 	}
 }
 

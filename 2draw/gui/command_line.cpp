@@ -97,16 +97,19 @@ CommandLine* find_by_symbol_among(const string& symb, const vector<size_t>& v, c
 
 void CommandLine::error() {
 	//make the command line red to show that's an error occurred
-	r = 255; g = 64; b = 64;
+	err = true;
 	return;
 }
 void CommandLine::Compile() {
+
+	editing = false;
+	err = false;
 
 	// empty command case
 	if (command == "") {
 		symbol = "";
 		DeleteObject();
-		r = 128; g = 128; b = 128; // make command line gray
+		//r = 128; g = 128; b = 128; // make command line gray
 		return;
 	}
 
@@ -190,7 +193,8 @@ void CommandLine::Compile() {
 				iss >> y >> r;
 				if (iss.fail()) {
 					iss.clear();
-					return error();
+					err = true; 
+					return;
 				}
 				obj = new Circle(x, y, r);
 			}
@@ -201,8 +205,11 @@ void CommandLine::Compile() {
 					r = stoi(p2);
 					CommandLine* pp1 = nullptr;
 					pp1 = find_by_symbol(p1);
-					if (pp1 == nullptr)
-						return error();
+					if (pp1 == nullptr) {
+						err = true; 
+						return;
+					}
+						
 
 					obj = new Circle(*(Point*)(pp1->obj), r);
 
@@ -218,7 +225,8 @@ void CommandLine::Compile() {
 					pp2 = find_by_symbol(p2);
 
 					if (pp1 == nullptr || pp2 == nullptr) {
-						return error();
+						err = true; 
+						return;
 					}
 					obj = new Circle(*(Point*)(pp1->obj), distance(*(Point*)(pp1->obj), *(Point*)(pp2->obj)));
 					AddDependency(pp1);
@@ -241,7 +249,8 @@ void CommandLine::Compile() {
 			CommandLine* pp = nullptr;
 			pp = find_by_symbol(p, "circle");
 			if (pp == nullptr) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "point") {
@@ -272,7 +281,10 @@ void CommandLine::Compile() {
 			pp1 = find_by_symbol(p1);
 			pp2 = find_by_symbol(p2);
 
-			if (pp1 == nullptr || pp2 == nullptr) return error();
+			if (pp1 == nullptr || pp2 == nullptr) { 
+				err = true; 
+				return; 
+			}
 
 
 			if (type == "line") {
@@ -305,17 +317,20 @@ void CommandLine::Compile() {
 			cline1 = find_by_symbol(line1, "line");
 			if (cline1 == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			cline2 = find_by_symbol(line2, "line");
 			if (cline2 == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (((Line*)(cline1->obj))->is_parallel_to(*(Line*)(cline2->obj))) {
-				return error();
+				err = true; 
+				return;
 			}
 			if (type != "point") {
 				DeleteObject();
@@ -349,13 +364,15 @@ void CommandLine::Compile() {
 			cline = find_by_symbol(line, "line");
 			if (cline == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			cpoint = find_by_symbol(point, "point");
 			if (cpoint == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "line") {
@@ -388,13 +405,15 @@ void CommandLine::Compile() {
 			cline = find_by_symbol(line, "line");
 			if (cline == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			cpoint = find_by_symbol(point, "point");
 			if (cpoint == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "line") {
@@ -430,7 +449,8 @@ void CommandLine::Compile() {
 			if (iss.fail()) {
 				iss.clear();
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			//then we get pointers to command lines that has type we need (here it is point)
@@ -442,7 +462,8 @@ void CommandLine::Compile() {
 			//case where we didn't find all we need
 			if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			//if all is good, then if it's initialy was a triangle
@@ -478,11 +499,13 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true;
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "point") {
@@ -511,11 +534,13 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true;
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "point") {
@@ -544,11 +569,13 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "point") {
@@ -580,18 +607,21 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			// we look for a point only in triangles vertexes
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "line") {
@@ -628,17 +658,20 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "line") {
@@ -672,17 +705,20 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "line") {
@@ -716,17 +752,20 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "line") {
@@ -754,7 +793,10 @@ void CommandLine::Compile() {
 			iss >> tr;
 			CommandLine* trp;
 			trp = find_by_symbol(tr, "triangle");
-			if (trp == nullptr) return error();
+			if (trp == nullptr) { 
+				err = true; 
+				return; 
+			}
 
 			if (type != "circle") {
 				DeleteObject();
@@ -780,7 +822,10 @@ void CommandLine::Compile() {
 			iss >> tr;
 			CommandLine* trp;
 			trp = find_by_symbol(tr, "triangle");
-			if (trp == nullptr) return error();
+			if (trp == nullptr) {
+				err = true; 
+				return;
+			}
 
 			if (type != "circle") {
 				DeleteObject();
@@ -811,18 +856,21 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (!((Triangle*)(trp->obj))->exists()) {
-				return error();
+				err = true; 
+				return;
 			}
 
 			// we look for a point only among triangle vertexes
 			vertex = find_by_symbol_among(ver, trp->dependencies);
 			if (vertex == nullptr) {
 				DeleteObject();
-				return error();
+				err = true; 
+				return;
 			}
 
 			if (type != "circle") {
@@ -868,7 +916,8 @@ void CommandLine::Compile() {
 
 				if (pp1 == nullptr) {
 					DeleteObject();
-					return error();
+					err = true; 
+					return;
 				}
 
 				((Polygon*)(obj))->append(*(Point*)(pp1->obj));
@@ -903,7 +952,8 @@ void CommandLine::Compile() {
 				CommandLine* pp1;
 				pp1 = find_by_symbol(p1);
 				if (pp1 == nullptr) {
-					return error();
+					err = true; 
+					return;
 				}
 				v.push_back(*(Point*)(pp1->obj));
 				AddDependency(pp1);
@@ -921,7 +971,8 @@ void CommandLine::Compile() {
 		else if (!symbol_is_there) {
 			symbol_is_there = true;
 			if (symbol != keyword && is_the_symbol_defined(keyword)) {
-				return error();
+				err = true; 
+				return;
 			}
 			symbol = keyword; 
 			// after that, loop repeats, reads new keyword, but symbol_is_there is true
@@ -930,23 +981,23 @@ void CommandLine::Compile() {
 		//first word is read as symbol, but next word is still not recognized or something else gone wrong
 		else {
 			DeleteObject();
-			return error();
+			err = true; 
 			return;
 		}
 	}
 		
-		
+	
 	obj->filled = filled;
 
 	//randomize object colors
-	obj->red = 64 + rand() % 192;
-	obj->green = 64 + rand() % 192;
-	obj->blue = 64 + rand() % 192;
+	obj->red = 128 + rand() % 128;
+	obj->green = 128 + rand() % 128;
+	obj->blue = 128 + rand() % 128;
 
 	CompileDependencies();
 
 	// make command line gray
-	r = 128; g = 128; b = 128; 
+	//r = 128; g = 128; b = 128; 
 	return;
 }
 
@@ -968,18 +1019,47 @@ void CommandLine::Draw() {
 		}
 	}
 
+	
 	glBegin(GL_POLYGON);
+
+	int r, g, b;
+	if (editing) {
+		r = 64;
+		g = 64;
+		b = 192;
+	} else if (err) {
+		r = 192;
+		g = 0;
+		b = 0;
+	} else if (obj != nullptr) {
+		r = obj->red;
+		g = obj->green;
+		b = obj->blue;
+	} else {
+		r = g = b = 128;
+	}
+
 	glColor3ub(r, g, b);
 	glVertex2f(x, Height - (y));
 	glVertex2f(x + width, Height - y);
-	glColor3ub(r - 64, g - 64, b - 64);
+	if (err) {
+		glColor3ub(r - 64, g, b);
+	} else {
+		glColor3ub(r - 64, g - 64, b - 64);
+	}
+	
 	glVertex2f(x + width, Height - (y + height));
 	glVertex2f(x, Height - (y + height));
 	glEnd();
 
+	if (editing || err) {
+		r = g = b = 255;
+	}
+	else {
+		r = g = b = 0;
+	}
 
-
-	glColor3ub(255, 255, 255);
+	glColor3ub(r, g, b);
 	glRasterPos2f(x+3, Height - y - 20);
 	for (int i = 0; i < command.length(); i++) {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, command[i]);

@@ -26,6 +26,11 @@ extern GLint Width, Height;
 // keeps track of dependencies, 
 class CommandLine {
 public:
+
+	// serves to change color of command line when it's being edited
+	bool editing = 0;
+	bool err = 0;
+
 	string command = "";
 
 	// analagous to the variable names, it's used 
@@ -50,11 +55,8 @@ public:
 	//chould be cleared after deletion of this object
 	vector<size_t> dependencies;
 
-
+	//is its object should be filled
 	bool filled = 0;
-
-	//colors for background of command line
-	int r = 128, g = 128, b = 128;
 
 	// definition of where the comand line is;
 	double x, y, width=300, height=26;
