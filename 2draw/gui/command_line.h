@@ -59,7 +59,7 @@ public:
 	bool filled = 0;
 
 	// definition of where the comand line is;
-	double x, y, width=300, height=26;
+	double x, y, width=420, height=26;
 
 	//constructor
 	CommandLine(double _x, double _y);
