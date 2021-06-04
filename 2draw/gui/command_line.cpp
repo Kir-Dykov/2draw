@@ -130,7 +130,7 @@ void CommandLine::Compile() {
 		iss >> keyword;
 
 		/*POINT*/
-		if (keyword == "point" || (symbol != "" && keyword == "p")) {
+		if (keyword == "point" || (symbol_is_there == 1 && keyword == "p")) {
 			//expected syntax:
 			//point_name point x_coordinate y_coordinate
 			//or
