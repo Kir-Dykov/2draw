@@ -275,7 +275,6 @@ Circle Triangle::get_excircle(const Point& vertex) const {
 	double radius = (*this).area() / ((*this).perimeter()/2 - distance(second_vertex, third_vertex));
 	Circle res;
 	res.set(intersection, radius);
-	//cout << intersection << ' ' << radius << '\n';
 	return res;
 }
 

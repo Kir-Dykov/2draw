@@ -68,7 +68,7 @@ void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 
-	//drawing objects
+	///drawing objects
 
 	glDisplacedView();
 
@@ -82,11 +82,8 @@ void Display(void) {
 	}
 
 	for (size_t i = commands.size() - 1; i < commands.size(); i--) {
-		if (commands[i].obj != nullptr && !(commands[i].obj->filled)) {
-			commands[i].obj->Draw();
-			cout << i << endl;
-		}
-			
+		if (commands[i].obj != nullptr && !(commands[i].obj->filled))
+			commands[i].obj->Draw();			
 	}
 	
 	x_unit.Draw();
@@ -95,7 +92,7 @@ void Display(void) {
 	y_axis.Draw();
 	
 
-	//drawing command lines
+	///drawing command lines
 
 	glNormalView();
 
@@ -162,7 +159,6 @@ void Keyboard(unsigned char key, int, int) {
 }
 
 void SpecialInput(int key, int, int) {
-	//cout << key << endl;
 	if (key == 1) { //F1
 		for (size_t i = 0; i < commands.size(); i++) {
 			commands[i].command = "";
@@ -393,23 +389,11 @@ void MotionFunc(int x, int y) {
 		command_to_edit->Compile();
 		glutPostRedisplay();
 	}
+
 	if (moving_screen) {
-
 		x_shifted = x_start - x; y_shifted = y_start - y;
-
-		//glViewport(0, 0, Width, Height);
-		
-
-		//cout << endl << x_shifted << "   " << y_shifted;
 		glutPostRedisplay();
-		
 	}
-}
-
-
-void PassiveMotionFunc(int x, int y) {
-	//cout << "Passive motion " << x << " " << y << endl;
-	//glutPostRedisplay();
 }
 
 

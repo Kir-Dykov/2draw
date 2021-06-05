@@ -964,64 +964,69 @@ void CommandLine::Compile() {
 			break;
 		}
 
-
+		/*NUMBERS OUTPUT*/
 		else if (keyword == "perimeter") {
-		ClearDependencies();
-		string obj_t;
-		iss >> obj_t;
+			ClearDependencies();
+			string obj_t;
+			iss >> obj_t;
 
-		CommandLine* ctr;
+			CommandLine* ctr;
 
-		ctr = find_by_symbol(obj_t, "triangle");
-		if (ctr != nullptr)
-			command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Triangle*)(ctr->obj))->perimeter());
-		if (ctr == nullptr) {
-			ctr = find_by_symbol(obj_t, "circle");
+			ctr = find_by_symbol(obj_t, "triangle");
 			if (ctr != nullptr)
-				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Circle*)(ctr->obj))->circumference());
+				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Triangle*)(ctr->obj))->perimeter());
 			if (ctr == nullptr) {
-				ctr = find_by_symbol(obj_t, "polygon");
+				ctr = find_by_symbol(obj_t, "circle");
 				if (ctr != nullptr)
-					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Polygon*)(ctr->obj))->perimeter());
+					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Circle*)(ctr->obj))->circumference());
 				if (ctr == nullptr) {
-					DeleteObject();
-					err = true;
-					return;
+					ctr = find_by_symbol(obj_t, "polygon");
+					if (ctr != nullptr)
+						command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Polygon*)(ctr->obj))->perimeter());
+					if (ctr == nullptr) {
+						DeleteObject();
+						err = true;
+						return;
+					}
 				}
 			}
+			AddDependency(ctr);
+			break;
 		}
-		AddDependency(ctr);
-		break;
-	}
+
+
 
 		else if (keyword == "area") {
-		ClearDependencies();
-		string obj_t;
-		iss >> obj_t;
+			ClearDependencies();
+			string obj_t;
+			iss >> obj_t;
 
-		CommandLine* ctr;
+			CommandLine* ctr;
 
-		ctr = find_by_symbol(obj_t, "triangle");
-		if (ctr != nullptr)
-			command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
-		if (ctr == nullptr) {
-			ctr = find_by_symbol(obj_t, "circle");
+			ctr = find_by_symbol(obj_t, "triangle");
 			if (ctr != nullptr)
 				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
 			if (ctr == nullptr) {
-				ctr = find_by_symbol(obj_t, "polygon");
+				ctr = find_by_symbol(obj_t, "circle");
 				if (ctr != nullptr)
 					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
 				if (ctr == nullptr) {
-					DeleteObject();
-					err = true;
-					return;
+					ctr = find_by_symbol(obj_t, "polygon");
+					if (ctr != nullptr)
+						command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
+					if (ctr == nullptr) {
+						DeleteObject();
+						err = true;
+						return;
+					}
 				}
 			}
+			AddDependency(ctr);
+			break;
 		}
-		AddDependency(ctr);
-		break;
-	}
+
+
+
 		/*ELSE*/
 			//that's the case when we didn't recognize any command
 			//and if we didn't already defined a symbol
