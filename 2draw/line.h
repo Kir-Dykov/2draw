@@ -22,6 +22,9 @@ public:
 	void set_argument_c(const double& _c) { c = _c; }
 
 	// Getters
+	double get_a() const { return a; }
+	double get_b() const { return b; }
+	double get_c() const { return c; }
 	// angle between line and Ox in radians
 	double get_angle_rad() const { return atan(-a / b); }
 	// ... in degrees
