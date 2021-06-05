@@ -1189,7 +1189,7 @@ void CommandLine::Compile() {
 					err = true;
 					return;
 				}
-				command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : rad " + to_string(((Triangle*)(ctr1->obj))->get_angle(*(Point*)(ctr2->obj)));
+				command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " :rad " + to_string(((Triangle*)(ctr1->obj))->get_angle(*(Point*)(ctr2->obj)));
 				AddDependency(ctr1);
 				AddDependency(ctr2);
 				break;
