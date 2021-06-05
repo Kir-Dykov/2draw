@@ -424,7 +424,7 @@ int gui_main() {
 	glutKeyboardFunc(Keyboard);
 	glutSpecialFunc(SpecialInput);
 	glutMotionFunc(MotionFunc);
-	glutPassiveMotionFunc(PassiveMotionFunc);
+	//glutPassiveMotionFunc(PassiveMotionFunc);
 
 	glutMainLoop();
 
