@@ -76,6 +76,7 @@ void CommandLine::Compile() {
 	editing = false;
 	err = false;
 
+	cout << "wtf" << endl;
 	// empty command case
 	if (command == "") {
 		symbol = "";
@@ -405,11 +406,16 @@ void CommandLine::Compile() {
 			break;
 		}
 
-		
 		// угол между прямой и осью Х
 		// name argument line
 		else if (keyword == "argument") {
-			ClearDependencies();
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
 			string obj_t;
 			iss >> obj_t;
 
@@ -430,57 +436,42 @@ void CommandLine::Compile() {
 
 
 		/*TRIANGLE STUFF*/
-		else if (keyword == "triangle") {
+		else if (keyword == "triangle" || (symbol_is_there == 1 && keyword == "t")) {
 
-			//expected syntax:
-			//triangle_name triangle point_name1 point_name2 point_name3
-
-			// command requires three symbols to a points
-			string p1, p2, p3;
-			iss >> p1 >> p2 >> p3;
-
-			// if symbols reading fails, we delete object completely
-			if (iss.fail()) {
-				iss.clear();
-				DeleteObject();
-				err = true; 
+			if(MakeTriangle(iss))
+				break;
+			else
 				return;
-			}
+		}
 
-			//then we get pointers to command lines that has type we need (here it is point)
-			CommandLine* pp1, * pp2, * pp3;
-			pp1 = find_by_symbol(p1);
-			pp2 = find_by_symbol(p2);
-			pp3 = find_by_symbol(p3);
-
-			//case where we didn't find all we need
-			if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
+		// определяет тип треугольника
+		// name type triangle
+		else if (keyword == "type") {
+			if (obj != nullptr) {
 				DeleteObject();
-				err = true; 
-				return;
-			}
-
-			//if all is good, then if it's initialy was a triangle
-			//we just update it without any deletions, because that would
-			//mess up all every object that were dependent from this triangle
-			if (type == "triangle") {
-				ClearDependencies();
-				((Triangle*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
 			}
 			else {
-				DeleteObject();
-				obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
-				type = "triangle";
+				ClearDependencies();
 			}
 
-			//it's nessesary to add all dependencies so when we move a point
-			//our triangle will be updated
-			AddDependency(pp1);
-			AddDependency(pp2);
-			AddDependency(pp3);
+			string obj_t1;
+			iss >> obj_t1;
+
+			CommandLine* ctr1;
+
+			ctr1 = find_by_symbol(obj_t1, "triangle");
+			if (ctr1 == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
+
+			command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Triangle*)(ctr1->obj))->triangle_type());
+			AddDependency(ctr1);
 			break;
 		}
 
+		
 		/*POINTS IN TRIANGLE*/
 		else if (keyword == "incenter") {
 
@@ -517,6 +508,7 @@ void CommandLine::Compile() {
 		}
 
 
+
 		else if (keyword == "centroid") {
 
 			string tr;
@@ -550,6 +542,7 @@ void CommandLine::Compile() {
 			AddDependency(trp);
 			break;
 		}
+
 
 
 		else if (keyword == "orthocenter") {
@@ -636,6 +629,55 @@ void CommandLine::Compile() {
 		}
 
 
+		else if (keyword == "median") {
+
+			//expected syntax:
+			//line_name bisectrix triangle_name point_name_of_vertex
+
+			string tr; string ver;
+			iss >> tr; iss >> ver;
+
+			CommandLine* trp; CommandLine* vertex;
+
+			trp = find_by_symbol(tr, "triangle");
+			if (trp == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
+
+			if (!((Triangle*)(trp->obj))->exists()) {
+				err = true;
+				return;
+			}
+
+			// we look for a point only in triangles vertexes
+			vertex = find_by_symbol_among(ver, trp->dependencies);
+			if (vertex == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
+
+			if (type != "line") {
+				DeleteObject();
+				obj = new Line(((Triangle*)(trp->obj))->get_median(*(Point*)(vertex->obj)));
+				type = "line";
+			}
+			else {
+				ClearDependencies();
+				*((Line*)(obj)) = ((Triangle*)(trp->obj))->get_median(*(Point*)(vertex->obj));
+			}
+
+			AddDependency(trp);
+			// we don't add a vertex as a dependency because
+			// triangle is aleready dependent from it
+
+			break;
+		}
+
+
+
 		else if (keyword == "altitude") {
 
 			//expected syntax:
@@ -683,6 +725,7 @@ void CommandLine::Compile() {
 		}
 
 
+
 		else if (keyword == "midline") {
 
 			//expected syntax:
@@ -728,6 +771,7 @@ void CommandLine::Compile() {
 			AddDependency(trp);
 			break;
 		}
+
 
 
 		else if (keyword == "perpbis") {
@@ -807,6 +851,7 @@ void CommandLine::Compile() {
 		}
 
 
+
 		else if (keyword == "circumcircle") {
 
 			//expected syntax:
@@ -818,6 +863,11 @@ void CommandLine::Compile() {
 			trp = find_by_symbol(tr, "triangle");
 			if (trp == nullptr) {
 				err = true; 
+				return;
+			}
+
+			if (!((Triangle*)(trp->obj))->exists()) {
+				err = true;
 				return;
 			}
 
@@ -834,6 +884,7 @@ void CommandLine::Compile() {
 			AddDependency(trp);
 			break;
 		}
+
 
 
 		else if (keyword == "excircle") {
@@ -895,13 +946,9 @@ void CommandLine::Compile() {
 
 			string p1;
 
-			// currently nothing could be dependent from polygon
-			// so we always delete it instead of erasing all it's vertexes
-
 			if (type == "polygon") {
 				ClearDependencies();
-				delete obj;
-				obj = new Polygon();
+				((Polygon*)(obj))->clear();
 			}
 			else {
 				DeleteObject();
@@ -931,6 +978,7 @@ void CommandLine::Compile() {
 		}
 
 
+
 		else if (keyword == "convex_hull" || keyword == "convex") {
 
 
@@ -945,8 +993,7 @@ void CommandLine::Compile() {
 
 			if (type == "polygon") {
 				ClearDependencies();
-				delete obj;
-				obj = new Polygon();
+				((Polygon*)(obj))->clear();
 			}
 			else {
 				DeleteObject();
@@ -965,6 +1012,12 @@ void CommandLine::Compile() {
 				v.push_back(*(Point*)(pp1->obj));
 				AddDependency(pp1);
 			}
+
+			if (v.size() <= 2) {
+				err = true;
+				return;
+			}
+
 			*(Polygon*)(obj) = convex_hull(v);
 
 			type = "polygon";
@@ -1001,7 +1054,13 @@ void CommandLine::Compile() {
 		// проверка многоугольника на выпуклость, return 1 or 0
 		// name is_convex polygon
 		else if (keyword == "is_convex") {
-			ClearDependencies();
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
 			string obj_t1;
 			iss >> obj_t1;
 
@@ -1021,8 +1080,54 @@ void CommandLine::Compile() {
 
 
 		/*NUMBERS AND PROPERTIES*/
+		// вывод данных объекта
+		// name output obj
+		else if (keyword == "info") {
+
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
+			string obj_t1;
+			iss >> obj_t1;
+
+			CommandLine* ctr1;
+
+			ctr1 = find_by_symbol(obj_t1, "circle");
+			if (ctr1 != nullptr)
+				command = symbol + " " + keyword + " " + obj_t1 + " :center " + to_string((int)((Circle*)(ctr1->obj))->center.x) \
+				+ " " + to_string((int)((Circle*)(ctr1->obj))->center.y) + " r " + to_string((int)((Circle*)(ctr1->obj))->radius);
+			if (ctr1 == nullptr) {
+				ctr1 = find_by_symbol(obj_t1, "line");
+				if (ctr1 != nullptr)
+					command = symbol + " " + keyword + " " + obj_t1 + " :a " + to_string((int)((Line*)(ctr1->obj))->get_a()) + \
+					" ,b " + to_string((int)((Line*)(ctr1->obj))->get_b()) + " ,c " + to_string((int)((Line*)(ctr1->obj))->get_c());
+				if (ctr1 == nullptr) {
+					DeleteObject();
+					err = true;
+					return;
+				}
+
+			}
+
+			AddDependency(ctr1);
+			break;
+		}
+
+
+
 		else if (keyword == "perimeter") {
-			ClearDependencies();
+			
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
 			string obj_t;
 			iss >> obj_t;
 
@@ -1031,15 +1136,15 @@ void CommandLine::Compile() {
 			ctr = find_by_symbol(obj_t, "triangle");
 			if (ctr != nullptr)
 				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Triangle*)(ctr->obj))->perimeter());
-			if (ctr == nullptr) {
+			else {
 				ctr = find_by_symbol(obj_t, "circle");
 				if (ctr != nullptr)
 					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Circle*)(ctr->obj))->circumference());
-				if (ctr == nullptr) {
+				else {
 					ctr = find_by_symbol(obj_t, "polygon");
 					if (ctr != nullptr)
 						command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)((Polygon*)(ctr->obj))->perimeter());
-					if (ctr == nullptr) {
+					else {
 						DeleteObject();
 						err = true;
 						return;
@@ -1053,7 +1158,14 @@ void CommandLine::Compile() {
 
 
 		else if (keyword == "area") {
-			ClearDependencies();
+
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
 			string obj_symbol;
 			iss >> obj_symbol;
 
@@ -1081,13 +1193,17 @@ void CommandLine::Compile() {
 			break;
 		}
 
-
-
-
 		// проверка принадлежит ли точка объекту, return 0 or 1
 		// name is_in point obj
 		else if (keyword == "is_in") {
-			ClearDependencies();
+
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
 			string obj_t1; string obj_t2;
 			iss >> obj_t1; iss >> obj_t2;
 
@@ -1130,42 +1246,18 @@ void CommandLine::Compile() {
 			break;
 		}
 
-		// вывод данных объекта
-		// name output obj
-		else if (keyword == "info") {
-			ClearDependencies();
-			string obj_t1;
-			iss >> obj_t1;
-
-			CommandLine* ctr1;
-
-			ctr1 = find_by_symbol(obj_t1, "circle");
-			if (ctr1 != nullptr)
-				command = symbol + " " + keyword + " " + obj_t1 + " :center " + to_string((int)((Circle*)(ctr1->obj))->center.x) \
-				+ " " + to_string((int)((Circle*)(ctr1->obj))->center.y) + " r " + to_string((int)((Circle*)(ctr1->obj))->radius);
-			if (ctr1 == nullptr) {
-				ctr1 = find_by_symbol(obj_t1, "line");
-				if (ctr1 != nullptr)
-					command = symbol + " " + keyword + " " + obj_t1 + " :a " + to_string((int)((Line*)(ctr1->obj))->get_a()) + \
-					" ,b " + to_string((int)((Line*)(ctr1->obj))->get_b()) + " ,c " + to_string((int)((Line*)(ctr1->obj))->get_c());
-				if (ctr1 == nullptr) {
-					DeleteObject();
-					err = true;
-					return;
-				}
-
-			}
-
-			AddDependency(ctr1);
-			break;
-		}
-
 		// угол треугольника
 		// name angle triangle point 
 		// угол между двумя прямыми
 		// name angle line1 line2
 		else if (keyword == "angle") {
-			ClearDependencies();
+			if (obj != nullptr) {
+				DeleteObject();
+			}
+			else {
+				ClearDependencies();
+			}
+
 			string obj_t1; string obj_t2;
 			iss >> obj_t1; iss >> obj_t2;
 
@@ -1203,30 +1295,6 @@ void CommandLine::Compile() {
 			
 		}
 
-		// определяет тип треугольника
-		// name type triangle
-		else if (keyword == "type") {
-			ClearDependencies();
-			string obj_t1;
-			iss >> obj_t1;
-
-			CommandLine* ctr1;
-
-			ctr1 = find_by_symbol(obj_t1, "triangle");
-			if (ctr1 == nullptr) {
-				DeleteObject();
-				err = true;
-				return;
-			}
-
-			command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Triangle*)(ctr1->obj))->triangle_type());
-			AddDependency(ctr1);
-			break;
-		}
-
-		
-
-		
 
 
 		/*ELSE*/
@@ -1254,9 +1322,12 @@ void CommandLine::Compile() {
 	if (obj != nullptr) {
 		obj->filled = filled;
 		//randomize object colors
-		obj->red = 128 + rand() % 128;
-		obj->green = 128 + rand() % 128;
-		obj->blue = 128 + rand() % 128;
+		obj->red = obj->red + rand() % 17 - 8;
+		obj->red = max(128, min(255, obj->red));
+		obj->green = obj->green + rand() % 17 - 8;
+		obj->green = max(128, min(255, obj->green));
+		obj->blue = obj->blue + rand() % 17 - 8;
+		obj->blue = max(128, min(255, obj->blue));
 	}
 	CompileDependencies();
 
@@ -1278,18 +1349,37 @@ void CommandLine::Draw() {
 	else if (obj != nullptr) { r = obj->red; g = obj->green; b = obj->blue; }
 	else { r = g = b = 128; }
 
+	
+
 	glBegin(GL_POLYGON);
 
 		glColor3ub(r, g, b);
 
-		glVertex2f(x, Height - (y));
 		glVertex2f(x + width, Height - y);
+		glVertex2f(x, Height - (y));
+		
 
-		if (err) glColor3ub(r - 64, g, b);
-		else glColor3ub(r - 64, g - 64, b - 64);
-	
-		glVertex2f(x + width, Height - (y + height));
+		if (err) {
+			r = max(0, r - 64);
+		}
+		else {
+			r = max(0, r - 64);
+			g = max(0, g - 64);
+			b = max(0, b - 64);
+		}
+		if (filled) {
+			r /= 2;
+			g /= 2;
+			b /= 2;
+		}
+		glColor3ub(r, g, b);
 		glVertex2f(x, Height - (y + height));
+		if (filled) {
+			r /= 2;
+			g /= 2;
+			b /= 2;
+		}
+		glVertex2f(x + width, Height - (y + height));
 
 	glEnd();
 
@@ -1302,3 +1392,55 @@ void CommandLine::Draw() {
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, command[i]);
 	}
 }
+
+bool CommandLine::MakeTriangle(std::istringstream& iss) {
+	//expected syntax:
+	//triangle_name triangle point_name1 point_name2 point_name3
+	
+	// command requires three symbols to a points
+	string p1, p2, p3;
+	iss >> p1 >> p2 >> p3;
+
+	// if symbols reading fails, we delete object completely
+	if (iss.fail()) {
+		iss.clear();
+		DeleteObject();
+		err = true;
+		return false;
+	}
+
+	//then we get pointers to command lines that has type we need (here it is point)
+	CommandLine* pp1, * pp2, * pp3;
+	pp1 = find_by_symbol(p1);
+	pp2 = find_by_symbol(p2);
+	pp3 = find_by_symbol(p3);
+
+	//case where we didn't find all we need
+	if (pp1 == nullptr || pp2 == nullptr || pp3 == nullptr) {
+		DeleteObject();
+		err = true;
+		return false;
+	}
+
+	//if all is good, then if it's initialy was a triangle
+	//we just update it without any deletions, because that would
+	//mess up all every object that were dependent from this triangle
+	if (type == "triangle") {
+		ClearDependencies();
+		((Triangle*)(obj))->set(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+	}
+	else {
+		DeleteObject();
+		obj = new Triangle(*(Point*)(pp1->obj), *(Point*)(pp2->obj), *(Point*)(pp3->obj));
+		type = "triangle";
+	}
+
+	command = symbol + " triangle " + p1 + ' ' + p2 + ' ' + p3;
+
+	//it's nessesary to add all dependencies so when we move a point
+	//our triangle will be updated
+	AddDependency(pp1);
+	AddDependency(pp2);
+	AddDependency(pp3);
+	return true;
+};

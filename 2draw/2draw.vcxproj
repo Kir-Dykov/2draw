@@ -93,7 +93,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Денис\2draw\dependencies\freeglut\lib;$(SolutionDir)dependencies\bin\glut-3.7.6-bin;$(SolutionDir)dependencies\bin\freeglut-bin</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)dependencies\bin\glut-3.7.6-bin;$(SolutionDir)dependencies\bin\freeglut-bin</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -201,6 +201,9 @@ XCOPY $(SolutionDir)dependencies\bin\freeglut-bin\freeglut.dll $(SolutionDir)Deb
     <ClInclude Include="gui\undo_stack.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="all commands.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

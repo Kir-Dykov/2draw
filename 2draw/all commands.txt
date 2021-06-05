@@ -1,3 +1,4 @@
+
 /*POINT*/
 	name p
 	name point
@@ -30,6 +31,7 @@
 
 	/*LINES IN TRIANGLE*/
 	name bisectrix triangle_name vertex_name
+	name median triangle_name vertex_name
 	name altitude triangle_name vertex_name
 	name midline triangle_name vertex_name
 	name perpbis triangle_name vertex_name

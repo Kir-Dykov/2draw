@@ -176,8 +176,8 @@ Line Triangle::get_altitude(const Point& vertex) const{
 	point_reassignment(vertex, a1, a2);
 	// set side (line)
 	L.set(a1, a2);
-	Alt = L.perpendicular();
-	Alt.set_argument_c(-Alt.a * vertex.x - Alt.b * vertex.y);
+	Alt = L.perp2point_on_line(vertex);
+	//Alt.set_argument_c(-Alt.a * vertex.x - Alt.b * vertex.y);
 
 	return Alt;
 }

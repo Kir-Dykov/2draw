@@ -93,4 +93,6 @@ public:
 
 	//Draws the command line box on the screen;
 	void Draw();
+
+	bool MakeTriangle(std::istringstream& iss);
 };

@@ -147,10 +147,9 @@ bool Polygon::is_in(const Point& p) const {
 		// the idea of the algorithm: https://en.wikipedia.org/wiki/Point_in_polygon#Winding_number_algorithm
 
 		int winding_number = 0;
-		int turn_sign;
 		
 		for (size_t i = 0; i < vertexes.size() - 1; i += 1) {
-			// if edge crosses vertical line
+			// if edge crosses vertical line through point p
 			if ((vertexes[i].x - p.x) * (vertexes[i+1].x - p.x) <= 0) {
 				// then we add a sign of a rotation (it's positive 
 				// iff vector from vertexes[i] to vertexes[i + 1]

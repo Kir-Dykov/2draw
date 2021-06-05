@@ -27,6 +27,7 @@ public:
 	//appends
 	void append(const Point& new_point) { vertexes.push_back(new_point); measure = area(); }
 	void append(initializer_list<Point> l) { vertexes.insert(vertexes.end(), l.begin(), l.end()); measure = area(); }
+	void clear() { vertexes.resize(0); }
 
 	//operators
 	inline Point operator [] (unsigned int idx) const { return vertexes[idx]; }
