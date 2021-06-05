@@ -1,56 +1,4 @@
 #include "command_line.h"
-/*
-Actual avaliable commands that you can just type in right now
-
-a point 400 400
-b point
-c point
-tr triangle a b c
-c1 circle 300 400 50
-c2 circle a 60
-c3 circle a b
-c4 incircle t
-c5 circumcircle t
-l1 line a b
-l2 bisectrix t a
-pg1 polygon a b c ... n
-pg2 convex a b c ... n
-p intersection l1 l2
-l perpendicular l1 p
-p incenter triangle1
-p centroid triangle1
-p orthocenter triangle1
-c6 excircle triangle1 p
-l altitude triangle1 p
-l midline triangle1 p
-l perpbis triangle1 p
-p center circle1
-l parallel l1 p1
-l perpendicular l1 p1
-
-name perimeter obj
- name area obj
- // угол между пр€мой и осью ’
-// name deg_line_Ox line
-// проверка на параллельность, return 0 or 1
-// name is_parallel line1 line2
-// проверка принадлежит ли точка объекту, return 0 or 1
-// name is_in point obj
-// угол между двум€ пр€мыми
-// name deg_line2line line1 line2
-// с какой стороны от пр€мой лежит точка, return -1 or 0 or 1
-// name halfplane point line
-// вывод данных объекта
-// name output obj
-// угол треугольника
-// name angle triangle point
-// определ€ет тип треугольника
-// name type triangle
-// проверка многоугольника на выпуклость, return 1 or 0
-// name is_convex polygon
-// поиск и отрисовка точки центра массы полигона
-// name center_of_mass polygon
-*/
 
 //NEVER erase from that vector.
 //it will break indexes inside CommandLine's
@@ -454,6 +402,29 @@ void CommandLine::Compile() {
 
 			type = "line";
 
+			break;
+		}
+
+		
+		// угол между пр€мой и осью ’
+		// name argument line
+		else if (keyword == "argument") {
+			ClearDependencies();
+			string obj_t;
+			iss >> obj_t;
+
+			CommandLine* ctr;
+
+			ctr = find_by_symbol(obj_t, "line");
+			if (ctr == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
+
+			command = symbol + " " + keyword + " " + obj_t + " : deg " + to_string((int)((Line*)(ctr->obj))->get_angle_deg()) + \
+				" rad " + to_string(((Line*)(ctr->obj))->get_angle_rad());
+			AddDependency(ctr);
 			break;
 		}
 
@@ -1000,7 +971,56 @@ void CommandLine::Compile() {
 			break;
 		}
 
-		/*NUMBERS OUTPUT*/
+		// поиск и отрисовка точки центра массы полигона
+		// name center_of_mass polygon
+		else if (keyword == "center_of_mass") {
+
+			string tr;
+			iss >> tr;
+			CommandLine* trp;
+			trp = find_by_symbol(tr, "polygon");
+			if (trp == nullptr) {
+				err = true;
+				return;
+			}
+
+			if (type != "point") {
+				DeleteObject();
+				obj = new Point(((Polygon*)(trp->obj))->center_of_mass());
+				type = "point";
+			}
+			else {
+				ClearDependencies();
+				*((Point*)(obj)) = (((Polygon*)(trp->obj))->center_of_mass());
+			}
+			command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
+			AddDependency(trp);
+			break;
+		}
+
+		// проверка многоугольника на выпуклость, return 1 or 0
+		// name is_convex polygon
+		else if (keyword == "is_convex") {
+			ClearDependencies();
+			string obj_t1;
+			iss >> obj_t1;
+
+			CommandLine* ctr1;
+
+			ctr1 = find_by_symbol(obj_t1, "polygon");
+			if (ctr1 == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
+
+			command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Polygon*)(ctr1->obj))->is_convex());
+			AddDependency(ctr1);
+			break;
+		}
+
+
+		/*NUMBERS AND PROPERTIES*/
 		else if (keyword == "perimeter") {
 			ClearDependencies();
 			string obj_t;
@@ -1062,28 +1082,6 @@ void CommandLine::Compile() {
 		}
 
 
-
-		// угол между пр€мой и осью ’
-		// name argument line
-		else if (keyword == "argument") {
-			ClearDependencies();
-			string obj_t;
-			iss >> obj_t;
-
-			CommandLine* ctr;
-
-			ctr = find_by_symbol(obj_t, "line");
-			if (ctr == nullptr) {
-				DeleteObject();
-				err = true;
-				return;
-			}
-
-			command = symbol + " " + keyword + " " + obj_t + " : deg " + to_string((int)((Line*)(ctr->obj))->get_angle_deg()) + \
-				" rad " + to_string(((Line*)(ctr->obj))->get_angle_rad());
-			AddDependency(ctr);
-			break;
-		}
 
 
 		// проверка принадлежит ли точка объекту, return 0 or 1
@@ -1226,53 +1224,9 @@ void CommandLine::Compile() {
 			break;
 		}
 
-		// проверка многоугольника на выпуклость, return 1 or 0
-		// name is_convex polygon
-		else if (keyword == "is_convex") {
-			ClearDependencies();
-			string obj_t1;
-			iss >> obj_t1;
+		
 
-			CommandLine* ctr1;
-
-			ctr1 = find_by_symbol(obj_t1, "polygon");
-			if (ctr1 == nullptr) {
-				DeleteObject();
-				err = true;
-				return;
-			}
-
-			command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Polygon*)(ctr1->obj))->is_convex());
-			AddDependency(ctr1);
-			break;
-		}
-
-		// поиск и отрисовка точки центра массы полигона
-		// name center_of_mass polygon
-		else if (keyword == "center_of_mass") {
-
-			string tr;
-			iss >> tr;
-			CommandLine* trp;
-			trp = find_by_symbol(tr, "polygon");
-			if (trp == nullptr) {
-				err = true;
-				return;
-			}
-
-			if (type != "point") {
-				DeleteObject();
-				obj = new Point(((Polygon*)(trp->obj))->center_of_mass());
-				type = "point";
-			}
-			else {
-				ClearDependencies();
-				*((Point*)(obj)) = (((Polygon*)(trp->obj))->center_of_mass());
-			}
-			command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
-			AddDependency(trp);
-			break;
-		}
+		
 
 
 		/*ELSE*/

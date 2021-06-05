@@ -1,0 +1,66 @@
+/*POINT*/
+	name p
+	name point
+	name point 1x 2y
+
+/*CIRCLE STUFF*/
+	name circle 1x 2y 3r
+	name circle point_name 1r
+	name circle point_name_center point_name_on_circumference
+
+	name center circle_name
+
+/*LINE STUFF*/
+	name line point_name point_name
+	name intersection line_name line_name
+	name perpendicular line_name point_name
+	name parallel line_name point_name
+	name argument line
+
+/*TRIANGLE STUFF*/
+
+	name triangle point_name point_name point_name
+	name angle triangle point_name
+	name type triangle_name
+
+	/*POINTS IN TRIANGLE*/
+	name incenter triangle_name
+	name centroid triangle_name
+	name orthocenter triangle_name
+
+	/*LINES IN TRIANGLE*/
+	name bisectrix triangle_name vertex_name
+	name altitude triangle_name vertex_name
+	name midline triangle_name vertex_name
+	name perpbis triangle_name vertex_name
+	name angle line_name line_name
+
+	/*CIRCLES OF TRIANGLE*/
+	name incircle triangle_name
+	name circumcircle triangle_name
+	name excircle triangle_name vertex_name
+
+/*POLYGON STUFF*/
+	name polygon point_name point_name point_name ...
+	name convex point_name point_name point_name
+	name convex_hull point_name point_name point_name
+	name center_of_mass polygon_name
+	name is_convex polygon_name
+
+/*NUMBERS AND PROPERTIES*/
+	name info obj_name
+	name perimeter obj_name
+	name area obj_name
+	name is_in point obj
+	
+	
+	
+	
+
+
+	
+
+
+
+
+

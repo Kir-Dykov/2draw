@@ -54,6 +54,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Polygon& p);
 	double perimeter() const;
 
+	// correct work only with convex
 	void Draw() const;
 };
 
