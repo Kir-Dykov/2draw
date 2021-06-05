@@ -927,8 +927,16 @@ void CommandLine::Compile() {
 			// currently nothing could be dependent from polygon
 			// so we always delete it instead of erasing all it's vertexes
 
-			DeleteObject();
-			obj = new Polygon();
+			if (type == "polygon") {
+				ClearDependencies();
+				delete obj;
+				obj = new Polygon();
+			}
+			else {
+				DeleteObject();
+				obj = new Polygon();
+			}
+			
 
 			while (!iss.eof()) {
 
@@ -964,10 +972,15 @@ void CommandLine::Compile() {
 
 			string p1;
 
-			// currently nothing could be dependent from polygon
-			// so we always delete it instead of erasing all it's vertexes
-			DeleteObject();
-			obj = new Polygon();
+			if (type == "polygon") {
+				ClearDependencies();
+				delete obj;
+				obj = new Polygon();
+			}
+			else {
+				DeleteObject();
+				obj = new Polygon();
+			}
 
 			vector<Point> v;
 			while (!iss.eof()) {
@@ -1021,23 +1034,23 @@ void CommandLine::Compile() {
 
 		else if (keyword == "area") {
 			ClearDependencies();
-			string obj_t;
-			iss >> obj_t;
+			string obj_symbol;
+			iss >> obj_symbol;
 
 			CommandLine* ctr;
 
-			ctr = find_by_symbol(obj_t, "triangle");
-			if (ctr != nullptr)
-				command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
-			if (ctr == nullptr) {
-				ctr = find_by_symbol(obj_t, "circle");
-				if (ctr != nullptr)
-					command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
-				if (ctr == nullptr) {
-					ctr = find_by_symbol(obj_t, "polygon");
-					if (ctr != nullptr)
-						command = symbol + " " + keyword + " " + obj_t + " : " + to_string((int)(ctr->obj)->measure);
-					if (ctr == nullptr) {
+			ctr = find_by_symbol(obj_symbol, "triangle");
+			if (ctr != nullptr) {
+				command = symbol + " " + keyword + " " + obj_symbol + " : " + to_string((int)(ctr->obj)->measure);
+			} else {
+				ctr = find_by_symbol(obj_symbol, "circle");
+				if (ctr != nullptr) {
+					command = symbol + " " + keyword + " " + obj_symbol + " : " + to_string((int)(ctr->obj)->measure);
+				} else {
+					ctr = find_by_symbol(obj_symbol, "polygon");
+					if (ctr != nullptr) {
+						command = symbol + " " + keyword + " " + obj_symbol + " : " + to_string((int)(ctr->obj)->measure);
+					} else {
 						DeleteObject();
 						err = true;
 						return;
@@ -1051,273 +1064,215 @@ void CommandLine::Compile() {
 
 
 		// угол между прямой и осью Х
-		// name deg_line_Ox line
-		else if (keyword == "deg_line_Ox") {
-		ClearDependencies();
-		string obj_t;
-		iss >> obj_t;
+		// name argument line
+		else if (keyword == "argument") {
+			ClearDependencies();
+			string obj_t;
+			iss >> obj_t;
 
-		CommandLine* ctr;
+			CommandLine* ctr;
 
-		ctr = find_by_symbol(obj_t, "line");
-		if (ctr == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
+			ctr = find_by_symbol(obj_t, "line");
+			if (ctr == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
+
+			command = symbol + " " + keyword + " " + obj_t + " : deg " + to_string((int)((Line*)(ctr->obj))->get_angle_deg()) + \
+				" rad " + to_string(((Line*)(ctr->obj))->get_angle_rad());
+			AddDependency(ctr);
+			break;
 		}
 
-		command = symbol + " " + keyword + " " + obj_t + " : deg " + to_string((int)((Line*)(ctr->obj))->get_angle_deg()) + \
-			" rad " + to_string(((Line*)(ctr->obj))->get_angle_rad());
-		AddDependency(ctr);
-		break;
-		}
-
-		// проверка на параллельность, return 0 or 1
-		// name is_parallel line1 line2
-		else if (keyword == "is_parallel") {
-		ClearDependencies();
-		string obj_t1; string obj_t2;
-		iss >> obj_t1; iss >> obj_t2;
-
-		CommandLine* ctr1; CommandLine* ctr2;
-
-		ctr1 = find_by_symbol(obj_t1, "line");
-		ctr2 = find_by_symbol(obj_t2, "line");
-		if (ctr1 == nullptr || ctr2 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
-		Line tmp = Line(((Line*)(ctr2->obj))->get_a(), ((Line*)(ctr2->obj))->get_b(), ((Line*)(ctr2->obj))->get_c());
-		command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string(((Line*)(ctr1->obj))->is_parallel_to(tmp));
-		AddDependency(ctr1);
-		AddDependency(ctr2);
-		break;
-		}
 
 		// проверка принадлежит ли точка объекту, return 0 or 1
 		// name is_in point obj
 		else if (keyword == "is_in") {
-		ClearDependencies();
-		string obj_t1; string obj_t2;
-		iss >> obj_t1; iss >> obj_t2;
+			ClearDependencies();
+			string obj_t1; string obj_t2;
+			iss >> obj_t1; iss >> obj_t2;
 
-		CommandLine* ctr1; CommandLine* ctr2;
+			CommandLine* ctr1; CommandLine* ctr2;
 
-		ctr1 = find_by_symbol(obj_t1);
-		if (ctr1 != nullptr) {
-			Point tmp = Point(((Point*)(ctr1->obj))->x, ((Point*)(ctr1->obj))->y);
-			ctr2 = find_by_symbol(obj_t2, "triangle");
-			if (ctr2 != nullptr)
-				command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Triangle*)(ctr2->obj))->is_in(tmp));
-			if (ctr2 == nullptr) {
-				ctr2 = find_by_symbol(obj_t2, "circle");
+			ctr1 = find_by_symbol(obj_t1);
+			if (ctr1 != nullptr) {
+				Point tmp = Point(((Point*)(ctr1->obj))->x, ((Point*)(ctr1->obj))->y);
+				ctr2 = find_by_symbol(obj_t2, "triangle");
 				if (ctr2 != nullptr)
-					command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Circle*)(ctr2->obj))->is_in(tmp));
+					command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Triangle*)(ctr2->obj))->is_in(tmp));
 				if (ctr2 == nullptr) {
-					ctr2 = find_by_symbol(obj_t2, "polygon");
+					ctr2 = find_by_symbol(obj_t2, "circle");
 					if (ctr2 != nullptr)
-						command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Polygon*)(ctr2->obj))->is_in(tmp));
+						command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Circle*)(ctr2->obj))->is_in(tmp));
 					if (ctr2 == nullptr) {
-						ctr2 = find_by_symbol(obj_t2, "line");
+						ctr2 = find_by_symbol(obj_t2, "polygon");
 						if (ctr2 != nullptr)
-							command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Line*)(ctr2->obj))->point_on_Line(tmp));
+							command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Polygon*)(ctr2->obj))->is_in(tmp));
 						if (ctr2 == nullptr) {
-							DeleteObject();
-							err = true;
-							return;
+							ctr2 = find_by_symbol(obj_t2, "line");
+							if (ctr2 != nullptr)
+								command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Line*)(ctr2->obj))->point_on_Line(tmp));
+							if (ctr2 == nullptr) {
+								DeleteObject();
+								err = true;
+								return;
+							}
 						}
 					}
 				}
 			}
-		}
-		else {
-			DeleteObject();
-			err = true;
-			return;
-		}
-		AddDependency(ctr1);
-		AddDependency(ctr2);
-		break;
-	}
-
-	// угол между двумя прямыми
-	// name deg_line2line line1 line2
-		else if (keyword == "deg_line2line") {
-		ClearDependencies();
-		string obj_t1; string obj_t2;
-		iss >> obj_t1; iss >> obj_t2;
-
-		CommandLine* ctr1; CommandLine* ctr2;
-
-		ctr1 = find_by_symbol(obj_t1, "line");
-		ctr2 = find_by_symbol(obj_t2, "line");
-		if (ctr1 == nullptr || ctr2 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
-		Line tmp = Line(((Line*)(ctr2->obj))->get_a(), ((Line*)(ctr2->obj))->get_b(), ((Line*)(ctr2->obj))->get_c());
-		command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : deg " + to_string((int)((Line*)(ctr1->obj))->get_twoLines_degangle(tmp)) + \
-			" rad " + to_string(((Line*)(ctr1->obj))->get_twoLines_radangle(tmp));
-		AddDependency(ctr1);
-		AddDependency(ctr2);
-		break;
+			else {
+				DeleteObject();
+				err = true;
+				return;
+			}
+			AddDependency(ctr1);
+			AddDependency(ctr2);
+			break;
 		}
 
+		// вывод данных объекта
+		// name output obj
+		else if (keyword == "info") {
+			ClearDependencies();
+			string obj_t1;
+			iss >> obj_t1;
 
-		// с какой стороны от прямой лежит точка, return -1 or 0 or 1
-		// name halfplane point line
-		else if (keyword == "halfplane") {
-		ClearDependencies();
-		string obj_t1; string obj_t2;
-		iss >> obj_t1; iss >> obj_t2;
+			CommandLine* ctr1;
 
-		CommandLine* ctr1; CommandLine* ctr2;
-
-		ctr1 = find_by_symbol(obj_t1);
-		ctr2 = find_by_symbol(obj_t2, "line");
-		if (ctr2 == nullptr || ctr1 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
-
-		Point tmp = Point(((Point*)(ctr1->obj))->x, ((Point*)(ctr1->obj))->y);
-		command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : " + to_string((int)((Line*)(ctr2->obj))->find_halfplane(tmp));
-
-		AddDependency(ctr1);
-		AddDependency(ctr2);
-		break;
-	}
-
-	// вывод данных объекта
-	// name output obj
-		else if (keyword == "output") {
-		ClearDependencies();
-		string obj_t1;
-		iss >> obj_t1;
-
-		CommandLine* ctr1;
-
-		ctr1 = find_by_symbol(obj_t1, "circle");
-		if (ctr1 != nullptr)
-			command = symbol + " " + keyword + " " + obj_t1 + " :center " + to_string((int)((Circle*)(ctr1->obj))->center.x) \
-			+ " " + to_string((int)((Circle*)(ctr1->obj))->center.y) + " r " + to_string((int)((Circle*)(ctr1->obj))->radius);
-		if (ctr1 == nullptr) {
-			ctr1 = find_by_symbol(obj_t1, "line");
+			ctr1 = find_by_symbol(obj_t1, "circle");
 			if (ctr1 != nullptr)
-				command = symbol + " " + keyword + " " + obj_t1 + " :a " + to_string((int)((Line*)(ctr1->obj))->get_a()) + \
-				" ,b " + to_string((int)((Line*)(ctr1->obj))->get_b()) + " ,c " + to_string((int)((Line*)(ctr1->obj))->get_c());
+				command = symbol + " " + keyword + " " + obj_t1 + " :center " + to_string((int)((Circle*)(ctr1->obj))->center.x) \
+				+ " " + to_string((int)((Circle*)(ctr1->obj))->center.y) + " r " + to_string((int)((Circle*)(ctr1->obj))->radius);
+			if (ctr1 == nullptr) {
+				ctr1 = find_by_symbol(obj_t1, "line");
+				if (ctr1 != nullptr)
+					command = symbol + " " + keyword + " " + obj_t1 + " :a " + to_string((int)((Line*)(ctr1->obj))->get_a()) + \
+					" ,b " + to_string((int)((Line*)(ctr1->obj))->get_b()) + " ,c " + to_string((int)((Line*)(ctr1->obj))->get_c());
+				if (ctr1 == nullptr) {
+					DeleteObject();
+					err = true;
+					return;
+				}
+
+			}
+
+			AddDependency(ctr1);
+			break;
+		}
+
+		// угол треугольника
+		// name angle triangle point 
+		// угол между двумя прямыми
+		// name angle line1 line2
+		else if (keyword == "angle") {
+			ClearDependencies();
+			string obj_t1; string obj_t2;
+			iss >> obj_t1; iss >> obj_t2;
+
+			CommandLine* ctr1; CommandLine* ctr2;
+
+			ctr1 = find_by_symbol(obj_t1, "line");
+			ctr2 = find_by_symbol(obj_t2, "line");
+			if (ctr1 == nullptr || ctr2 == nullptr) {
+				ctr1 = find_by_symbol(obj_t1, "triangle");
+				if (ctr1 == nullptr) {
+					DeleteObject();
+					err = true;
+					return;
+				}
+
+				ctr2 = find_by_symbol_among(obj_t2, ctr1->dependencies);
+				if (ctr2 == nullptr) {
+					DeleteObject();
+					err = true;
+					return;
+				}
+				Point tmp = Point(((Point*)(ctr2->obj))->x, ((Point*)(ctr2->obj))->y);
+				command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " :rad " + to_string(((Triangle*)(ctr1->obj))->get_angle(tmp));
+				AddDependency(ctr1);
+				AddDependency(ctr2);
+				break;
+			}
+			else {
+				Line tmp = Line(((Line*)(ctr2->obj))->get_a(), ((Line*)(ctr2->obj))->get_b(), ((Line*)(ctr2->obj))->get_c());
+				command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " : deg " + to_string((int)((Line*)(ctr1->obj))->get_twoLines_degangle(tmp)) + \
+					" rad " + to_string(((Line*)(ctr1->obj))->get_twoLines_radangle(tmp));
+				AddDependency(ctr1);
+				AddDependency(ctr2);
+				break;
+			}
+			
+		}
+
+		// определяет тип треугольника
+		// name type triangle
+		else if (keyword == "type") {
+			ClearDependencies();
+			string obj_t1;
+			iss >> obj_t1;
+
+			CommandLine* ctr1;
+
+			ctr1 = find_by_symbol(obj_t1, "triangle");
 			if (ctr1 == nullptr) {
 				DeleteObject();
 				err = true;
 				return;
 			}
 
-		}
-
-		AddDependency(ctr1);
-		break;
-	}
-
-	// угол треугольника
-	// name angle triangle point 
-		else if (keyword == "angle") {
-		ClearDependencies();
-		string obj_t1; string obj_t2;
-		iss >> obj_t1; iss >> obj_t2;
-
-		CommandLine* ctr1; CommandLine* ctr2;
-
-		ctr1 = find_by_symbol(obj_t1, "triangle");
-		if (ctr1 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
-
-		ctr2 = find_by_symbol_among(obj_t2, ctr1->dependencies);
-		if (ctr2 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
-		Point tmp = Point(((Point*)(ctr2->obj))->x, ((Point*)(ctr2->obj))->y);
-		command = symbol + " " + keyword + " " + obj_t1 + " " + obj_t2 + " :rad " + to_string(((Triangle*)(ctr1->obj))->get_angle(tmp));
-		AddDependency(ctr1);
-		AddDependency(ctr2);
-		break;
-		}
-
-		// определяет тип треугольника
-		// name type triangle
-		else if (keyword == "type") {
-		ClearDependencies();
-		string obj_t1;
-		iss >> obj_t1;
-
-		CommandLine* ctr1;
-
-		ctr1 = find_by_symbol(obj_t1, "triangle");
-		if (ctr1 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
-
-
-		command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Triangle*)(ctr1->obj))->triangle_type());
-		AddDependency(ctr1);
-		break;
+			command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Triangle*)(ctr1->obj))->triangle_type());
+			AddDependency(ctr1);
+			break;
 		}
 
 		// проверка многоугольника на выпуклость, return 1 or 0
 		// name is_convex polygon
 		else if (keyword == "is_convex") {
-		ClearDependencies();
-		string obj_t1;
-		iss >> obj_t1;
+			ClearDependencies();
+			string obj_t1;
+			iss >> obj_t1;
 
-		CommandLine* ctr1;
+			CommandLine* ctr1;
 
-		ctr1 = find_by_symbol(obj_t1, "polygon");
-		if (ctr1 == nullptr) {
-			DeleteObject();
-			err = true;
-			return;
-		}
+			ctr1 = find_by_symbol(obj_t1, "polygon");
+			if (ctr1 == nullptr) {
+				DeleteObject();
+				err = true;
+				return;
+			}
 
-		command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Polygon*)(ctr1->obj))->is_convex());
-		AddDependency(ctr1);
-		break;
+			command = symbol + " " + keyword + " " + obj_t1 + " : " + to_string(((Polygon*)(ctr1->obj))->is_convex());
+			AddDependency(ctr1);
+			break;
 		}
 
 		// поиск и отрисовка точки центра массы полигона
 		// name center_of_mass polygon
 		else if (keyword == "center_of_mass") {
 
-		string tr;
-		iss >> tr;
-		CommandLine* trp;
-		trp = find_by_symbol(tr, "polygon");
-		if (trp == nullptr) {
-			err = true;
-			return;
-		}
+			string tr;
+			iss >> tr;
+			CommandLine* trp;
+			trp = find_by_symbol(tr, "polygon");
+			if (trp == nullptr) {
+				err = true;
+				return;
+			}
 
-		if (type != "point") {
-			DeleteObject();
-			obj = new Point(((Polygon*)(trp->obj))->center_of_mass());
-			type = "point";
-		}
-		else {
-			ClearDependencies();
-			*((Point*)(obj)) = (((Polygon*)(trp->obj))->center_of_mass());
-		}
-		command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
-		AddDependency(trp);
-		break;
+			if (type != "point") {
+				DeleteObject();
+				obj = new Point(((Polygon*)(trp->obj))->center_of_mass());
+				type = "point";
+			}
+			else {
+				ClearDependencies();
+				*((Point*)(obj)) = (((Polygon*)(trp->obj))->center_of_mass());
+			}
+			command = symbol + " " + keyword + " " + tr + " : " + to_string(int(((Point*)(obj))->x)) + " " + to_string(int(((Point*)(obj))->y));
+			AddDependency(trp);
+			break;
 		}
 
 
